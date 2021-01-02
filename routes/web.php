@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\DashboardControllers\IndexController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,7 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'asdas';
+});
+
+
+Route::prefix('admin')->name('admin.')->group(function(){    
+    Route::get('/index', [IndexController::class, 'index']);
 });
 
 Route::get('/dashboard', function () {
