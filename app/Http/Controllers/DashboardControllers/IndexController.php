@@ -13,39 +13,9 @@ class IndexController extends Controller
         return view('dashboard.index');
     }
 
- 
-    public function create()
+    public function loginPage()
     {
-        //
+        return view('dashboard.auth.login');
     }
 
-    
-    public function store(Request $request)
-    {
-        //
-    }
-
-    
-    public function show($id)
-    {
-        //
-    }
-
-    
-    public function edit($id)
-    {
-        //
-    }
-
-   
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-   
-    public function destroy($id)
-    {
-        //
-    }
 }

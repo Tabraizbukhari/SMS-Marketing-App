@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'title') }}</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -27,11 +27,16 @@
         <link href="{{ asset('admin/css/pe-icon-7-stroke.css')}}" rel="stylesheet" />
     </head>
     <body class="font-sans antialiased">
+    @auth
         @include('dashboard.includes.navigation')
-            {{ $header }}
-        <main>
-            {{ $slot }}
-        </main>
+    @endauth
+        <div class="content">
+            <div class="container-fluid">
+                {{ $slot }}
+            </div>
+        </div>
     </body>
+    @auth
         @include('dashboard.includes.script')
+    @endauth
 </html>
