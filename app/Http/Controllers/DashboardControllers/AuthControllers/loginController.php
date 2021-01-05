@@ -19,10 +19,9 @@ class loginController extends Controller
 
     }
 
-    public function loginView($type)
+    public function loginView()
     {
-        $data['type'] = $type;
-        return view('dashboard.auth.login', $data);
+        return view('dashboard.auth.login');
     }
 
 

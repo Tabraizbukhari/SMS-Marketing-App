@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AuthAuthenticationWithType
+class AuthenticatedUser
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,10 @@ class AuthAuthenticationWithType
      */
     public function handle(Request $request, Closure $next)
     {
-        
+        if(Auth::user()->type !== 'user'){
+            return redirect()->route(Auth::user()->type.'.dashboard');
+        }
+
         return $next($request);
     }
 }

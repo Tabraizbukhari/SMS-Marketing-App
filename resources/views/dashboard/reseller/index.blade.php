@@ -62,7 +62,7 @@
                             <td>View</td>
                             <td>
                               <a href="#Editmasking" data-toggle="modal" data-target="#Editmasking"><i class="align-middle" data-feather="edit-2"></i></a>
-                              <form method="get" id="form1" action="{{ route('admin.reseller.destroy', encrypt($u->id))}}">
+                              <form method="POST" id="form1" action="{{ route('admin.reseller.destroy', encrypt($u->id))}}">
                                   @method('DELETE')
                                   @csrf
                                 <a href="#" onclick="document.getElementById('form1').submit();">

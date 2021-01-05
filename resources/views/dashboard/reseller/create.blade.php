@@ -17,7 +17,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Add Resellers
-                          <a href="{{ route("admin.reseller.index") }}" class="btn btn-outline-dark float-right" >
+                          <a href="{{ route('admin.reseller.index') }}" class="btn btn-outline-dark float-right" >
                           <span class="align-middle" data-feather="chevron-left" ></span>back
                           </a>
                         </h2>

@@ -23,14 +23,14 @@ use App\Http\Controllers\DashboardControllers\ResellerController;
 */
 
 Route::middleware('guest')->group(function(){
-    Route::get('{type?}/login',[loginController::class, 'loginView'])->name('login');
+    Route::get('/',[loginController::class, 'loginView'])->name('login');
     Route::post('login',[loginController::class, 'login'])->name('login.post');
 });
 Route::get('logout', [loginController::class, 'destroy'])->middleware('auth')->name('logout');
 
 Route::middleware('auth')->group(function(){
 
-    Route::prefix('admin')->name('admin.')->middleware(['authtype'])->group(function(){    
+    Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function(){    
         Route::get('index', [IndexController::class, 'index'])->name('dashboard');
         
         Route::prefix('masking')->name('masking.')->group(function(){
@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function(){
 
     });
 
-    Route::prefix('user')->name('user.')->middleware(['authtype'])->group(function(){    
+    Route::prefix('user')->name('user.')->middleware('auth.user')->group(function(){    
         Route::get('index', [IndexController::class, 'index'])->name('dashboard');
     });
 });
