@@ -80,7 +80,7 @@ class ResellerController extends Controller
 
     public function destroy($id)
     {
-        $user = User::findOrFail(decrypt($id))->delete();
+        $user = User::findOrFail(decrypt($id));
         $user->delete();
         return redirect()->back()->with('success','Reseller deleted Successfully');
     }

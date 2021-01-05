@@ -44,10 +44,7 @@ Route::middleware('auth')->group(function(){
             Route::get('index', [ResellerController::class, 'index'] )->name('index');
             Route::get('create', [ResellerController::class, 'create'] )->name('create');
             Route::post('store', [ResellerController::class, 'store'] )->name('store');
-            Route::post('destroy', [ResellerController::class, ''] )->name('destroy');
-
-
-
+            Route::delete('destroy/{id}', [ResellerController::class, 'destroy'] )->name('destroy');
         });
 
         Route::prefix('customer')->name('customer.')->group(function(){
