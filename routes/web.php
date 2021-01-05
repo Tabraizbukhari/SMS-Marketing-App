@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardControllers\AuthControllers\loginController;
 use App\Http\Controllers\DashboardControllers\UserController;
 use App\Http\Controllers\DashboardControllers\MaskingController;
 use App\Http\Controllers\DashboardControllers\ResellerController;
+use App\Http\Controllers\DashboardControllers\CustomerController;
 
 
 
@@ -48,9 +49,10 @@ Route::middleware('auth')->group(function(){
         });
 
         Route::prefix('customer')->name('customer.')->group(function(){
-            Route::get('index', [MaskingController::class, 'index'] )->name('index');
-            // Route::get('create', [MaskingController::class, 'create'] )->name('create');
-
+            Route::get('index', [CustomerController::class, 'index'] )->name('index');
+            Route::get('create', [CustomerController::class, 'create'] )->name('create');
+            Route::post('store', [CustomerController::class, 'store'] )->name('store');
+            Route::delete('destroy/{id}', [CustomerController::class, 'destroy'] )->name('destroy');
         });
 
     });

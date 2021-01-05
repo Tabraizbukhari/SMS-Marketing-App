@@ -16,14 +16,14 @@
             <div class="col-12 col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Add Resellers
-                          <a href="{{ route('admin.reseller.index') }}" class="btn btn-outline-dark float-right" >
+                        <h2 class="card-title">Add Customers
+                          <a href="{{ route('admin.customer.index') }}" class="btn btn-outline-dark float-right" >
                           <span class="align-middle" data-feather="chevron-left" ></span>back
                           </a>
                         </h2>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('admin.reseller.store') }}"> @csrf
+                        <form method="post" action="{{ route('admin.customer.store') }}"> @csrf
                             <div class="row form-group">
                                 <div class="col-md-6">
                                     <label class="form-label">Email address <span class="text-danger">*</span></label>
@@ -44,7 +44,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Masking <span class="text-danger">*</span></label>
-                                <select class="select2 form-control" name="masking[]" multiple data-placeholder="Select multiple masking">
+                                <select class="select2 form-control" name="masking"  data-placeholder="Select multiple masking">
                                     @foreach ($maskings as $masking )
                                         <option {{ (old('masking') == $masking->id)? 'selected': null }} value="{{ $masking->id }}">{{ $masking->title }}</option>
                                     @endforeach

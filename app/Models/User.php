@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\ResellerCustomer;
 
 class User extends Authenticatable
 {
@@ -65,5 +66,10 @@ class User extends Authenticatable
     public function getFormatedCreatedAt()
     {
         return date('d-M-y h-m-s', $this->created_at);
+    }
+
+    public function getResellerCustomer()
+    {
+      return  $this->belongsToMany(User::class,'reseller_customers','cutomer_id','user_id');
     }
 }

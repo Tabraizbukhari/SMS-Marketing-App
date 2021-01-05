@@ -11,7 +11,7 @@ use App\Models\UserMasking;
 use App\Models\SmsApi;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-
+use Auth;
 
 class ResellerController extends Controller
 {
@@ -24,7 +24,10 @@ class ResellerController extends Controller
     }
     public function index()
     {
-        $user = User::where('type','user')->paginate($this->pagination);
+        $user = User::where('type','user')->whereHas('getUserData', function ($query)
+        {
+            $query->where('register_as', 'reseller');
+        })->paginate($this->pagination);
         $data['user'] = $user;
         return view('dashboard.reseller.index', $data);
     }
@@ -37,10 +40,14 @@ class ResellerController extends Controller
 
     public function store(Request $request)
     {
+        if(Auth::user()->sms == 0){
+            return redirect()->back()->withErrors('Admin have no more sms');
+        }
+
         $data = [
             'name'              =>  $request->username,
             'email'             =>  $request->email,
-            'password'          =>    Hash::make($request->password) ,
+            'password'          =>  Hash::make($request->password) ,
             'sms'               =>  $request->sms,
             'price'             =>  $request->cost,
             'type'              =>  'user',
@@ -73,7 +80,7 @@ class ResellerController extends Controller
                 'api_password'  => $request->api_password,
             ]);
         }
-
+      
         return redirect()->route('admin.reseller.index')->with('success','Reseller Created Successfully');
     }
     
