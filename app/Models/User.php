@@ -23,6 +23,8 @@ class User extends Authenticatable
         'sms',
         'price',
         'type',
+        'api_token',
+        'email_verified_at'
     ];
 
     /**
@@ -47,6 +49,21 @@ class User extends Authenticatable
 
     public function getUserData()
     {
-        return hasOne(UsersData::class);
+        return $this->hasOne(UsersData::class);
+    }
+
+    public function getUserSmsApi()
+    {
+        return $this->hasOne(SmsApi::class);
+    }
+
+    public function getResellerMasking()
+    {
+        return $this->belongsToMany(Masking::class,'user_maskings','user_id','masking_id');
+    }
+
+    public function getFormatedCreatedAt()
+    {
+        return date('d-M-y h-m-s', $this->created_at);
     }
 }

@@ -1,45 +1,47 @@
 <x-dashboard>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="col-lg-3 col-md-2"></div>
-            <div class="col-lg-6 col-md-8 p-top-login mt-5">
-                <div class="col-lg-12 text-center ">
-                    <h3> login Here.. </h3>
-                </div>
+    <main class="d-flex w-100">
+		<div class="container d-flex flex-column">
+			<div class="row vh-100">
+				<div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
+					<div class="d-table-cell align-middle">
 
-                <div class="col-lg-12 login-form">
-                    <div class="col-lg-12 login-form">
-                        <form method='post' action="{{ route('login.post') }}"> @csrf
-                            <div class="form-group">
-                                <label class="form-control-label">USERNAME</label>
-                                <input type="text" name="email" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label">PASSWORD</label>
-                                <input type="password" name="password" class="form-control" i>
-                            </div>
-                        
-                            @if (isset($type) && $type == 'user')                                
-                                <div class="form-group">
-                                    <label for="exampleFormControlSelect1">Register As</label>
-                                    <select class="form-control" name='register_as' id="exampleFormControlSelect1">
-                                    <option disabled selected>Select User Registeration Type</option>
-                                    <option value="reseller">Reseller</option>
-                                    <option value="customer">Customer</option>
-                                    </select>
-                                </div>
-                            @endif
+						<div class="text-center mt-4">
+							<h1 class="h2">Welcome back,</h1>
+							<p class="lead">
+								Sign in to your account to continue
+							</p>
+						</div>
 
-                            <div class="form-group">
-                            <button type="submit" class="btn btn-block btn-info btn-fill">LOGIN</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-2"></div>
-            </div>
-        </div>
-        <style >
-     
-        </style>
+						<div class="card">
+							<div class="card-body">
+								<div class="m-sm-4">
+									<div class="text-center">
+										<img src="{{asset('admin/img/avatars/avatar.jpg')}}" alt="Charles Hall" class="img-fluid rounded-circle" width="132" height="132" />
+									</div>
+									<form method="post" action="{{ route('login.post') }}"> @csrf
+										<div class="mb-3">
+											<label class="form-label">Email</label>
+											<input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+										</div>
+										<div class="mb-3">
+											<label class="form-label">Password</label>
+											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
+											{{-- <small>
+                                                <a href="pages-reset-password.html">Forgot password?</a>
+                                            </small> --}}
+										</div>
+										<div class="text-center mt-3">
+											{{-- <a href="index.html" class="btn btn-lg btn-primary">Sign in</a> --}}
+											 <button type="submit" class="btn btn-lg btn-primary">Sign in</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
 </x-dashboard>

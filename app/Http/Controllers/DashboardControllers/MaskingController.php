@@ -13,7 +13,7 @@ class MaskingController extends Controller
      * @return \Illuminate\Http\Response
      */
     public $pagination;
-    public function _construct()
+    public function __construct()
     {
         $this->pagination = 10;
     }
@@ -41,7 +41,10 @@ class MaskingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(['title' => 'required|string']);
+        $data = ['title' => $request->title];
+        Masking::create($data);
+        return redirect()->back()->with('success','Masking Created Successfully');
     }
 
     /**
@@ -75,7 +78,11 @@ class MaskingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $masking = Masking::findOrFail(decrypt($id));
+        $masking->update([
+            'title' => $request->title,
+        ]);
+        return redirect()->back()->with('success','Masking Updated Successfully');
     }
 
     /**
@@ -86,6 +93,8 @@ class MaskingController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $masking = Masking::findOrFail(decrypt($id));
+        $masking->delete();
+        return redirect()->back()->with('success','Masking Deleted Successfully');
     }
 }
