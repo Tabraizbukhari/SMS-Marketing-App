@@ -4,7 +4,7 @@
                 <span class="align-middle">AdminKit</span>
             </a>
 
-            <ul class="sidebar-nav">
+            <ul class="sidebar-nav" >
                 <li class="sidebar-header">
                     Sms Mangement App
                 </li>
@@ -27,18 +27,18 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="{{ route('admin.customer.index') }}">
+                    <a class="sidebar-link" href="{{ route('customer.index') }}">
                         <i class="align-middle" data-feather="user-plus"></i> 
                         <span class="align-middle">Customer</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item" >
                     <a href="#auth" data-toggle="collapse" class="sidebar-link collapsed">
-                        <i class="align-middle" data-feather="users"></i> <span class="align-middle">Auth</span>
+                        <i class="align-middle" data-feather="users"></i> <span class="align-middle">Messages</span>
                     </a>
                     <ul id="auth" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-                        <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-in.html">Sign In</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="pages-sign-up.html">Sign Up</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.create') }}">Compose Message</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.index') }}">Inbox</a></li>
                     </ul>
                 </li>
 

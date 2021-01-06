@@ -15,10 +15,10 @@ class CreateResellerCustomersTable extends Migration
     {
         Schema::create('reseller_customers', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('cutomer_id');
-            $table->primary(['user_id', 'cutomer_id']);
+            $table->unsignedBigInteger('customer_id');
+            $table->primary(['user_id', 'customer_id']);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('cutomer_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

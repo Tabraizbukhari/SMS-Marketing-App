@@ -8,6 +8,8 @@ use App\Http\Controllers\DashboardControllers\UserController;
 use App\Http\Controllers\DashboardControllers\MaskingController;
 use App\Http\Controllers\DashboardControllers\ResellerController;
 use App\Http\Controllers\DashboardControllers\CustomerController;
+use App\Http\Controllers\DashboardControllers\MessageController;
+
 
 
 
@@ -48,13 +50,23 @@ Route::middleware('auth')->group(function(){
             Route::delete('destroy/{id}', [ResellerController::class, 'destroy'] )->name('destroy');
         });
 
+        
+    });
+    
+    Route::middleware('auth.customer')->group(function(){
         Route::prefix('customer')->name('customer.')->group(function(){
             Route::get('index', [CustomerController::class, 'index'] )->name('index');
             Route::get('create', [CustomerController::class, 'create'] )->name('create');
             Route::post('store', [CustomerController::class, 'store'] )->name('store');
             Route::delete('destroy/{id}', [CustomerController::class, 'destroy'] )->name('destroy');
         });
+    });
 
+    Route::prefix('message')->name('message.')->group(function(){
+        Route::get('index', [MessageController::class, 'index'] )->name('index');
+        Route::get('create', [MessageController::class, 'create'] )->name('create');
+        Route::post('store', [MessageController::class, 'store'] )->name('store');
+        Route::delete('destroy/{id}', [MessageController::class, 'destroy'] )->name('destroy');
     });
 
     Route::prefix('user')->name('user.')->middleware('auth.user')->group(function(){    

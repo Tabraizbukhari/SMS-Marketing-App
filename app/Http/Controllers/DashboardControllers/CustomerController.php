@@ -12,6 +12,7 @@ use App\Models\UserMasking;
 use App\Models\SmsApi;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\ResellerCustomer;
 
 class CustomerController extends Controller
 {
@@ -60,6 +61,11 @@ class CustomerController extends Controller
         ];
         $user = User::create($data);
 
+        ResellerCustomer::create([
+            'user_id'   => Auth::id(),
+            'customer_id'   => $user->id,
+        ]);
+        
         if($request->has('masking')){
             UserMasking::create([
                 'user_id' => $user->id, 
@@ -83,7 +89,7 @@ class CustomerController extends Controller
             ]);
         }
       
-        return redirect()->route('admin.customer.index')->with('success','Customer Created Successfully');
+        return redirect()->route('customer.index')->with('success','Customer Created Successfully');
     }
     
 

@@ -70,6 +70,6 @@ class User extends Authenticatable
 
     public function getResellerCustomer()
     {
-      return  $this->belongsToMany(User::class,'reseller_customers','cutomer_id','user_id');
+      return  $this->belongsToMany(User::class,'reseller_customers','customer_id','user_id');
     }
 }

@@ -28,7 +28,7 @@
                     <div class="card">
                     <div class="card-header">
                     <h2 class="card-title">Customers 
-                        <a href="{{ route("admin.customer.create") }}" class="btn btn-primary float-right" >Add New</a>
+                        <a href="{{ route("customer.create") }}" class="btn btn-primary float-right" >Add New</a>
                     </h5>
                     </div>
                     <table class="table table-bordered">
