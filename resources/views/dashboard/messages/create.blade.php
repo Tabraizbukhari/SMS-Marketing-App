@@ -104,7 +104,7 @@ $(document).ready(function(){
                 <div class="col-md-6">
                     <label class="form-label">Import excel<span class="text-danger">*</span></label>
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile" accept=".xls, .xlsx">
+                        <input type="file" name="file" class="custom-file-input" id="customFile" accept=".xls, .xlsx">
                         <label class="custom-file-label" for="customFile">Import your excel</label>
                     </div>
                 </div>

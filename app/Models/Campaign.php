@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Campaign extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'name',
+        'file_url',
+        'file_name',
+        'size',
+        'campaign_date',
+    ];
+    
 }

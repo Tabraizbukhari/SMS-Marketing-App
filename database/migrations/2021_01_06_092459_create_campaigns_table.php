@@ -17,9 +17,11 @@ class CreateCampaignsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
-            $table->string('name');
-            $table->timestamps('start_campaign');
-            $table->timestamps('end_campaign');
+            $table->string('file_url');
+            $table->string('file_name');
+            $table->string('size');
+            $table->timestamp('campaign_date')->nullable();
+            $table->enum('status',['pending', 'canceled', 'completed', 'failed']);
             $table->timestamps();
         });
     }

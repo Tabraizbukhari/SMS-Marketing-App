@@ -7,11 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\ResellerCustomer;
+use Auth;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
-
+    public $file_prefix_path = 'public/file';
     /**
      * The attributes that are mass assignable.
      *
@@ -71,5 +72,10 @@ class User extends Authenticatable
     public function getResellerCustomer()
     {
       return  $this->belongsToMany(User::class,'reseller_customers','customer_id','user_id');
+    }
+
+    public function getBulkSmsExcelPath()
+    {
+        return $this->file_prefix_path.'/'.Auth::user()->id;
     }
 }
