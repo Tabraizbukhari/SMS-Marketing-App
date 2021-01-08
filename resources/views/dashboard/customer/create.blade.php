@@ -56,7 +56,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Cost<span class="text-danger">*</span></label>
-                                <input type="Number" class="form-control" name="cost" placeholder="Cost of per sms" value="{{ old('cost') }}">
+                                <input type="Number" step="any" class="form-control" name="cost" placeholder="Cost of per sms" value="{{ old('cost') }}">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Api Name<span class="text-danger">*</span></label>

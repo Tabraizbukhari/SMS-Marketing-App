@@ -9,6 +9,8 @@ use App\Http\Controllers\DashboardControllers\MaskingController;
 use App\Http\Controllers\DashboardControllers\ResellerController;
 use App\Http\Controllers\DashboardControllers\CustomerController;
 use App\Http\Controllers\DashboardControllers\MessageController;
+use App\Http\Controllers\DashboardControllers\TransactionController;
+
 
 
 
@@ -48,9 +50,11 @@ Route::middleware('auth')->group(function(){
             Route::get('create', [ResellerController::class, 'create'] )->name('create');
             Route::post('store', [ResellerController::class, 'store'] )->name('store');
             Route::delete('destroy/{id}', [ResellerController::class, 'destroy'] )->name('destroy');
+            Route::get('edit/{id}', [ResellerController::class, 'edit'] )->name('edit');
+            Route::post('update/{id}', [ResellerController::class, 'update'] )->name('update');
+            Route::get('{id}/customer', [ResellerController::class, 'resellerCustomer'] )->name('customer');
         });
 
-        
     });
     
     Route::middleware('auth.customer')->group(function(){
@@ -59,6 +63,8 @@ Route::middleware('auth')->group(function(){
             Route::get('create', [CustomerController::class, 'create'] )->name('create');
             Route::post('store', [CustomerController::class, 'store'] )->name('store');
             Route::delete('destroy/{id}', [CustomerController::class, 'destroy'] )->name('destroy');
+            Route::get('edit/{id}', [CustomerController::class, 'edit'] )->name('edit');
+            Route::post('update/{id}', [CustomerController::class, 'update'] )->name('update');
         });
     });
 
@@ -67,7 +73,16 @@ Route::middleware('auth')->group(function(){
         Route::get('create', [MessageController::class, 'create'] )->name('create');
         Route::post('store', [MessageController::class, 'store'] )->name('store');
         Route::delete('destroy/{id}', [MessageController::class, 'destroy'] )->name('destroy');
+
+        Route::get('campaign', [MessageController::class, 'messageCampaign'] )->name('campaign');
+        Route::get('campaign/{id}/file', [MessageController::class, 'campaignFileDownload'] )->name('campaign.file');
     });
+
+
+    Route::prefix('transaction')->name('transaction.')->group(function(){
+        Route::get('index', [TransactionController::class, 'index'] )->name('index');
+    });
+    
 
     Route::prefix('user')->name('user.')->middleware('auth.user')->group(function(){    
         Route::get('index', [IndexController::class, 'index'])->name('dashboard');

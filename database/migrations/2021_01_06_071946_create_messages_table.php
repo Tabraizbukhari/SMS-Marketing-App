@@ -20,10 +20,14 @@ class CreateMessagesTable extends Migration
             $table->unsignedBigInteger('contact_number');
             $table->text('message');
             $table->unsignedBigInteger('message_length');
+            $table->double('price')->nullable();
             $table->enum('status', ['successfully','pending','not_sent']);
+            $table->enum('type', ['single','campaign'])->default('single');
             $table->timestamp('send_date');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('masking_id')->references('id')->on('maskings')->onDelete('cascade');
+
         });
     }
 

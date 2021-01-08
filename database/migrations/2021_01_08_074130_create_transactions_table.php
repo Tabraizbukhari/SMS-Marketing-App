@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCampaignsTable extends Migration
+class CreateTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,19 @@ class CreateCampaignsTable extends Migration
      */
     public function up()
     {
-        Schema::create('campaigns', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('transaction_id')->unique();
             $table->unsignedBigInteger('user_id');
-            $table->string('name');
-            $table->string('file_url');
-            $table->string('file_name');
-            $table->string('size');
-            $table->timestamp('campaign_date')->nullable();
-            $table->enum('status',['pending', 'canceled', 'completed', 'failed']);
+            $table->string('title')->nullable();
+            $table->string('description')->nullable();
+            $table->double('amount', 30, 2);
+            $table->enum('type', ['credit', 'debit'])->nullable()->default(NULL);
+            $table->text('data')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
         });
     }
 
@@ -36,6 +36,6 @@ class CreateCampaignsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('campaigns');
+        Schema::dropIfExists('transactions');
     }
 }

@@ -17,4 +17,9 @@ class Message extends Model
         'status',
         'send_date',
     ];
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

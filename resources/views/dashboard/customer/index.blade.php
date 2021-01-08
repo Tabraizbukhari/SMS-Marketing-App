@@ -50,7 +50,7 @@
                         @foreach ($user as $u)
                           <tr>
                             <td>{{ $u->id }}</td>
-                            <td>{{ $u->getResellerCustomer()->first()->name }}</td>
+                            <td>{{ $u->getCustomerAddBy()->first()->name }}</td>
                             <td>{{ $u->name }}</td>
                             <td>{{ $u->email }}</td>
                             <td>{{ $u->sms }}</td>
@@ -63,12 +63,12 @@
                             <td>{{ $u->created_at }}</td>
                             <td>View</td>
                             <td>
-                              <a href="#Editmasking" data-toggle="modal" data-target="#Editmasking"><i class="align-middle" data-feather="edit-2"></i></a>
-                              <form method="POST" id="form1" action="{{ route('admin.reseller.destroy', encrypt($u->id))}}">
+                              <a href="{{ route('customer.edit', encrypt($u->id)) }}" >Edit </a></br>
+                              <form method="POST" id="form1" action="{{ route('customer.destroy', encrypt($u->id))}}">
                                   @method('DELETE')
                                   @csrf
-                                <a href="#" onclick="document.getElementById('form1').submit();">
-                                  <i class="align-middle" data-feather="trash"></i>
+                                <a href="#" class="text-danger" onclick="document.getElementById('form1').submit();">
+                                  Delete
                                 </a>
                               </form>
                             </td>

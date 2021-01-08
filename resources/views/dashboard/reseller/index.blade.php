@@ -59,14 +59,14 @@
                               @endforeach
                             </td>
                             <td>{{ $u->created_at }}</td>
-                            <td>View</td>
+                            <td><a class="btn btn-info text-white" href="{{ route('admin.reseller.customer', encrypt($u->id)) }}">view </a></td>
                             <td>
-                              <a href="#Editmasking" data-toggle="modal" data-target="#Editmasking"><i class="align-middle" data-feather="edit-2"></i></a>
+                              <a href="{{ route('admin.reseller.edit', encrypt($u->id)) }}" >Edit</a>
                               <form method="POST" id="form1" action="{{ route('admin.reseller.destroy', encrypt($u->id))}}">
                                   @method('DELETE')
                                   @csrf
-                                <a href="#" onclick="document.getElementById('form1').submit();">
-                                  <i class="align-middle" data-feather="trash"></i>
+                                <a href="#" class="text-danger" onclick="document.getElementById('form1').submit();">
+                                Delete
                                 </a>
                               </form>
                             </td>

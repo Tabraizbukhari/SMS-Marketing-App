@@ -1,7 +1,7 @@
 <nav id="sidebar" class="sidebar">
         <div class="sidebar-content js-simplebar">
             <a class="sidebar-brand" href="index.html">
-                <span class="align-middle">AdminKit</span>
+                <span class="align-middle">SMA</span>
             </a>
 
             <ul class="sidebar-nav" >
@@ -39,12 +39,18 @@
                     <ul id="auth" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
                         <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.create') }}">Compose Message</a></li>
                         <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.index') }}">Inbox</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.campaign') }}">Campaign</a></li>
+
                     </ul>
                 </li>
 
-                <li class="sidebar-header">
-                    Tools & Components
+                    <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('transaction.index') }}">
+                        <i class="align-middle" data-feather="money"></i> 
+                        <span class="align-middle">Transaction</span>
+                    </a>
                 </li>
+             
             </ul>
         </div>
     </nav>

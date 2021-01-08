@@ -16,6 +16,13 @@ class Campaign extends Model
         'file_name',
         'size',
         'campaign_date',
+        'status',
+        'price',
+        'type', 
     ];
     
+    public function getUser()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 }

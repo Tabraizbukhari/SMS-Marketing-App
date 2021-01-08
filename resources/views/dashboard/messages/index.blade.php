@@ -36,15 +36,37 @@
 									<thead>
 										<tr>
                       <th>ID</th>
-                      <th>Title</th>
+                      <th>Send By</th>
+                      <th>Contact Number</th>
+                      <th>Message</th>
+                      <th>Message Length</th>
+                      <th>Price</th>
+                      <th>Type</th>
+                      <th>status</th>
+                      <th>Delivery Date</th>
                       <th>Created at</th>
-                      <th>Actions</th>
 										</tr>
 									</thead>
 									<tbody>
-								
+                  @foreach ($messages as $msg)
+                      <tr>
+                        <td>{{ $msg->id }}</td>
+                        <td>{{ $msg->getUser->name }}</td>
+                        <td>{{ $msg->contact_number }}</td>
+                        <td>{{ $msg->message }}</td>
+                        <td>{{ $msg->message_length }}</td>
+                        <td>{{ $msg->price }}</td>
+                        <td>{{ $msg->type }}</td>
+                        <td>{{ $msg->status }}</td>
+                        <td>{{ $msg->send_date }}</td>
+                        <td>{{ $msg->created_at }}</td>
+                      </tr>
+                  @endforeach
 									</tbody>
 								</table>
+                <div class="float-right">
+                  {{$messages->links()}}
+                </div>
 							</div>
 						</div>
           </div>

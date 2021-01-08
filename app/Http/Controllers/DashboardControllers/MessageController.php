@@ -27,8 +27,14 @@ class MessageController extends Controller
 
     public function index()
     {
-        $data['messages'] = Message::paginate($this->pagination);
+        $data['messages'] = Message::where('user_id', Auth::id())->paginate($this->pagination);
         return view('dashboard.messages.index', $data);
+    }
+
+    public function messageCampaign()
+    {
+        $data['campaign'] = Campaign::where('user_id', Auth::id())->paginate($this->pagination);
+        return view('dashboard.campaign.index', $data);
     }
 
     public function create()
@@ -48,26 +54,41 @@ class MessageController extends Controller
         ]);
 
         $data = [
-            'user_id'           => Auth::id(),
-            'masking_id'        => $request->masking_id,
-            'message'           => $request->message,
-            'message_length'    => $request->no_of_sms,
-            'contact_number'    => ($request->has('phone_number'))? $request->phone_number : NULL,
-            'send_date'         => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
+            'user_id'        => Auth::id(),
+            'masking_id'     => $request->masking_id,
+            'message'        => $request->message,
+            'message_length' => $request->no_of_sms,
+            'contact_number' => ($request->has('phone_number'))? $request->phone_number : NULL,
+            'send_date'      => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
+            'price'          => Auth::user()->price,
         ];
+        
         $data['masking_name'] = Masking::findOrFail($request->masking_id)->title;
 
 
         if($request->has('late_shedule') && $request->has('sheduledatetime') && $request->sheduledatetime != null){
             if($request->type == 'single'){
-                dd($this->hitApi($data));
+                $data['status'] = 'pending';
+                $data['type'] = 'single';
+                $sumSms = Auth::user()->sms - 1;
+                Auth::user()->update(['sms' => $sumSms ]);
+                Message::create($data);
+            }else{
+                $data['campaign'] = $request->campaign;
+                $data['file'] = $request->file;
+                $data['campaign_status'] = 'pending';
+                $readExcel = Excel::toArray(new BulkSmsImport, $request->file);
+                $c = $this->save_campaign($data);
             }
-            
         }else{
             if($request->type == 'single'){
                 $hitapi = $this->hitApi($data);
                 if($hitapi == 'success'){
                     $data['status'] = 'successfully';
+                    $data['type'] = 'single';
+                    
+                    $sumSms = Auth::user()->sms - 1;
+                    Auth::user()->update(['sms' => $sumSms ]);
                     Message::create($data);
                 }else{
                     return redirect()->back()->withErrors($hitapi);
@@ -77,19 +98,21 @@ class MessageController extends Controller
                 $data['file'] = $request->file;
                 $data['campaign_status'] = 'completed';
                 $readExcel = Excel::toArray(new BulkSmsImport, $request->file);
+                $c = $this->save_campaign($data);
                 foreach ($readExcel as $_read) {
                     if(count($_read) > 0){
+                        $sum = Auth::user()->sms - count($_read);
                         foreach ($_read as $r) {
                             $data['contact_number']= (int)$r['number'];
                             $hitapi = $this->hitApi($data);
                             if($hitapi == 'success'){
                                 $data['status'] = 'successfully';
                                 $m = Message::create($data);
-                                $c = $this->save_campaign($data);
                                 CampaignMessage::create([
                                     'message_id' => $m->id,
                                     'campaign_id' => $c->id,
                                 ]);
+                                Auth::user()->update(['sms' => $sum]);
                             }else{
                                 return redirect()->back()->withErrors($hitapi);
                             }     
@@ -141,7 +164,6 @@ class MessageController extends Controller
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result=  curl_exec($ch);
-        dd($result,urlencode($url), $url);
         $error = (isset($result))? json_decode($result): null;
         if(isset($error) && $error != null){
             if(!isset($error->Data->status)){
@@ -151,5 +173,10 @@ class MessageController extends Controller
         return 'success';
     }
 
+    public function campaignFileDownload($id)
+    {
+        $campaign = Campaign::findOrFail(decrypt($id));
+        return  Storage::download($campaign->file_url);
+    }
   
 }

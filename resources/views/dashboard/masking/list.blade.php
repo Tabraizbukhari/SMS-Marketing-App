@@ -50,7 +50,7 @@
 											<td class="table-action">
                         <div class="d-flex">
                         
-                          <a href="#Editmasking" data-toggle="modal" data-target="#Editmasking"><i class="align-middle" data-feather="edit-2"></i></a>
+                          <a href="#Editmasking" data-toggle="modal" data-target="#Editmasking">Edit</a>
                           
                           {{-- Edit masking modal --}}
                           <div class="modal fade" id="Editmasking" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -81,8 +81,8 @@
                           <form method="post" id="form1" action="{{ route('admin.masking.destroy', encrypt($mask->id))}}">
                               @method('DELETE')
                               @csrf
-                            <a href="#" onclick="document.getElementById('form1').submit();">
-                              <i class="align-middle" data-feather="trash"></i>
+                            <a href="#" class="text-danger" onclick="document.getElementById('form1').submit();">
+                              Delete
                             </a>
                           </form>
                         </div>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\ResellerCustomer;
+use Illuminate\Support\Str;
 use Auth;
 
 class User extends Authenticatable
@@ -49,6 +50,11 @@ class User extends Authenticatable
     ];
 
 
+    public function getAllMessages()
+    {
+        return $this->hasMany(Message::class);
+    }
+
     public function getUserData()
     {
         return $this->hasOne(UsersData::class);
@@ -69,13 +75,24 @@ class User extends Authenticatable
         return date('d-M-y h-m-s', $this->created_at);
     }
 
-    public function getResellerCustomer()
+    public function getCustomerAddBy()
     {
       return  $this->belongsToMany(User::class,'reseller_customers','customer_id','user_id');
     }
 
+    public function getResellerCustomer()
+    {
+      return  $this->belongsToMany(User::class,'reseller_customers','user_Id','customer_id');
+    }
+
+
     public function getBulkSmsExcelPath()
     {
         return $this->file_prefix_path.'/'.Auth::user()->id;
+    }
+
+    public function getTransactionId()
+    {
+        return strtoupper('TS'.rand(0,100000).Str::random(2).Str::random(1));
     }
 }
