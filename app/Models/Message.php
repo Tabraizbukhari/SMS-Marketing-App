@@ -16,10 +16,17 @@ class Message extends Model
         'message_length',
         'status',
         'send_date',
+        'campaign_id',
     ];
 
     public function getUser()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    public function getCampaign()
+    {
+        return $this->belongsToMany(Campaign::class,'campaign_messages','message_id','campaign_id');
+    }
+    
 }

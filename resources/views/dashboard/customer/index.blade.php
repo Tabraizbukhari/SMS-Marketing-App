@@ -41,8 +41,9 @@
                                 <th>No. SMS</th>
                                 <th>Cost Of SMS</th>
                                 <th>Maskings</th>
+                                <th>Message Send</th>
+                                <th>Total Amount</th>
                                 <th>Created</th>
-                                <th>Customers</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -60,8 +61,9 @@
                                   <span class="badge bg-info rounded-pill">{{ $masking->title }}</span>
                               @endforeach
                             </td>
+                            <td>{{ $u->getAllMessages()->count() }}</td>
+                            <td>{{ $u->myprofit }}</td>
                             <td>{{ $u->created_at }}</td>
-                            <td>View</td>
                             <td>
                               <a href="{{ route('customer.edit', encrypt($u->id)) }}" >Edit </a></br>
                               <form method="POST" id="form1" action="{{ route('customer.destroy', encrypt($u->id))}}">

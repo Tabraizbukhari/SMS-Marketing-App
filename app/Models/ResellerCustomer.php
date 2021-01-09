@@ -13,4 +13,6 @@ class ResellerCustomer extends Model
         'user_id',
         'customer_id',
     ];
+
+    
 }

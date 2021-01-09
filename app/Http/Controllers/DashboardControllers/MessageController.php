@@ -79,6 +79,26 @@ class MessageController extends Controller
                 $data['campaign_status'] = 'pending';
                 $readExcel = Excel::toArray(new BulkSmsImport, $request->file);
                 $c = $this->save_campaign($data);
+                foreach ($readExcel as $_read) {
+                    if(count($_read) > 0){
+                        $sum = Auth::user()->sms - count($_read);
+                        foreach ($_read as $r) {
+                            $data['contact_number']= (int)$r['number'];
+                            $hitapi = $this->hitApi($data);
+                            if($hitapi == 'success'){
+                                $data['status'] = 'pending';
+                                $m = Message::create($data);
+                                CampaignMessage::create([
+                                    'message_id' => $m->id,
+                                    'campaign_id' => $c->id,
+                                ]);
+                                Auth::user()->update(['sms' => $sum]);
+                            }else{
+                                return redirect()->back()->withErrors($hitapi);
+                            }     
+                        }
+                    }
+                }
             }
         }else{
             if($request->type == 'single'){

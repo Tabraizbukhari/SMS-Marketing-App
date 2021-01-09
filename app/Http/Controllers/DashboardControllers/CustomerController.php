@@ -32,8 +32,7 @@ class CustomerController extends Controller
         //     $query->where('register_as', 'customer');
         // })->paginate($this->pagination);
 
-        $data['user'] = Auth::user()->getResellerCustomer;
-
+        $data['user'] = Auth::user()->getResellerCustomerProfit;
 
         return view('dashboard.customer.index', $data);
     }
@@ -121,6 +120,9 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail(decrypt($id));
+        if($user->getAllMessages()->count() > 0){
+            return redirect()->back()->withErrors('You can not delete this customer');
+        }
         $smscount = Auth::user()->sms + $user->sms;
         Auth::user()->update(['sms' => $smscount]);
         Transaction::create([

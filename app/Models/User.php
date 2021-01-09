@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\ResellerCustomer;
 use Illuminate\Support\Str;
 use Auth;
-
+use DB;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -49,6 +49,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // public function messageProfit()
+    // {
+    // return $this->hasMany(Message::class)
+    //     ->selectRaw('SUM(price) as total')
+    //     ->groupBy('user_id');
+    // }
 
     public function getAllMessages()
     {
@@ -95,4 +101,12 @@ class User extends Authenticatable
     {
         return strtoupper('TS'.rand(0,100000).Str::random(2).Str::random(1));
     }
+
+    public function getResellerCustomerProfit()
+    {
+      return  $this->belongsToMany(User::class,'reseller_customers','user_Id','customer_id')->withCount(['getAllMessages AS myprofit' => function ($query) {
+        $query->select(DB::raw('SUM(price) as profit'));
+        }]);
+    }
+
 }

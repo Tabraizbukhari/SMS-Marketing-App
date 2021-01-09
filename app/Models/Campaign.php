@@ -19,10 +19,17 @@ class Campaign extends Model
         'status',
         'price',
         'type', 
+        
     ];
     
     public function getUser()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    public function getmessage()
+    {
+        return $this->belongsToMany(Messages::class,'campaign_messages','message_id','campaign_id');
+    }
+
 }

@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Auth;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use DB;
 
 class ResellerController extends Controller
 {
@@ -29,7 +30,10 @@ class ResellerController extends Controller
         $user = User::where('type','user')->whereHas('getUserData', function ($query)
         {
             $query->where('register_as', 'reseller');
-        })->paginate($this->pagination);
+        })->withCount('getResellerCustomer as customer_count')
+        ->withCount(['getAllMessages AS myprofit' => function ($query) {
+                $query->select(DB::raw('SUM(price) as profit'));
+            }])->paginate($this->pagination);;
         $data['user'] = $user;
         return view('dashboard.reseller.index', $data);
     }
@@ -37,7 +41,7 @@ class ResellerController extends Controller
     public function resellerCustomer($id)
     {
         $user = User::findOrFail(decrypt($id));
-        $data['user'] = $user->getResellerCustomer;
+        $data['user'] = $user->getResellerCustomerProfit;
         return view('dashboard.customer.index', $data);
     }
 
@@ -130,6 +134,9 @@ class ResellerController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail(decrypt($id));
+            if($user->getAllMessages()->count() > 0){
+                return redirect()->back()->withErrors('You can not delete this reseller');
+            }
         $smscount = Auth::user()->sms + $user->sms;
         Auth::user()->update(['sms' => $smscount]);
         Transaction::create([

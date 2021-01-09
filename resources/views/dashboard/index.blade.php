@@ -14,6 +14,17 @@
 												<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sms</span>
 											</div>
 										</div>
+										 @if(Auth::user()->type == 'admin')
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Message Transfer</h5>
+												<h1 class="mt-1 mb-3">{{ $total_message_transfer }}</h1>
+												<div class="mb-1">
+													<span class="text-muted">Total Message transfer into User</span>
+												</div>
+											</div>
+										</div>
+                                    	@endif
                                         @if(Auth::user()->type == 'admin')
 										<div class="card">
 											<div class="card-body">
@@ -27,7 +38,7 @@
                                         @endif
 									</div>
 									<div class="col-sm-6">
-                                    @if(Auth::user()->type == 'user' && Auth::user()->getUserData->register_as == 'reseller')
+                                    @if(isset(Auth::user()->getUserData) && Auth::user()->getUserData->register_as != 'customer')
 										<div class="card">
 											<div class="card-body">
 												<h5 class="card-title mb-4">Customer</h5>
@@ -39,6 +50,25 @@
 											</div>
 										</div>
                                     @endif
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Message Sended</h5>
+												<h1 class="mt-1 mb-3">{{ $total_message_sending }}</h1>
+												<div class="mb-1">
+													<span class="text-muted">Total Count Of Message is sended</span>
+												</div>
+											</div>
+										</div>
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Total Amount</h5>
+												<h1 class="mt-1 mb-3">{{ $profit }}</h1>
+												<div class="mb-1">
+													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Customer by {{ (Auth::user()->type == 'admin')? 'Admin' : 'reseller' }}</span></br>
+													<span class="text-muted">Total Amount of Message</span>
+												</div>
+											</div>
+										</div>
 									</div>
 								
                                 </div>
