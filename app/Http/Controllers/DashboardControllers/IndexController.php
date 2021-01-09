@@ -34,4 +34,10 @@ class IndexController extends Controller
         return view('dashboard.auth.login');
     }
 
+    public function updateAdminSms(Request $request)
+    {
+        Auth::user()->update(['sms' => $request->sms]);
+        return redirect()->back()->with('success', 'Sms limit updated successfully');
+    }
+
 }

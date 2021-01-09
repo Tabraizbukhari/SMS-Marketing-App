@@ -2,6 +2,14 @@
 <x-dashboard>
 	<main class="content">
 		<div class="container-fluid p-0">
+		   @if(session()->has('success'))
+        	<div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+            <div class="alert-message">
+              {{ session()->get('success') }}
+            </div>
+          </div>
+          @endif
             <div class="row">
                 	<div class="col-xl-6 col-xxl-5 d-flex">
 							<div class="w-100">

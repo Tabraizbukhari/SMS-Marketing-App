@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function(){
 
     Route::prefix('admin')->name('admin.')->middleware('auth.admin')->group(function(){    
         Route::get('index', [IndexController::class, 'index'])->name('dashboard');
+        Route::post('update/sms', [IndexController::class, 'updateAdminSms'])->name('update.sms');
+
         
         Route::prefix('masking')->name('masking.')->group(function(){
             Route::get('index', [MaskingController::class, 'index'] )->name('index');
