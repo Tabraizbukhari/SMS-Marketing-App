@@ -88,6 +88,8 @@ Route::middleware('auth')->group(function(){
 
     Route::prefix('transaction')->name('transaction.')->group(function(){
         Route::get('index', [TransactionController::class, 'index'] )->name('index');
+        Route::post('add/amount/{id}', [TransactionController::class, 'addAmount'] )->name('amount.post');
+
     });
 
     Route::prefix('user')->name('user.')->middleware('auth.user')->group(function(){    

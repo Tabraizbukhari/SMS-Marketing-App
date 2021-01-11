@@ -28,7 +28,7 @@
                     </a>
                 </li>
                 @endif
-                @if(Auth::user()->type == 'admin' OR Auth::user()->type == 'user' && isset(Auth::user()->getUserData) && Auth::user()->getUserData->regsiter_as != 'customer')
+                @if(Auth::user()->type == 'admin' OR Auth::user()->type == 'user' && isset(Auth::user()->getUserData) && Auth::user()->getUserData->register_as != 'customer')
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('customer.index') }}">
                         <i class="align-middle" data-feather="user-plus"></i> 

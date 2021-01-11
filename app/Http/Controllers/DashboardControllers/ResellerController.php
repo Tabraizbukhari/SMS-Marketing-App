@@ -55,7 +55,7 @@ class ResellerController extends Controller
     {
         $request->validate([
             'username' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required',
             'sms' => 'required|numeric',
             'cost' => 'required',

@@ -49,7 +49,13 @@ class CustomerController extends Controller
         if(Auth::user()->sms == 0){
             return redirect()->back()->withErrors('You have no more sms');
         }
-
+        $request->validate([
+            'username'  => 'required|',
+            'email'     => 'required|string|email|max:255|unique:users',
+            'password'  => 'required',
+            'cost' => 'required|',
+            'sms'   => 'required|',
+        ]);
         $data = [
             'name'              =>  $request->username,
             'email'             =>  $request->email,
@@ -151,7 +157,7 @@ class CustomerController extends Controller
     {
         $request->validate([
             'username' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|string|email|max:255|unique:users',
             'sms' => 'required|numeric',
             'cost' => 'required',
             'phone_number' => 'required|numeric',
