@@ -40,4 +40,27 @@ class IndexController extends Controller
         return redirect()->back()->with('success', 'Sms limit updated successfully');
     }
 
+    public function getapi()
+    {
+        $api = Auth::user()->getUserSmsApi;
+        $data['start_url']  =   $api->api_url;
+        $data['username']   =   $api->api_username;
+        $data['password']   =   $api->api_password;
+        $data['api_url'] =  $this->message_url($api);
+        return view('dashboard.api.index', $data);
+    }
+
+
+    public function message_url($data)
+    {
+        $url = $data->api_url;
+        $url .= 'user='.$data->api_username;
+        $url .= '&pwd='.$data->api_password;
+        $url .= '&sender='.NULL;
+        $url .= '&reciever='.NULL;
+        $url .= '&msg-data='.NULL;
+        $url .= '&response=json';
+        return $url;
+    }
+
 }

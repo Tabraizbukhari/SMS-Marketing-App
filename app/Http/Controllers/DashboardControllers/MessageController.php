@@ -150,8 +150,8 @@ class MessageController extends Controller
         // Auth::user()->getUserSmsApi->api_username
         // Auth::user()->getUserSmsApi->api_password
         $url = Auth::user()->getUserSmsApi->api_url;
-        $url .= 'user='.'tabraiz';
-        $url .= '&pwd='.'AGJcqrebE%2bDl%2bDv%2bD6uYVQcwau8sinQqJDrpulLwhp3BsqyNWxC6d2Gdywm0CpnVOQ%3d%3d';
+        $url .= 'user='.Auth::user()->getUserSmsApi->api_username;
+        $url .= '&pwd='.Auth::user()->getUserSmsApi->api_password;
         $url .= '&sender='.$data['masking_name'];
         $url .= '&reciever='.$data['contact_number'];
         $url .= '&msg-data='.$data['message'];

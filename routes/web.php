@@ -81,10 +81,14 @@ Route::middleware('auth')->group(function(){
     });
 
 
+    Route::prefix('api')->name('api.')->group(function(){
+        Route::get('index', [IndexController::class, 'getapi'] )->name('index');
+    });
+    
+
     Route::prefix('transaction')->name('transaction.')->group(function(){
         Route::get('index', [TransactionController::class, 'index'] )->name('index');
     });
-    
 
     Route::prefix('user')->name('user.')->middleware('auth.user')->group(function(){    
         Route::get('index', [IndexController::class, 'index'])->name('dashboard');

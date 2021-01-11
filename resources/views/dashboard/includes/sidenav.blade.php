@@ -1,6 +1,6 @@
 <nav id="sidebar" class="sidebar">
         <div class="sidebar-content js-simplebar">
-            <a class="sidebar-brand" href="index.html">
+            <a class="sidebar-brand" href="{{ route('admin.dashboard') }}">
                 <span class="align-middle">SMA</span>
             </a>
 
@@ -52,6 +52,13 @@
                     <a class="sidebar-link" href="{{ route('transaction.index') }}">
                         <i class="align-middle" data-feather="money"></i> 
                         <span class="align-middle">Transaction</span>
+                    </a>
+                </li>
+
+                      <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('api.index') }}">
+                        <i class="align-middle" data-feather="money"></i> 
+                        <span class="align-middle">My Api</span>
                     </a>
                 </li>
              
