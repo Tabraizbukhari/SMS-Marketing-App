@@ -18,9 +18,9 @@ class IndexController extends Controller
        
         $data['sms_count'] = Auth::user()->sms;
         $data['reseller_count'] = User::where('type', 'user')->whereHas('getUserData', function ($query)
-        {
-            $query->where('register_as', 'reseller');
-        })->count();
+                                    {
+                                        $query->where('register_as', 'reseller');
+                                    })->count();
 
         $data['customer_count'] = Auth::user()->getResellerCustomer->count();
         $data['total_message_sending'] =  (Auth::user()->type == 'admin')? Message::count(): Message::where('user_id', Auth::id())->count();

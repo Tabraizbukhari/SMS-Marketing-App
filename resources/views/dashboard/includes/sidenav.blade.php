@@ -14,6 +14,7 @@
                         <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
                     </a>
                 </li>
+                @if(Auth::user()->type == 'admin')
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('admin.masking.index') }}">
                         <i class="align-middle" data-feather="layers"></i> 
@@ -26,12 +27,15 @@
                         <span class="align-middle">Resellers</span>
                     </a>
                 </li>
+                @endif
+                @if(Auth::user()->type == 'admin' OR Auth::user()->type == 'user' && isset(Auth::user()->getUserData) && Auth::user()->getUserData->regsiter_as != 'customer')
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('customer.index') }}">
                         <i class="align-middle" data-feather="user-plus"></i> 
                         <span class="align-middle">Customer</span>
                     </a>
                 </li>
+                @endif
                 <li class="sidebar-item" >
                     <a href="#auth" data-toggle="collapse" class="sidebar-link collapsed">
                         <i class="align-middle" data-feather="users"></i> <span class="align-middle">Messages</span>
