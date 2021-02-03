@@ -1,7 +1,7 @@
 <nav id="sidebar" class="sidebar">
         <div class="sidebar-content js-simplebar">
             <a class="sidebar-brand" href="{{ route('admin.dashboard') }}">
-                <span class="align-middle">SMA</span>
+                <span class="align-middle">SMAs</span>
             </a>
 
             <ul class="sidebar-nav" >
