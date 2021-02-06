@@ -26,6 +26,9 @@ class IndexController extends Controller
         $data['total_message_sending'] =  (Auth::user()->type == 'admin')? Message::count(): Message::where('user_id', Auth::id())->count();
         $data['total_message_transfer'] = User::where('type','user')->sum('sms');
         $data['profit'] = (Auth::user()->type == 'user')? Message::where('user_id', Auth::id())->sum('price') : Message::sum('price');
+        $data['message_send_code'] = Message::where('api_type', 'code')->count();
+        $data['message_send_masking'] = Message::where('api_type', 'masking')->count();
+
         return view('dashboard.index',$data);
     }
 

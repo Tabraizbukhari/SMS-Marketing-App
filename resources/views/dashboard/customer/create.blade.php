@@ -39,11 +39,11 @@
                                 <input type="text" class="form-control" name="username" placeholder="username" value="{{ old('username') }}">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <label class="form-label">Phone Number</label>
                                 <input type="text" class="form-control" name="phone_number" placeholder="phone number" value="{{ old('phone_number') }}">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Masking <span class="text-danger">*</span></label>
+                                <label class="form-label">Masking</label>
                                 <select class="select2 form-control" name="masking"  data-placeholder="Select multiple masking">
                                     @foreach ($maskings as $masking )
                                         <option {{ (old('masking') == $masking->id)? 'selected': null }} value="{{ $masking->id }}">{{ $masking->title }}</option>
@@ -59,12 +59,20 @@
                                 <input type="Number" step="any" class="form-control" name="cost" placeholder="Cost of per sms" value="{{ old('cost') }}">
                             </div>
                             <div class="mb-3">
+                                <label class="form-label">Api Url<span class="text-danger">*</span></label>
+                                <select id='api_url' name="api_url" class="form-control">
+                                    <option value="" selected disabled>select Api type</option>
+                                    <option value="1">masking</option>
+                                    <option value="2">code</option>
+                                <select>
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label">Api Name<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="api_name" placeholder="Enter user api name" value="{{ old('api_name') }}">
+                                <input type="text" id='api_name' class="form-control" name="api_name" placeholder="Enter user api name" value="{{ old('api_name') }}">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Api Password<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="api_password" placeholder="Enter user api password" value="{{ old('api_password') }}">
+                                <input type="password" id='api_password' class="form-control" name="api_password" placeholder="Enter user api password" value="{{ old('api_password') }}">
                             </div>
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
@@ -74,4 +82,16 @@
         </div>
     </div>
 </main>
+
+<script>
+    $(document).ready(function(){
+        $('#api_url').change(function(){
+            console.log(this.value);
+            if(this.value == 2){
+                $('#api_name').value = 'butt_lubricants';
+                $('#api_password').value = 'pak@456';
+            }
+        })
+    });
+</script>
 </x-dashboard>

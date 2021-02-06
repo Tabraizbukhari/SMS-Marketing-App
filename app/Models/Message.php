@@ -17,6 +17,9 @@ class Message extends Model
         'status',
         'send_date',
         'campaign_id',
+        'type',
+        'api_type',
+        'price',
     ];
 
     public function getUser()

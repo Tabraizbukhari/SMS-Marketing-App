@@ -29,7 +29,7 @@
 							<div class="card">
 								<div class="card-header">
 									<h2 class="card-title">Masking Data 
-                    <button class="btn btn-primary float-right" data-toggle="modal" data-target="#addmasking">Add New</button>
+                    <a href="{{ route('message.index') }}" class="btn btn-primary float-right" >Add New</a>
                   </h5>
 								</div>
 								<table class="table table-bordered">

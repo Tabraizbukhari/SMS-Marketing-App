@@ -32,7 +32,7 @@
                     <button class="btn btn-primary float-right" data-toggle="modal" data-target="#addmasking">Add New</button>
                   </h5>
 								</div>
-								<table class="table table-bordered">
+								<table class="table table-bordered table-responsive">
 									<thead>
 										<tr>
                       <th>ID</th>

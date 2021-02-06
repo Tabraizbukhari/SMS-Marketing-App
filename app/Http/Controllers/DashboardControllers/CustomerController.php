@@ -19,22 +19,45 @@ class CustomerController extends Controller
 {
     public $pagination; 
     public $api_url;
+    
     public function __construct()
     {
         $this->pagination = 10;
         $this->api_url = 'https://sms.synctechsol.com/APIManagement/API/RequestAPI?';
+        $this->api_username = 'synctech';
+        $this->api_password = 'AAUKHlNrDzuEHqqE9yVO%2bUKQlEwe94F9npa7WmUWJ1q1rwe7shghLUEs1jctgTbxPQ%3d%3d';
+
     }
+
     public function index()
     {
-
-        // $user = User::where('type','user')->whereHas('getUserData', function ($query)
-        // {
-        //     $query->where('register_as', 'customer');
-        // })->paginate($this->pagination);
-
         $data['user'] = Auth::user()->getResellerCustomerProfit;
-
         return view('dashboard.customer.index', $data);
+    }
+
+    public function getApiUrl($status, $html_ = null)
+    {
+        if($html_ == null){
+            switch ($status) {
+                case '1':
+                    return 'https://sms.synctechsol.com/APIManagement/API/RequestAPI?';
+                break;
+                
+                case '2':
+                    return 'http://smsctp3.eocean.us:24555/api?';
+                break;    
+            }
+        }else{
+            switch ($status) {
+                case '1':
+                    return 'masking';
+                break;
+                
+                case '2':
+                    return 'code';
+                break;    
+            }
+        }
     }
 
     public function create()
@@ -55,6 +78,7 @@ class CustomerController extends Controller
             'password'  => 'required',
             'cost' => 'required|',
             'sms'   => 'required|',
+            'api_url' => 'required',
         ]);
         $data = [
             'name'              =>  $request->username,
@@ -73,7 +97,7 @@ class CustomerController extends Controller
             'customer_id'   => $user->id,
         ]);
         
-        if($request->has('masking')){
+        if($request->has('masking') && $request->masking != null){
             UserMasking::create([
                 'user_id' => $user->id, 
                 'masking_id' => $request->masking
@@ -87,15 +111,13 @@ class CustomerController extends Controller
         ];
         UsersData::create($users_data);
         
-        if($request->has('api_name') && $request->has('api_password')){
-            SmsApi::create([
-                'user_id'       => $user->id,
-                'api_url'       => $this->api_url,
-                'api_username'  => $request->api_name,
-                'api_password'  => $request->api_password,
-            ]);
-        }
-
+        SmsApi::create([
+            'user_id'       => $user->id,
+            'api_url'       => $this->getApiUrl($request->api_url),
+            'api_username'  => $request->api_name??$this->api_username,
+            'api_password'  => $request->api_password??$this->api_password,
+            'type'          => $this->getApiUrl($request->api_url, 'status'),
+        ]);
          
         $count = Auth::user()->sms - $request->sms;
         Auth::user()->update(['sms'=> $count]);
@@ -194,6 +216,7 @@ class CustomerController extends Controller
             SmsApi::where('user_id', decrypt($id))->update([
                 'api_username'  => $request->api_name,
                 'api_password'  => $request->api_password,
+                'type' => $request->type,
             ]);
         }
         if($userSmsCount != $request->sms){

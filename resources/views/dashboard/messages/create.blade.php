@@ -53,6 +53,7 @@
                             <div class="mb-3" id="someThingHere">
                                
                             </div>
+                            @if(Auth::user()->getUserSmsApi->type != 'code')
                             <div class="mb-3">
                                 <label class="form-label">Masking <span class="text-danger">*</span></label>
                                 <select class="select2 form-control" name="masking_id" data-placeholder="Select multiple masking">
@@ -61,6 +62,7 @@
                                     @endforeach
                                 </select>
                             </div>
+                            @endif
                             <div class="mb-3">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" name="late_shedule" class="custom-control-input" id="lateShedule">

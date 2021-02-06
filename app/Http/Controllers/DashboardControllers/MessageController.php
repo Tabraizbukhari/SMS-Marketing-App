@@ -14,6 +14,7 @@ use App\Models\Campaign;
 use App\Models\CampaignMessage;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\MessageMasking;
 
 class MessageController extends Controller
 {
@@ -46,24 +47,26 @@ class MessageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'message' => 'required',
-            'no_of_sms' => 'required',
-            'phone_number' => 'sometimes|required',
-            'file'          =>  'sometimes|required|file',
-            'type' => 'required|string'
+            'message'       => 'required',
+            'no_of_sms'     => 'required',
+            'phone_number'  => 'sometimes|required',
+            'file'          => 'sometimes|required|file',
+            'type'          => 'required|string',
+            'phone_number'  => 'sometimes|required',
         ]);
 
+        $masking_id = $request->masking_id??NULL;
+        
         $data = [
             'user_id'        => Auth::id(),
-            'masking_id'     => $request->masking_id,
             'message'        => $request->message,
             'message_length' => $request->no_of_sms,
             'contact_number' => ($request->has('phone_number'))? $request->phone_number : NULL,
             'send_date'      => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
             'price'          => Auth::user()->price,
         ];
-        
-        $data['masking_name'] = Masking::findOrFail($request->masking_id)->title;
+        $data['masking_name'] = Masking::find($request->masking_id)->title??NULL;
+        $data['api_type'] = ($data['masking_name'] == null)? 'code' : 'masking';
 
 
         if($request->has('late_shedule') && $request->has('sheduledatetime') && $request->sheduledatetime != null){
@@ -72,7 +75,13 @@ class MessageController extends Controller
                 $data['type'] = 'single';
                 $sumSms = Auth::user()->sms - 1;
                 Auth::user()->update(['sms' => $sumSms ]);
-                Message::create($data);
+                $messageCreate = Message::create($data);
+                if($request->has('masking_id') && $request->masking_id){
+                    MessageMasking::create([
+                        'message_id' => $messageCreate->id,
+                        'masking_id' => $request->masking_id,
+                    ]);
+                }
             }else{
                 $data['campaign'] = $request->campaign;
                 $data['file'] = $request->file;
@@ -147,15 +156,23 @@ class MessageController extends Controller
 
     public function message_url($data)
     {
-        // Auth::user()->getUserSmsApi->api_username
-        // Auth::user()->getUserSmsApi->api_password
         $url = Auth::user()->getUserSmsApi->api_url;
-        $url .= 'user='.Auth::user()->getUserSmsApi->api_username;
-        $url .= '&pwd='.Auth::user()->getUserSmsApi->api_password;
-        $url .= '&sender='.$data['masking_name'];
-        $url .= '&reciever='.$data['contact_number'];
-        $url .= '&msg-data='.$data['message'];
-        $url .= '&response=json';
+        if(Auth::user()->getUserSmsAPi->type == 'masking'){
+            $url .= 'user='.Auth::user()->getUserSmsApi->api_username;
+            $url .= '&pwd='.Auth::user()->getUserSmsApi->api_password;
+            $url .= '&sender='.$data['masking_name'];
+            $url .= '&reciever='.$data['contact_number'];
+            $url .= '&msg-data='.$data['message'];
+            $url .= '&response=json';
+        }else{
+            $url .= 'action=sendmessage';
+            $url .= '&username='.Auth::user()->getUserSmsApi->api_username;
+            $url .= '&password='.Auth::user()->getUserSmsApi->api_password;
+            $url .= '&recipient='.$data['contact_number'];
+            $url .= '&originator=99095';
+            $url .= '&messagedata='.$data['message'];
+            $url .= '&responseformat=html';
+        }
         return $url;
     }
 

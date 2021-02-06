@@ -31,7 +31,7 @@
                         <a href="{{ route("customer.create") }}" class="btn btn-primary float-right" >Add New</a>
                     </h5>
                     </div>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-responsive">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -45,6 +45,7 @@
                                 <th>Total Amount</th>
                                 <th>Created</th>
                                 <th>Add Amount</th>
+                                <th>API-Type</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -65,6 +66,7 @@
                             <td>{{ $u->getAllMessages()->count() }}</td>
                             <td>{{ $u->myprofit }}</td>
                             <td>{{ $u->created_at }}</td>
+                            <td>{{ $u->getUserSmsApi->type }}</td>
                             @if (Auth::user()->type == 'admin')
                             <td>
                               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add{{$u->id}}">

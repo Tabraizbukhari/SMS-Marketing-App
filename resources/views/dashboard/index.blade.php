@@ -77,6 +77,23 @@
 												</div>
 											</div>
 										</div>
+										@if(Auth::user()->type == 'admin')
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Message Sended By Code</h5>
+												<h1 class="mt-1 mb-3">{{ $message_send_code }}</h1>
+												
+											</div>
+										</div>
+
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Message Sended By Masking</h5>
+												<h1 class="mt-1 mb-3">{{ $message_send_masking }}</h1>
+												
+											</div>
+										</div>
+										@endif
 									</div>
 								
                                 </div>
