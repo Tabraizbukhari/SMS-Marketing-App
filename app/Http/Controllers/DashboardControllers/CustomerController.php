@@ -169,7 +169,7 @@ class CustomerController extends Controller
     public function edit($id)
     {
         $data['user'] = User::findOrFail(decrypt($id));
-        $data['maskings'] = (Auth::user()->type == 'user')? Auth::user()->getResellerMasking : Masking::get();
+        $data['maskings'] = Masking::get();
         return view('dashboard.customer.edit',$data);
     }
 
@@ -179,12 +179,13 @@ class CustomerController extends Controller
     {
         $request->validate([
             'username' => 'required|string',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email',
             'sms' => 'required|numeric',
             'cost' => 'required',
-            'phone_number' => 'required|numeric',
+            'phone_number' => 'required',
             'api_name' => 'required',
             'api_password' => 'required',
+            'api_url' => 'required',
         ]);
 
         if($request->sms > Auth::user()->sms){
@@ -214,9 +215,10 @@ class CustomerController extends Controller
 
         if($request->has('api_name') && $request->has('api_password')){
             SmsApi::where('user_id', decrypt($id))->update([
+                'api_url'       => $this->getApiUrl($request->api_url),
                 'api_username'  => $request->api_name,
                 'api_password'  => $request->api_password,
-                'type' => $request->type,
+                'type'       => $this->getApiUrl($request->api_url, "status"),
             ]);
         }
         if($userSmsCount != $request->sms){

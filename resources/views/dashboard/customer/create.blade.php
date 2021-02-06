@@ -45,6 +45,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Masking</label>
                                 <select class="select2 form-control" name="masking"  data-placeholder="Select multiple masking">
+                                    <option value="" selected disabled>Select Masking</option>
                                     @foreach ($maskings as $masking )
                                         <option {{ (old('masking') == $masking->id)? 'selected': null }} value="{{ $masking->id }}">{{ $masking->title }}</option>
                                     @endforeach

@@ -16,7 +16,7 @@
             <div class="col-12 col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Edit Resellers
+                        <h2 class="card-title">Edit Customers
                           <a href="{{ route('customer.index') }}" class="btn btn-outline-dark float-right" >
                           <span class="align-middle" data-feather="chevron-left" ></span>back
                           </a>
@@ -45,8 +45,9 @@
                             <div class="mb-3">
                                 <label class="form-label">Masking <span class="text-danger">*</span></label>
                                 <select class="select2 form-control" name="masking" data-placeholder="Select multiple masking">
+                                    <option value="" selected disabled>Select Masking</option>
                                     @foreach ($maskings as $masking )
-                                        <option {{ (old('masking') == $masking->id)? 'selected': (($user->getResellerMasking()->first()->id == $masking->id)? 'selected': null) }} value="{{ $masking->id }}">{{ $masking->title }}</option>
+                                        <option {{ (old('masking') == $masking->id)? 'selected': (($user->getResellerMasking()->first()['id'] == $masking->id)? 'selected': null) }} value="{{ $masking->id }}">{{ $masking->title }}</option>
                                       @endforeach
                                 </select>
                             </div>
@@ -57,6 +58,14 @@
                             <div class="mb-3">
                                 <label class="form-label">Cost<span class="text-danger">*</span></label>
                                 <input type="Number" step="any" class="form-control" name="cost" placeholder="Cost of per sms" value="{{ (old('cost'))? old('cost'): $user->price }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Api Url<span class="text-danger">*</span></label>
+                                <select id='api_url' name="api_url" class="form-control">
+                                    <option value="" selected disabled>select Api type</option>
+                                    <option {{($user->getUserSmsApi->type == 'masking')? 'selected' : NULL}} value="1">masking</option>
+                                    <option {{($user->getUserSmsApi->type == 'code')? 'selected' : NULL}} value="2">code</option>
+                                <select>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Api Name<span class="text-danger">*</span></label>
