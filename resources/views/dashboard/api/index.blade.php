@@ -10,7 +10,6 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="form-group">
-                                            {{ $api_url }}
                                         </div>
                                   
                                         <div>

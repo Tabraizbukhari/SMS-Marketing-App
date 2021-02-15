@@ -45,11 +45,12 @@ class IndexController extends Controller
 
     public function getapi()
     {
-        $api = Auth::user()->getUserSmsApi;
-        $data['start_url']  =   $api->api_url;
-        $data['username']   =   $api->api_username;
-        $data['password']   =   $api->api_password;
-        $data['api_url'] =  $this->message_url($api);
+       
+            $api = Auth::user()->getUserSmsApi;
+            $data['start_url']  =   $api->api_url;
+            $data['username']   =   $api->api_username;
+            $data['password']   =   $api->api_password;
+            $data['api_url'] =  $this->message_url($api);
         return view('dashboard.api.index', $data);
     }
 
