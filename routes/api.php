@@ -15,8 +15,6 @@ use App\Http\Controllers\ApiControllers\ApiController;
 */
 Route::any('sendmessage',[ApiController::class, 'store'])->name('store');
 
-
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

@@ -70,7 +70,7 @@ class ApiController extends Controller
                     $user->sms = $sumSms;
                     $user->save();
                     Message::create($data);
-                    $response['response'] = "Message Sended Successfully";
+                    $response['response'] = "Message Send Successfully";
                     $response['success'] = true;
                 }else{
                     $response['response'] = $hitapi;
