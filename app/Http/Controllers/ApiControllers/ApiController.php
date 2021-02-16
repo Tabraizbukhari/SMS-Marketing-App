@@ -56,12 +56,18 @@ class ApiController extends Controller
                     'price'          => $user->price,
                 ];
 
-                if(Masking::where('title', $request->orginator)->exists()){
-                    $data['masking_name'] = Masking::where('title', $request->orginator)->first()->title;
-                }else{
-                    $response['response'] = 'Masking not found';
-                }
-            
+                if($user->getUserSmsAPi->type == 'masking'){
+                    if(Masking::where('title', $request->orginator)->exists()){
+                        $data['masking_name'] = Masking::where('title', $request->orginator)->first()->title;
+                    }else{
+                        $response['response'] = 'Masking not found';
+                        return response()->json($response);
+                    }
+                }elseif ($request->orginator != 99059) {
+                    $response['response'] = 'incorrect code of orginator';
+                    return response()->json($response);
+                }  
+              
                 $hitapi = $this->hitApi($data, $user);
                 if($hitapi == 'success'){
                     $data['status'] = 'successfully';
