@@ -47,6 +47,11 @@ class ApiController extends Controller
             }else{
                 
                 $user = (Auth::check())? Auth::user() : User::where('email', $request->email)->firstOrFail();
+               
+                if($user->sms == 0){
+                    $response['response'] = 'User have zero sms ';
+                    return response()->json($response);
+                }
                 $data = [
                     'user_id'        => $user->id,
                     'message'        => $request->message,
