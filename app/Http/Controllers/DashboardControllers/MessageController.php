@@ -170,7 +170,7 @@ class MessageController extends Controller
             $url .= '&password='.Auth::user()->getUserSmsApi->api_password;
             $url .= '&recipient='.$data['contact_number'];
             $url .= '&originator=99095';
-            $url .= '&messagedata='.$data['message'];
+            $url .= '&messagedata='.urlencode($data['message']);
             $url .= '&responseformat=html';
         }
         return $url;
