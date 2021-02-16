@@ -83,7 +83,7 @@ class ApiController extends Controller
                     $response['response'] = "Message Send Successfully";
                     $response['success'] = true;
                 }else{
-                    $response['response'] = $hitapi;
+                    $response['response'] = 'Message not send Successfully! please try again!';
                 }     
             }
             return response()->json($response);

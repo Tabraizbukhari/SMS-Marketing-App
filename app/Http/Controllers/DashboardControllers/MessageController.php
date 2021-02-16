@@ -56,6 +56,10 @@ class MessageController extends Controller
         ]);
 
         $masking_id = $request->masking_id??NULL;
+
+        if(Auth::user()->sms == 0){
+            return redirect()->back()->withErrors('User have zero sms');
+        }
         
         $data = [
             'user_id'        => Auth::id(),
