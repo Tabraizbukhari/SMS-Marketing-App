@@ -125,7 +125,7 @@ class ApiController extends Controller
                 }
             }
         }
-        return $result;
+        return 'success';
     }
 
 }
