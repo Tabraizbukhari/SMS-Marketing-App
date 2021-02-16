@@ -36,7 +36,7 @@ class ApiController extends Controller
                 'email'         => 'required',
                 'message'       => 'required',
                 'phone_number'  => 'required',
-                'masking'       => 'required',
+                'orginator'     => 'sometimes|required',
             ];
             
             $validator = Validator::make($request->all(), $rules);
@@ -55,13 +55,12 @@ class ApiController extends Controller
                     'send_date'      => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
                     'price'          => $user->price,
                 ];
-                if(Masking::where('title', $request->masking)->exists()){
-                    $data['masking_name'] = Masking::where('title', $request->masking)->first()->title;
+                if(Masking::where('title', $request->orginator)->exists()){
+                    $data['masking_name'] = Masking::where('title', $request->orginator)->first()->title;
                 }else{
                     $response['response'] = 'Masking not found';
-                    return respone()->json($response);
+                    return response()->json($response);
                 }
-
                 $hitapi = $this->hitApi($data, $user);
                 if($hitapi == 'success'){
                     $data['status'] = 'successfully';
@@ -82,13 +81,22 @@ class ApiController extends Controller
     public function message_url($data, $user)
     {
         $url = $user->getUserSmsApi->api_url;
-        $url .= 'user='.$user->getUserSmsApi->api_username;
-        $url .= '&pwd='.$user->getUserSmsApi->api_password;
-        $url .= '&sender='.$data['masking_name'];
-        $url .= '&reciever='.$data['contact_number'];
-        $url .= '&msg-data='.$data['message'];
-        $url .= '&response=json';
-   
+        if($user->getUserSmsAPi->type == 'masking'){
+            $url .= 'user='.$user->getUserSmsApi->api_username;
+            $url .= '&pwd='.$user->getUserSmsApi->api_password;
+            $url .= '&sender='.$data['masking_name'];
+            $url .= '&reciever='.$data['contact_number'];
+            $url .= '&msg-data='.$data['message'];
+            $url .= '&response=json';    
+        }else{
+            $url .= 'action=sendmessage';
+            $url .= '&username='.$user->getUserSmsApi->api_username;
+            $url .= '&password='.$user->getUserSmsApi->api_password;
+            $url .= '&recipient='.$data['contact_number'];
+            $url .= '&originator=99095';
+            $url .= '&messagedata='.$data['message'];
+            $url .= '&responseformat=html';
+        }
         return $url;
     }
 

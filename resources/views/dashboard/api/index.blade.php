@@ -15,16 +15,9 @@
                                         <div>
                                             <div class="form-group">
                                                 <label>Api Start Url</label>
-                                                <input class="form-control" type="text" disabled value="{{ $start_url }}"> 
+                                                <h4>{{ $api_url }}</h4> 
                                             </div>
-                                            <div class="form-group">
-                                                <label>Api Username</label>
-                                                <input class="form-control" type="text" disabled value="{{ $username }}"> 
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Api Password</label>
-                                                <input class="form-control" type="text" disabled value="{{ $password }}"> 
-                                            </div>
+                                           
                                         </div>
                                     </div>
                                 </div>
