@@ -73,7 +73,6 @@ class ApiController extends Controller
                     return response()->json($response);
                 }  
                 $hitapi = $this->hitApi($data, $user);
-                var_dump($hitapi); die();
                 if($hitapi == 'success'){
                     $data['status'] = 'successfully';
                     $data['type'] = 'single';
@@ -118,14 +117,15 @@ class ApiController extends Controller
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result=  curl_exec($ch);
-        var_dump($result, $url); die();
-        $error = (isset($result))? json_decode($result): null;
-        if(isset($error) && $error != null){
-            if(!isset($error->Data->status)){
-                return $error->Data;
+        if($user->getUserSmsAPi->type == 'masking'){
+            $error = (isset($result))? json_decode($result): null;
+            if(isset($error) && $error != null){
+                if(!isset($error->Data->status)){
+                    return $error->Data;
+                }
             }
         }
-        return 'success';
+        return $result;
     }
 
 }
