@@ -36,7 +36,7 @@ class ApiController extends Controller
                 'email'         => 'required',
                 'message'       => 'required',
                 'phone_number'  => 'required',
-                'orginator'     => 'sometimes|required',
+                'orginator'     => 'required',
             ];
             
             $validator = Validator::make($request->all(), $rules);
@@ -55,12 +55,13 @@ class ApiController extends Controller
                     'send_date'      => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
                     'price'          => $user->price,
                 ];
+
                 if(Masking::where('title', $request->orginator)->exists()){
                     $data['masking_name'] = Masking::where('title', $request->orginator)->first()->title;
                 }else{
                     $response['response'] = 'Masking not found';
-                    return response()->json($response);
                 }
+            
                 $hitapi = $this->hitApi($data, $user);
                 if($hitapi == 'success'){
                     $data['status'] = 'successfully';
