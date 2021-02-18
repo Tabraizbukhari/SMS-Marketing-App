@@ -44,8 +44,8 @@
                                 <th>Message Send</th>
                                 <th>Total Amount</th>
                                 <th>Created</th>
+                                <th>Api-Type</th>
                                 <th>Add Amount</th>
-                                <th>API-Type</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -67,7 +67,6 @@
                             <td>{{ $u->myprofit }}</td>
                             <td>{{ $u->created_at }}</td>
                             <td>{{ $u->getUserSmsApi->type }}</td>
-                            @if (Auth::user()->type == 'admin')
                             <td>
                               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add{{$u->id}}">
                                 Add
@@ -97,7 +96,6 @@
                                 </div>
                               </div>
                             </td>
-                            @endif
                             <td>
                               <a href="{{ route('customer.edit', encrypt($u->id)) }}" >Edit </a></br>
                               <form method="POST" id="form1" action="{{ route('customer.destroy', encrypt($u->id))}}">

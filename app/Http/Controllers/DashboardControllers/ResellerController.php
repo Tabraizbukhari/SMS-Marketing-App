@@ -54,22 +54,21 @@ class ResellerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required',
-            'sms' => 'required|numeric',
-            'cost' => 'required',
-            'phone_number' => 'required|numeric',
-            'api_name' => 'required',
-            'api_password' => 'required',
+            'username'      => 'required|string',
+            'email'         => 'required|string|email|max:255|unique:users',
+            'password'      => 'required',
+            'sms'           => 'required|numeric',
+            'cost'          => 'required',
+            'api_name'      => 'required',
+            'api_password'  => 'required',
+            'api_url'       => 'sometimes|required',
+            'masking'       => 'sometimes|required|array',
         ]);
         
         if(Auth::user()->sms == 0){
-            return redirect()->back()->withErrors('Admin have no more sms');
+            return redirect()->back()->withErrors('You have enough not sms balance');
         }
-
         $count = Auth::user()->sms - $request->sms;
-
         $data = [
             'name'              =>  $request->username,
             'email'             =>  $request->email,
@@ -80,14 +79,15 @@ class ResellerController extends Controller
             'email_verified_at' =>  now(),
             'api_token'         =>  Str::random('80'),
         ];
+
         $user = User::create($data);
 
-        if($request->has('masking')){
+        if($request->has('masking') && count($request->masking) > 0){
             foreach ($request->masking as $mask) {
                 UserMasking::create([
-                    'user_id' => $user->id, 
-                    'masking_id' => $mask
-                    ]);
+                        'user_id' => $user->id, 
+                        'masking_id' => $mask
+                ]);
             }
         }
 
@@ -101,12 +101,12 @@ class ResellerController extends Controller
         if($request->has('api_name') && $request->has('api_password')){
             SmsApi::create([
                 'user_id'       => $user->id,
-                'api_url'       => $this->api_url,
+                'api_url'       => $request->api_url??$this->api_url,
                 'api_username'  => $request->api_name,
                 'api_password'  => $request->api_password,
+                'type'          => ($request->api_url)? 'code' : 'masking',
             ]);
         }
-        Auth::user()->update(['sms' => $count]);
         
         Transaction::create([
             'transaction_id' => Auth::user()->getTransactionId(),
@@ -126,7 +126,8 @@ class ResellerController extends Controller
             'amount' =>  $request->sms,
             'type' => 'credit',
         ]);
-
+           
+        Auth::user()->update(['sms' => $count]);
         return redirect()->route('admin.reseller.index')->with('success','Reseller Created Successfully');
     }
     

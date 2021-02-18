@@ -38,25 +38,36 @@
                                 <label class="form-label">Username <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="username" placeholder="username" value="{{ old('username') }}">
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="phone_number" placeholder="phone number" value="{{ old('phone_number') }}">
+                            <div class="row form-group">
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="Number" class="form-control" name="phone_number" placeholder="phone number" value="{{ old('phone_number') }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">SMS<span class="text-danger">*</span></label>
+                                    <input type="Number" required class="form-control"  min="5" max="{{ Auth::user()->sms }}" name="sms" placeholder="Number of sms" value="{{ old('sms') }}">
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Masking <span class="text-danger">*</span></label>
-                                <select class="select2 form-control" name="masking[]" multiple data-placeholder="Select multiple masking">
-                                    @foreach ($maskings as $masking )
-                                        <option {{ (old('masking') == $masking->id)? 'selected': null }} value="{{ $masking->id }}">{{ $masking->title }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="row form-group">
+                                <div class="col-md-6">
+                                    <label class="form-label">Select any one <span class="text-danger">*</span></label>
+                                    </br>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" required type="radio" name="type" id="code" value="single">
+                                        <label class="form-check-label" for="inlineRadio1">code</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" required type="radio" name="type" id="masking" value="bulk">
+                                        <label class="form-check-label" for="inlineRadio2">masking</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Cost<span class="text-danger">*</span></label>
+                                    <input type="Number" class="form-control" step="any" name="cost" placeholder="Cost of per sms" value="{{ old('cost') }}">
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">SMS<span class="text-danger">*</span></label>
-                                <input type="Number" class="form-control"  min="5" max="{{ Auth::user()->sms }}" name="sms" placeholder="Number of sms" value="{{ old('sms') }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Cost<span class="text-danger">*</span></label>
-                                <input type="Number" class="form-control" step="any" name="cost" placeholder="Cost of per sms" value="{{ old('cost') }}">
+                            <div id="maskingElement" class="mb-3">
+                            
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Api Name<span class="text-danger">*</span></label>
@@ -74,4 +85,39 @@
         </div>
     </div>
 </main>
+<script>
+    $(function(){
+       
+       var masking = @json($maskings, JSON_PRETTY_PRINT);
+        $('#code').change(function(){
+            if ($(this).is(':checked')) {
+                $('#maskingElement').empty();
+                var h_html = `<label class="form-label">Api Url <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="api_url" placeholder="Enter user api url" value="{{ old('api_password') }}">`;      
+                 $('#maskingElement').append(h_html);
+            }
+        });
+
+        $('#masking').change(function(){
+            $('#maskingElement').empty();
+            if ($(this).is(':checked')) {
+                var $v_html =   '<label class="form-label">Masking <span class="text-danger">*</span></label>'+
+                                '<select id="selectmask" class="select2 form-control" name="masking[]" multiple data-placeholder="Select multiple masking">'+
+                                '</select>';
+                $("#maskingElement").append($v_html);
+        
+                var output = [];
+                $.each(masking, function(mas, value){
+                    output.push({id: value.id,text:value.title});
+                });
+        
+                $("#selectmask").html('').select2({data: output,
+                    placeholder: "Select multiple masking",
+                    allowClear: true
+                    });
+        
+                }
+            });
+    });
+</script>
 </x-dashboard>

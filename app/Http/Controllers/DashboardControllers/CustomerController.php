@@ -35,30 +35,6 @@ class CustomerController extends Controller
         return view('dashboard.customer.index', $data);
     }
 
-    public function getApiUrl($status, $html_ = null)
-    {
-        if($html_ == null){
-            switch ($status) {
-                case '1':
-                    return 'https://sms.synctechsol.com/APIManagement/API/RequestAPI?';
-                break;
-                
-                case '2':
-                    return 'http://smsctp3.eocean.us:24555/api?';
-                break;    
-            }
-        }else{
-            switch ($status) {
-                case '1':
-                    return 'masking';
-                break;
-                
-                case '2':
-                    return 'code';
-                break;    
-            }
-        }
-    }
 
     public function create()
     {
@@ -72,16 +48,21 @@ class CustomerController extends Controller
         if(Auth::user()->sms == 0){
             return redirect()->back()->withErrors('You have no more sms');
         }
+
         $request->validate([
-            'username'  => 'required|',
-            'email'     => 'required|string|email|max:255|unique:users',
-            'password'  => 'required',
-            'cost' => 'required|',
-            'sms'   => 'required|',
-            'api_url' => 'required',
+            'name'      => 'required|unique:users',
+            'email'         => 'required|string|email|max:255|unique:users',
+            'password'      => 'required',
+            'cost'          => 'required',
+            'sms'           => 'required|Numeric',
+            'api_name'      => 'required',
+            'api_password'  => 'required',
+            'api_url'       => 'sometimes|required',
+            'masking'       => 'sometimes|required',
         ]);
+
         $data = [
-            'name'              =>  $request->username,
+            'name'              =>  $request->name,
             'email'             =>  $request->email,
             'password'          =>  Hash::make($request->password) ,
             'sms'               =>  $request->sms,
@@ -90,6 +71,7 @@ class CustomerController extends Controller
             'email_verified_at' =>  now(),
             'api_token'         =>  Str::random('80'),
         ];
+
         $user = User::create($data);
 
         ResellerCustomer::create([
@@ -113,14 +95,13 @@ class CustomerController extends Controller
         
         SmsApi::create([
             'user_id'       => $user->id,
-            'api_url'       => $this->getApiUrl($request->api_url),
+            'api_url'       => $request->api_url??$this->api_url,
             'api_username'  => $request->api_name??$this->api_username,
             'api_password'  => $request->api_password??$this->api_password,
-            'type'          => $this->getApiUrl($request->api_url, 'status'),
+            'type'          => ($request->api_url)? 'code' : 'masking',
         ]);
          
-        $count = Auth::user()->sms - $request->sms;
-        Auth::user()->update(['sms'=> $count]);
+        
         Transaction::create([
             'transaction_id' => Auth::user()->getTransactionId(),
             'user_id' => Auth::user()->id,
@@ -139,8 +120,9 @@ class CustomerController extends Controller
             'amount' =>  $request->sms,
             'type' => 'credit',
         ]);
-
-      
+        $count = Auth::user()->sms - $request->sms;
+        Auth::user()->update(['sms'=> $count]);
+    
         return redirect()->route('customer.index')->with('success','Customer Created Successfully');
     }
     
