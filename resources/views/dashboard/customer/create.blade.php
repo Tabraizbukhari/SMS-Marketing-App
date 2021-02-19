@@ -63,11 +63,11 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                @else
+                                {{-- @else
                                     <div class="mb-3">
                                         <label class="form-label">Api Url<span class="text-danger">*</span></label>
                                         <input type="text" name="api_url" class="form-control" >
-                                    </div>
+                                    </div> --}}
                                 @endif
                             @else
                             <div class="row form-group">
@@ -89,14 +89,16 @@
                             </div>
 
                             @endif
-                            <div class="mb-3">
-                                <label class="form-label">Api Name<span class="text-danger">*</span></label>
-                                <input type="text" id='api_name' class="form-control" name="api_name" placeholder="Enter user api name" value="{{ old('api_name') }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Api Password<span class="text-danger">*</span></label>
-                                <input type="password" id='api_password' class="form-control" name="api_password" placeholder="Enter user api password" value="{{ old('api_password') }}">
-                            </div>
+                            @if(Auth::user()->getUserSmsApi->type != 'code')
+                                <div class="mb-3">
+                                    <label class="form-label">Api Name<span class="text-danger">*</span></label>
+                                    <input type="text" id='api_name' class="form-control" name="api_name" placeholder="Enter user api name" value="{{ old('api_name') }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Api Password<span class="text-danger">*</span></label>
+                                    <input type="password" id='api_password' class="form-control" name="api_password" placeholder="Enter user api password" value="{{ old('api_password') }}">
+                                </div>
+                            @endif
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </form>
                     </div>

@@ -67,6 +67,8 @@ Route::middleware('auth')->group(function(){
             Route::delete('destroy/{id}', [CustomerController::class, 'destroy'] )->name('destroy');
             Route::get('edit/{id}', [CustomerController::class, 'edit'] )->name('edit');
             Route::post('update/{id}', [CustomerController::class, 'update'] )->name('update');
+
+            Route::post('api-create/{id}', [CustomerController::class, 'apiCreateORUpdate'] )->name('api.create.update');
         });
     });
 

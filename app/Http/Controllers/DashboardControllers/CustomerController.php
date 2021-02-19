@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\ResellerCustomer;
 use App\Models\Transaction;
+use App\Notifications\CustomerRegisterNotification;
 
 class CustomerController extends Controller
 {
@@ -50,16 +51,21 @@ class CustomerController extends Controller
         }
 
         $request->validate([
-            'name'      => 'required|unique:users',
+            'name'          => 'required|unique:users',
             'email'         => 'required|string|email|max:255|unique:users',
             'password'      => 'required',
             'cost'          => 'required',
             'sms'           => 'required|Numeric',
-            'api_name'      => 'required',
-            'api_password'  => 'required',
             'api_url'       => 'sometimes|required',
             'masking'       => 'sometimes|required',
         ]);
+
+        if(Auth::user()->getUserSmsApi->type != 'code'){
+            $request->validate([
+                'api_name'      => 'required',
+                'api_password'  => 'required',
+            ]);
+        }
 
         $data = [
             'name'              =>  $request->name,
@@ -73,7 +79,7 @@ class CustomerController extends Controller
         ];
 
         $user = User::create($data);
-
+        $user->notify(new CustomerRegisterNotification($data));
         ResellerCustomer::create([
             'user_id'   => Auth::id(),
             'customer_id'   => $user->id,
@@ -93,13 +99,15 @@ class CustomerController extends Controller
         ];
         UsersData::create($users_data);
         
-        SmsApi::create([
-            'user_id'       => $user->id,
-            'api_url'       => $request->api_url??$this->api_url,
-            'api_username'  => $request->api_name??$this->api_username,
-            'api_password'  => $request->api_password??$this->api_password,
-            'type'          => ($request->api_url)? 'code' : 'masking',
-        ]);
+        if(Auth::user()->getUserSmsApi->type != 'code'){
+            SmsApi::create([
+                'user_id'       => $user->id,
+                'api_url'       => $request->api_url??$this->api_url,
+                'api_username'  => $request->api_name??$this->api_username,
+                'api_password'  => $request->api_password??$this->api_password,
+                'type'          => ($request->api_url)? 'code' : 'masking',
+            ]);
+        }
          
         
         Transaction::create([
@@ -123,6 +131,8 @@ class CustomerController extends Controller
         $count = Auth::user()->sms - $request->sms;
         Auth::user()->update(['sms'=> $count]);
     
+        
+
         return redirect()->route('customer.index')->with('success','Customer Created Successfully');
     }
     
@@ -258,4 +268,27 @@ class CustomerController extends Controller
         return redirect()->route('customer.index')->with('success','Update customer successfully');
     }
 
+
+    public function apiCreateORUpdate($id, Request $request)
+    {
+        $user = User::findOrFail(decrypt($id));
+        $request->validate([
+            'api_name'      => 'required',
+            'api_password'  => 'required',
+            'api_url'       => 'required',
+        ]);
+
+        
+        if($request->has('api_name') && $request->has('api_password')){
+            SmsApi::updateOrCreate([
+                'user_id'       => $user->id,
+                'api_url'       => $request->api_url,
+                'api_username'  => $request->api_name,
+                'api_password'  => $request->api_password,
+                'type'          => ($request->api_url)? 'code' : 'masking',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Api created successfully');
+    }
 }

@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Models\ResellerCustomer;
 use Illuminate\Support\Str;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -109,4 +109,8 @@ class User extends Authenticatable
         }]);
     }
 
+    public function getAllNotification()
+    { 
+        return   $notifications =  DB::table('notifications')->get();
+    }
 }

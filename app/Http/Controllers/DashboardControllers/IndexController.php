@@ -9,13 +9,13 @@ use App\Models\User;
 use App\Models\Message;
 use DB;
 use Carbon\Carbon;
+use App\Models\Notifiable; 
 
 class IndexController extends Controller
 {
    
     public function index()
     {
-       
         $data['sms_count'] = Auth::user()->sms;
         $data['reseller_count'] = User::where('type', 'user')->whereHas('getUserData', function ($query)
                                     {

@@ -40,12 +40,15 @@
                                 <th>Email</th>
                                 <th>No. SMS</th>
                                 <th>Cost Of SMS</th>
-                                <th>Maskings</th>
+                                <th>Maskings/Code</th>
                                 <th>Message Send</th>
                                 <th>Total Amount</th>
                                 <th>Created</th>
-                                <th>Api-Type</th>
-                                <th>Add Amount</th>
+                                @if(Auth::user()->type == 'user')
+                                  <th>Add Amount</th>
+                                @else 
+                                  <th>API</th>
+                                @endif
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -59,14 +62,18 @@
                             <td>{{ $u->sms }}</td>
                             <td>{{ $u->price }}</td>
                             <td>
+                            @if(count($u->getResellerMasking) > 0)
                               @foreach ($u->getResellerMasking as $masking )
                                   <span class="badge bg-info rounded-pill">{{ $masking->title }}</span>
                               @endforeach
+                            @else
+                            99059
+                            @endif
                             </td>
                             <td>{{ $u->getAllMessages()->count() }}</td>
                             <td>{{ $u->myprofit }}</td>
                             <td>{{ $u->created_at }}</td>
-                            <td>{{ $u->getUserSmsApi->type }}</td>
+                          @if(Auth::user()->type == 'user')
                             <td>
                               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add{{$u->id}}">
                                 Add
@@ -96,6 +103,47 @@
                                 </div>
                               </div>
                             </td>
+                          @else
+                            <td>
+                              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add{{$u->id}}">
+                                Add / Update
+                              </button>
+
+                              <div class="modal fade" id="add{{$u->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLongTitle">Create or Update Customer Api</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <form method='post' action="{{ route('customer.api.create.update', encrypt($u->id)) }}"> @csrf
+                                      <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Api Url<span class="text-danger">*</span></label>
+                                            <input type="text" name="api_url" class="form-control" value='{{ old('api_url')??$u->getUserSmsApi->api_url }}' placeholder="enter api Url" >
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Api Name<span class="text-danger">*</span></label>
+                                            <input type="text" id='api_name' class="form-control" name="api_name" placeholder="Enter user api name" value="{{ old('api_name')??$u->getUserSmsApi->api_username }}">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Api Password<span class="text-danger">*</span></label>
+                                            <input type="password" id='api_password' class="form-control" name="api_password" placeholder="Enter user api password" value="{{ old('api_password')??$u->getUserSmsApi->api_password }}">
+                                        </div> 
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+                          @endif
+
                             <td>
                               <a href="{{ route('customer.edit', encrypt($u->id)) }}" >Edit </a></br>
                               <form method="POST" id="form1" action="{{ route('customer.destroy', encrypt($u->id))}}">
