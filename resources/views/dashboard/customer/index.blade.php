@@ -122,15 +122,15 @@
                                       <div class="modal-body">
                                         <div class="mb-3">
                                             <label class="form-label">Api Url<span class="text-danger">*</span></label>
-                                            <input type="text" name="api_url" class="form-control" value='{{ old('api_url')??$u->getUserSmsApi->api_url }}' placeholder="enter api Url" >
+                                            <input type="text" name="api_url" class="form-control" value='{{ old('api_url')??$u->getUserSmsApi['api_url'] }}' placeholder="enter api Url" >
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Api Name<span class="text-danger">*</span></label>
-                                            <input type="text" id='api_name' class="form-control" name="api_name" placeholder="Enter user api name" value="{{ old('api_name')??$u->getUserSmsApi->api_username }}">
+                                            <input type="text" id='api_name' class="form-control" name="api_name" placeholder="Enter user api name" value="{{ old('api_name')??$u->getUserSmsApi['api_username'] }}">
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Api Password<span class="text-danger">*</span></label>
-                                            <input type="password" id='api_password' class="form-control" name="api_password" placeholder="Enter user api password" value="{{ old('api_password')??$u->getUserSmsApi->api_password }}">
+                                            <input type="password" id='api_password' class="form-control" name="api_password" placeholder="Enter user api password" value="{{ old('api_password')??$u->getUserSmsApi['api_password'] }}">
                                         </div> 
                                       </div>
                                       <div class="modal-footer">

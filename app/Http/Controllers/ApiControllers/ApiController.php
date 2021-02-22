@@ -44,6 +44,8 @@ class ApiController extends Controller
                  $response['response'] = $validator->messages()->first();
             }else if(!User::where('email', $request->email)->exists()){
                 $response['response'] = "User doesn't exists";
+            }else if($this->stringCount($request->message) == false){
+                $response['response'] = 'Maximum message length limit is 5';
             }else{
                 
                 $user = (Auth::check())? Auth::user() : User::where('email', $request->email)->firstOrFail();
@@ -55,15 +57,18 @@ class ApiController extends Controller
                 $data = [
                     'user_id'        => $user->id,
                     'message'        => $request->message,
-                    'message_length' => strlen($request->message),
+                    'message_length' => $this->stringCount($request->message),
                     'contact_number' => ($request->has('phone_number'))? $request->phone_number : NULL,
                     'send_date'      => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
                     'price'          => $user->price,
+                    'api_type'       => 'code',
+                
                 ];
 
                 if($user->getUserSmsAPi->type == 'masking'){
                     if(Masking::where('title', $request->orginator)->exists()){
                         $data['masking_name'] = Masking::where('title', $request->orginator)->first()->title;
+                        $data['api_type'] = 'masking';
                     }else{
                         $response['response'] = 'Masking not found';
                         return response()->json($response);
@@ -71,7 +76,7 @@ class ApiController extends Controller
                 }elseif ($request->orginator != 99059) {
                     $response['response'] = 'incorrect code of orginator';
                     return response()->json($response);
-                }  
+                }
                 $hitapi = $this->hitApi($data, $user);
                 if($hitapi == 'success'){
                     $data['status'] = 'successfully';
@@ -97,7 +102,7 @@ class ApiController extends Controller
             $url .= '&pwd='.$user->getUserSmsApi->api_password;
             $url .= '&sender='.$data['masking_name'];
             $url .= '&reciever='.$data['contact_number'];
-            $url .= '&msg-data='.$data['message'];
+            $url .= '&msg-data='.urlencode($data['message']);
             $url .= '&response=json';    
         }else{
             $url .= 'action=sendmessage';
@@ -125,7 +130,65 @@ class ApiController extends Controller
                 }
             }
         }
-        return 'success';
+        if($result == true){
+            return 'success';
+        }else{
+            return $result;   
+        }
+    }
+
+
+    public function stringCount($message)
+    {
+        $count = '';
+        if (strlen($message) != strlen(utf8_decode($message))){
+            $urduCount = strlen(utf8_decode($message));
+            switch ($urduCount) {
+                case $urduCount <= 70:
+                        $count = 1;
+                    break;
+                case $urduCount <= 134:
+                        $count = 2;
+                    break;
+                case $urduCount <= 201:
+                        $count = 3;
+                    break;  
+                case $urduCount <= 268:
+                        $count = 4;
+                    break;  
+                case $urduCount <= 355:
+                        $count = 5;
+                    break;  
+                default:
+                    $count = false;
+                    break;
+            }
+
+        }else{
+            $englishCount  = strlen($message);
+            switch ($englishCount) {
+                case $englishCount <= 160:
+                        $count = 1;
+                    break;
+                case $englishCount <= 320:
+                        $count = 2;
+                    break;
+                case $englishCount <= 480:
+                        $count = 3;
+                    break;  
+                case $englishCount <= 640:
+                        $count = 4;
+                    break;  
+                case $englishCount <= 800:
+                        $count = 5;
+                    break;  
+                default:
+                    $count = false;
+                    break;
+            }
+        }
+
+        return $count;
     }
 
 }

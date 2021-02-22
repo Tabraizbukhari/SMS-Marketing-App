@@ -50,10 +50,10 @@
 											<td class="table-action">
                         <div class="d-flex">
                         
-                          <a href="#Editmasking" data-toggle="modal" data-target="#Editmasking">Edit</a>
+                          <a href="#Editmasking" data-toggle="modal" data-target="#Editmasking{{ $mask->id }}">Edit</a>
                           
                           {{-- Edit masking modal --}}
-                          <div class="modal fade" id="Editmasking" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                          <div class="modal fade" id="Editmasking{{ $mask->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                               <div class="modal-content">
                                 <div class="modal-header">
