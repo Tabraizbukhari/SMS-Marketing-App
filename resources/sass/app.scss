@@ -1,8 +1,15 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+.scroll {
+    height: 400px;
+    width: 500px;
+    overflow: scroll;
+}
+
+.lightGrey {
+    background-color: #a8a8a8;
+}

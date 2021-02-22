@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Auth;
+use User;
 
 class CustomerRegisterNotification extends Notification
 {
@@ -41,8 +42,8 @@ class CustomerRegisterNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'title' => 'Welcome To Taskshift',
-            'message' => 'Your email has been verified successfully !',
+            'title' => 'New Customer',
+            'message' => '',
             'user_id' => $this->user_id,
         ];
     }

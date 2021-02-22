@@ -108,9 +108,4 @@ class User extends Authenticatable
         $query->select(DB::raw('SUM(price) as profit'));
         }]);
     }
-
-    public function getAllNotification()
-    { 
-        return   $notifications =  DB::table('notifications')->get();
-    }
 }

@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
 use App\Models\ResellerCustomer;
 use App\Models\Transaction;
 use App\Notifications\CustomerRegisterNotification;
+use DB;
+use Carbon\Carbon;
 
 class CustomerController extends Controller
 {
@@ -30,9 +32,16 @@ class CustomerController extends Controller
 
     }
 
-    public function index()
+    public function index($id = null)
     {
-        $data['user'] = Auth::user()->getResellerCustomerProfit;
+        $id = decrypt($id);
+        if($id['user_id']){
+            $data['user'] = User::where('id', $id['user_id'])->get();
+            DB::table('notifications')->where('id', $id['notification_id'])->update(['read_at' => Carbon::now() ]);
+        }else{
+            $data['user'] = ($id)??Auth::user()->getResellerCustomerProfit;
+        }
+        
         return view('dashboard.customer.index', $data);
     }
 

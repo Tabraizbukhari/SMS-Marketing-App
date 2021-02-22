@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiControllers\ApiController;
+use App\Http\Controllers\ApiControllers\AdminNotificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,3 +19,5 @@ Route::any('sendmessage',[ApiController::class, 'store'])->name('store');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('admin/notification', [AdminNotificationController::class, 'index'])->name('admin.notification');

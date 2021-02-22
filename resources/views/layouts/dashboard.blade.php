@@ -14,13 +14,12 @@
 	<title>Blank Page | AdminKit Demo</title>
 	<link href="{{ asset('admin/css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    	<script src="{{ asset('js/app.js') }}"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
 </head>
-    <body>
+    <body >
         @auth
-	    <div class="wrapper">
+	    <div class="wrapper" >
             @include('dashboard.includes.sidenav')
             <div class="main">
             @include('dashboard.includes.navigation')
@@ -32,5 +31,7 @@
         </div>
         @endauth
         @include('dashboard.includes.script')
+    	<script src="{{ asset('js/app.js') }}"></script>
+
     </body>
 </html>

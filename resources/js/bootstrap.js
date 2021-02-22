@@ -20,7 +20,7 @@ try {
  */
 
 window.axios = require('axios');
-
+window.BASE_URL = 'http://localhost:81/SMA/public/';
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**

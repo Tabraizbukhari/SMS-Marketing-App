@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function(){
     
     Route::middleware('auth.customer')->group(function(){
         Route::prefix('customer')->name('customer.')->group(function(){
-            Route::get('index', [CustomerController::class, 'index'] )->name('index');
+            Route::get('index/{id?}', [CustomerController::class, 'index'] )->name('index');
             Route::get('create', [CustomerController::class, 'create'] )->name('create');
             Route::post('store', [CustomerController::class, 'store'] )->name('store');
             Route::delete('destroy/{id}', [CustomerController::class, 'destroy'] )->name('destroy');
