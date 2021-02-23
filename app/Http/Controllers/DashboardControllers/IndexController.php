@@ -46,9 +46,9 @@ class IndexController extends Controller
     public function getapi()
     {   
         if(Auth::user()->getUserSmsAPi->type == 'masking'){
-            $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email=synctech@example.com&message=testing&phone_number=090049124&orginator=your masking';
+            $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email='.Auth::user()->email.'&message=testing&phone_number=090049124&orginator=your masking';
         }else{
-            $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email=synctech@example.com&message=write&phone_number=090049124&orginator=your code';
+            $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email='.Auth::user()->email.'&message=write&phone_number=090049124&orginator=your code';
         }
         return view('dashboard.api.index', $data);
     }
