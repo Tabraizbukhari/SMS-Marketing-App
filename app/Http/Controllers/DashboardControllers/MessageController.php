@@ -227,7 +227,7 @@ class MessageController extends Controller
             'message_length'    => $data['message_length'],
             'contact_number'    => $data['contact_number'],
             'send_date'         => $data['send_date'],
-            'type'              => ($data['type'] == 'bulk')? 'campaign': NULL,
+            'type'              => ($data['type'] == 'bulk')? 'campaign': $data['type'],
             'price'             => $data['price'],
             'api_type'          => $data['api_type'],
             'status'            => $data['status'],

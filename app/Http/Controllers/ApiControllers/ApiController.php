@@ -60,7 +60,7 @@ class ApiController extends Controller
                     'message_length' => $this->stringCount($request->message),
                     'contact_number' => ($request->has('phone_number'))? $request->phone_number : NULL,
                     'send_date'      => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
-                    'price'          => $user->price,
+                    'price'          => $user->price * $this->stringCount($request->message),
                     'api_type'       => 'code',
                 
                 ];
