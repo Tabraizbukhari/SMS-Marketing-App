@@ -34,8 +34,9 @@ class CustomerController extends Controller
 
     public function index($id = null)
     {
-        $id = decrypt($id);
-        if($id['user_id']){
+        
+        if(isset($id) && $id != NULL){
+            $id = decrypt($id);
             $data['user'] = User::where('id', $id['user_id'])->get();
             DB::table('notifications')->where('id', $id['notification_id'])->update(['read_at' => Carbon::now() ]);
         }else{

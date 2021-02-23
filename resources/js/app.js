@@ -18,7 +18,6 @@ if ($('#notification_admin').length > 0) {
     const notifcationAdmin = new Vue({
         el: '#notification_admin',
         data: {
-            notify: 'hello',
             notifications: [],
             processing: false,
             page: 0,
@@ -29,7 +28,6 @@ if ($('#notification_admin').length > 0) {
         methods: {
 
             infiniteAdminNotification($state) {
-
                 if (this.processing === true) {
                     return;
                 }
@@ -55,22 +53,6 @@ if ($('#notification_admin').length > 0) {
                 }, 1000);
             },
 
-            read_at: function() {
-                axios.get(BASE_URL + 'admin/notification/read').then(({ data }) => {
-                    this.infiniteAdminNotification();
-                });
-            }
         }, //method end
-        filters: {
-            TextLimit: function(value) {
-                if (value && value.length > 70) {
-                    value = value.substring(0, 70) + '...';
-                }
-                return value
-            }
-        },
-        created() {
-            this.infiniteAdminNotification();
-        },
     })
 }

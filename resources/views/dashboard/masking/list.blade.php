@@ -45,12 +45,12 @@
 									@foreach ($masking as $mask )                            
                     <tr>
                       <td>{{ $mask->id }}</td>
-                      <td>{{ $mask->title }}</td>
+                      <td width="50%">{{ $mask->title }}</td>
 											<td class="d-none d-md-table-cell">{{ $mask->created_at }}</td>
-											<td class="table-action">
+											<td width="20%" class="table-action">
                         <div class="d-flex">
                         
-                          <a href="#Editmasking" data-toggle="modal" data-target="#Editmasking{{ $mask->id }}">Edit</a>
+                          <a href="#Editmasking" class="mr-5" data-toggle="modal" data-target="#Editmasking{{ $mask->id }}">Edit</a>
                           
                           {{-- Edit masking modal --}}
                           <div class="modal fade" id="Editmasking{{ $mask->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

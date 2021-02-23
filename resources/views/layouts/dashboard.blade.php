@@ -14,8 +14,8 @@
 	<title>Blank Page | AdminKit Demo</title>
 	<link href="{{ asset('admin/css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 </head>
     <body >
         @auth
@@ -31,7 +31,6 @@
         </div>
         @endauth
         @include('dashboard.includes.script')
-    	<script src="{{ asset('js/app.js') }}"></script>
 
     </body>
 </html>
