@@ -81,7 +81,7 @@ class ApiController extends Controller
                 if($hitapi == 'success'){
                     $data['status'] = 'successfully';
                     $data['type'] = 'single';
-                    $sumSms = $user->sms - 1;
+                    $sumSms = $user->sms - $this->stringCount($request->message);
                     $user->sms = $sumSms;
                     $user->save();
                     Message::create($data);
