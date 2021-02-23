@@ -11,7 +11,7 @@
 
 	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
 
-	<title>Blank Page | AdminKit Demo</title>
+	<title>SMS MANGMENT APP</title>
 	<link href="{{ asset('admin/css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
