@@ -33,16 +33,17 @@
 											</div>
 										</div>
                                     	@endif
-									<div class="card">
-										<div class="card-body">
-											<h5 class="card-title mb-4">Message Send</h5>
-											<h1 class="mt-1 mb-3">{{ $total_message_sending }}</h1>
-											<div class="mb-1">
-												<span class="text-muted">Total Count Of Message is sended</span>
+										<div class="card">
+											<div class="card-body">
+												<h5 class="card-title mb-4">Message Send</h5>
+												<h1 class="mt-1 mb-3">{{ $total_message_sending }}</h1>
+												<div class="mb-1">
+													<span class="text-muted">Total Count Of Message is sended</span>
+												</div>
 											</div>
 										</div>
 									</div>
-
+									<div class="col-md-6">
 									<div class="card">
 										<div class="card-body">
 											<h5 class="card-title mb-4">Message Send Succesfully</h5>
@@ -61,8 +62,6 @@
 											</div>
 										</div>
 									</div>
-									</div>
-									<div class="col-md-6">
                                     @if(isset(Auth::user()->getUserData) && Auth::user()->getUserData->register_as != 'customer')
 										<div class="card">
 											<div class="card-body">
