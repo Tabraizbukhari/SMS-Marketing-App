@@ -44,6 +44,12 @@ class MessageController extends Controller
         return view('dashboard.messages.create', $data);
     }
 
+    public function AuthSmsCount($messageLength)
+    {
+        $total_sms = Auth::user()->sms - $messageLength;
+       return Auth::user()->update(['sms' => $total_sms]);
+    }
+
     public function store(Request $request)
     {
         if(Auth::user()->sms == 0){
@@ -97,13 +103,27 @@ class MessageController extends Controller
             $data['campaign_status'] = 'pending';
             
             if($data['type'] == 'single'){
+                $this->AuthSmsCount($messageLength);
                 $this->saveMessage($data, $masking_id);
             }else{
-                $this->save_campaign($data);
                 foreach ($data['numbers'] as $number) {
+                    if(Auth::user()->sms == 0){
+                        return redirect()->back()->withErrors('User have zero sms');
+                    }
+
                     $data['contact_number'] = $number;
+                    $number_length = strlen($data['contact_number']);
+                    if($number_length < 10 || $number_length > 11  ){
+                        $data['status'] = 'not_sent';
+                        $data['price']  = 0;
+                    }else{
+                        $this->AuthSmsCount($messageLength);
+                        $data['status'] = 'pending';
+                        $data['price']  = $messageLength * Auth::user()->price;
+                    }
                     $this->saveMessage($data, $masking_id);
                 }
+                $this->save_campaign($data);
             }
 
         }else{
@@ -112,15 +132,32 @@ class MessageController extends Controller
             if($request->type == 'single'){
                 $hitapi = $this->hitApi($data);
                 if($hitapi == 'success'){
+                    $this->AuthSmsCount($messageLength);
                     $this->saveMessage($data, $masking_id);
                 }else{
                     $message = $hitapi??'Message Sending Failed';
                     return redirect()->back()->withErrors($message);
                 }     
             }else{
-                $this->save_campaign($data);
                 foreach ($data['numbers'] as $number) {
                     $data['contact_number'] = $number;
+                    $number_length = strlen($data['contact_number']);
+                    
+                    if(Auth::user()->sms == 0){
+                        return redirect()->back()->withErrors('User have zero sms');
+                    }
+
+                    if($number_length < 10 || $number_length > 11  ){
+                        $data['status'] = 'not_sent';
+                        $data['price']  = 0;
+                    }else{
+                        $this->AuthSmsCount($messageLength);
+                        $data['status'] = 'successfully';
+                        $data['price']  = $messageLength * Auth::user()->price;
+                    }
+
+                    
+
                     $hitapi = $this->hitApi($data);
                     if($hitapi == 'success'){
                         $this->saveMessage($data, $masking_id);
@@ -129,11 +166,11 @@ class MessageController extends Controller
                         return redirect()->back()->withErrors($message);
                     }
                 }
+                $this->save_campaign($data);
             }
         } 
         
-        $total_sms = Auth::user()->sms - $messageLength;
-        Auth::user()->update(['sms' => $total_sms]);
+       
         return redirect()->back()->with('success','Message Sending Successfully!');
     }
 

@@ -17,9 +17,9 @@
 									<div class="col-md-6">
 										<div class="card">
 											<div class="card-body">
-												<h5 class="card-title mb-4">SMS</h5>
+												<h5 class="card-title mb-4">My SMS</h5>
 												<h1 class="mt-1 mb-3">{{$sms_count}}</h1>
-												<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sms</span>
+												<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sms User Have.</span>
 											</div>
 										</div>
 										 @if(Auth::user()->type == 'admin')
@@ -35,8 +35,27 @@
                                     	@endif
 									<div class="card">
 										<div class="card-body">
-											<h5 class="card-title mb-4">Message Sended</h5>
+											<h5 class="card-title mb-4">Message Send</h5>
 											<h1 class="mt-1 mb-3">{{ $total_message_sending }}</h1>
+											<div class="mb-1">
+												<span class="text-muted">Total Count Of Message is sended</span>
+											</div>
+										</div>
+									</div>
+
+									<div class="card">
+										<div class="card-body">
+											<h5 class="card-title mb-4">Message Send Succesfully</h5>
+											<h1 class="mt-1 mb-3">{{ $message_send_successfully }}</h1>
+											<div class="mb-1">
+												<span class="text-muted">Total Count Of Message is sended</span>
+											</div>
+										</div>
+									</div>
+									<div class="card">
+										<div class="card-body">
+											<h5 class="card-title mb-4">Message send Failed</h5>
+											<h1 class="mt-1 mb-3">{{ $message_not_send }}</h1>
 											<div class="mb-1">
 												<span class="text-muted">Total Count Of Message is sended</span>
 											</div>
@@ -70,7 +89,7 @@
 										<div class="card">
 											<div class="card-body">
 												<h5 class="card-title mb-4">Total Amount</h5>
-												<h1 class="mt-1 mb-3">{{ $profit }}</h1>
+												<h1 class="mt-1 mb-3">{{ ceil($profit) }}</h1>
 												<div class="mb-1">
 													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Customer by {{ (Auth::user()->type == 'admin')? 'Admin' : 'reseller' }}</span></br>
 													<span class="text-muted">Total Amount of Message</span>
