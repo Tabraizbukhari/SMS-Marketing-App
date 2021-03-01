@@ -215,14 +215,14 @@ class CustomerController extends Controller
         ];
         UsersData::where('user_id', decrypt($id))->update($users_data);
 
-        if($request->has('api_name') && $request->has('api_password')){
-            SmsApi::where('user_id', decrypt($id))->update([
-                'api_url'       => $this->getApiUrl($request->api_url),
-                'api_username'  => $request->api_name,
-                'api_password'  => $request->api_password,
-                'type'       => $this->getApiUrl($request->api_url, "status"),
-            ]);
-        }
+        // if($request->has('api_name') && $request->has('api_password')){
+        //     SmsApi::where('user_id', decrypt($id))->update([
+        //         'api_url'       =>  $request->api_url),
+        //         'api_username'  =>  $request->api_name,
+        //         'api_password'  =>  $request->api_password,
+        //         'type'          =>  $request->api_url ,
+        //     ]);
+        // }
         if($userSmsCount != $request->sms){
             if($userSmsCount > $request->sms){
                 $count = $userSmsCount - $request->sms;
