@@ -28,8 +28,11 @@
             <div class="col-12 col-xl-12">             
 							<div class="card">
 								<div class="card-header">
-									<h2 class="card-title">Masking Data 
-                    <a href="{{ route('message.index') }}" class="btn btn-primary float-right" >Add New</a>
+									<h2 class="card-title">Messages Data
+                  <!-- Button trigger modal -->
+                  <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#exportt">
+                    Export Data
+                  </button>
                   </h5>
 								</div>
 								<table class="table table-bordered">
@@ -64,14 +67,44 @@
                   @endforeach
 									</tbody>
 								</table>
-                <div class="float-right">
-                  {{$messages->links()}}
-                </div>
+                
 							</div>
+                <div class="float-right">
+                  {{ $messages->links() }}
+                </div>
 						</div>
           </div>
         </div>
     </main>
 
-
+<!-- Modal -->
+<div class="modal fade" id="exportt" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Export data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="post" action="{{ route('message.data.export') }}"> @csrf
+        <div class="modal-body">
+          <div class="row">
+            <div class="col">
+              <label> Start Date </label>
+              <input type="date" name="start_date" class="form-control" placeholder="start date">
+            <div class="col">
+              <label> End Date </label>
+              <input type="date" name="end_date" class="form-control" placeholder="end date">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success">Export</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 </x-dashboard>

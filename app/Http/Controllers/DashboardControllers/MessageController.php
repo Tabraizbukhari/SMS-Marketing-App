@@ -15,6 +15,8 @@ use App\Models\CampaignMessage;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\MessageMasking;
+use App\Exports\MessageExport;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class MessageController extends Controller
 {
@@ -42,6 +44,16 @@ class MessageController extends Controller
     {
         $data['maskings']  =(Auth::user()->type == 'admin')? Masking::get() : Auth::user()->getResellerMasking ;
         return view('dashboard.messages.create', $data);
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $data = [];
+        $data['startDate']  = $request->start_date;
+        $data['endDate']    = $request->end_date;
+        return (new MessageExport($data))->download('messages.xlsx');
+        // $messages   = Message::where('created_at', '>=', $startDate)->where('created_at', '<=', $endDate)->get();
+        // return Excel::download(new MessageExport, 'messages.xlsx');
     }
 
     public function AuthSmsCount($messageLength)

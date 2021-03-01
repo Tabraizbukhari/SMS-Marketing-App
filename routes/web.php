@@ -77,6 +77,8 @@ Route::middleware('auth')->group(function(){
         Route::get('create', [MessageController::class, 'create'] )->name('create');
         Route::post('store', [MessageController::class, 'store'] )->name('store');
         Route::delete('destroy/{id}', [MessageController::class, 'destroy'] )->name('destroy');
+        
+        Route::post('exportExcel', [MessageController::class, 'exportExcel'] )->name('data.export');
 
         Route::get('campaign', [MessageController::class, 'messageCampaign'] )->name('campaign');
         Route::get('campaign/{id}/file', [MessageController::class, 'campaignFileDownload'] )->name('campaign.file');
