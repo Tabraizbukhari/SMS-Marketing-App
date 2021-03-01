@@ -42,7 +42,7 @@
                     </a>
                     <ul id="auth" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
                         <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.create') }}">Compose Message</a></li>
-                        <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.index') }}">Inbox</a></li>
+                        <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.index') }}">Sent Message</a></li>
                         <li class="sidebar-item"><a class="sidebar-link" href="{{ route('message.campaign') }}">Campaign</a></li>
 
                     </ul>
