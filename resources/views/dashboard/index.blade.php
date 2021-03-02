@@ -88,7 +88,7 @@
 										<div class="card">
 											<div class="card-body">
 												<h5 class="card-title mb-4">Total Amount</h5>
-												<h1 class="mt-1 mb-3">{{ ceil($profit) }}</h1>
+												<h1 class="mt-1 mb-3">{{ number_format((float)$profit, 2, '.', '') }}</h1>
 												<div class="mb-1">
 													<span class="text-muted">Total Amount of Message</span>
 												</div>
