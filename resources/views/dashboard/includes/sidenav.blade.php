@@ -14,6 +14,14 @@
                         <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
                     </a>
                 </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="{{ route('contacts') }}">
+                        <i class="align-middle" data-feather="contacts"></i> 
+                        <span class="align-middle">Contact</span>
+                    </a>
+                </li>
+
                 @if(Auth::user()->type == 'admin')
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('admin.masking.index') }}">

@@ -10,6 +10,8 @@ use App\Http\Controllers\DashboardControllers\ResellerController;
 use App\Http\Controllers\DashboardControllers\CustomerController;
 use App\Http\Controllers\DashboardControllers\MessageController;
 use App\Http\Controllers\DashboardControllers\TransactionController;
+use App\Http\Controllers\DashboardControllers\ContactController;
+
 
 
 
@@ -99,6 +101,14 @@ Route::middleware('auth')->group(function(){
     Route::prefix('user')->name('user.')->middleware('auth.user')->group(function(){    
         Route::get('index', [IndexController::class, 'index'])->name('dashboard');
     });
+
+    Route::get('contacts', [ContactController::class, 'index'])->name('contacts');
+    Route::get('contacts/create', [ContactController::class, 'create'])->name('contacts.create');
+    Route::post('contacts/store', [ContactController::class, 'store'])->name('contacts.store');
+    Route::delete('contacts/destroy/{id}', [ContactController::class, 'destroy'] )->name('contacts.destroy');
+
+
+
 });
 
 
