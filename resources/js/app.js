@@ -57,6 +57,7 @@ if ($('#notification_admin').length > 0) {
 
         created() {
             this.infiniteAdminNotification();
+            
         },
     })
 }
