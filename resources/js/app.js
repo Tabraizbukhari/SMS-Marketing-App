@@ -54,5 +54,9 @@ if ($('#notification_admin').length > 0) {
             },
 
         }, //method end
+
+        created() {
+            this.infiniteAdminNotification();
+        },
     })
 }
