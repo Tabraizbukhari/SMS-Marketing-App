@@ -19,7 +19,7 @@ class ContactController extends Controller
     }
     public function index()
     {
-        $data['contacts'] =  Contacts::paginate($this->pagination); 
+        $data['contacts'] =  Contacts::where('user_id', Auth::id())->paginate($this->pagination); 
         return view('dashboard.contact.index', $data);
     }
 
