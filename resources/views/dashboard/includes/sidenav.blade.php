@@ -11,7 +11,7 @@
 
                 <li class="sidebar-item">
                     <a class="sidebar-link" href="{{ route('admin.dashboard') }}">
-                        <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+                        <i class="align-middle" data-feather="sliderss"></i> <span class="align-middle">Dashboard</span>
                     </a>
                 </li>
 
