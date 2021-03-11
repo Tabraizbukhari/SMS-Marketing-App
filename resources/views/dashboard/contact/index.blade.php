@@ -30,7 +30,7 @@
                                 <a href="{{ route('contacts.create') }}" class="btn btn-success float-right">Add New Contact</a>
                             </h5>
                         </div>
-                        <table class="table table-bordered table-responsive">
+                        <table class="table table-bordered ">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -48,7 +48,7 @@
                                         <td>{{ $contact->number }}</td>
                                         <td>{{ $contact->created_at }}</td>
                                         <td> 
-                                            <a href="{{ route('customer.edit', encrypt($contact->id)) }}" >Edit </a></br>
+                                            <a href="{{ route('contacts.edit', encrypt($contact->id)) }}" >Edit </a></br>
                                             <form method="POST" id="form1" action="{{ route('contacts.destroy', encrypt($contact->id))}}">
                                                 @method('DELETE')
                                                 @csrf

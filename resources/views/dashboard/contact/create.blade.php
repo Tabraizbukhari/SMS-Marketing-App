@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label >Number</label>
-                                    <input type="text" class="form-control" name="number" placeholder="Enter the Number (0302-2322933)">
+                                    <input type="text" class="form-control" name="number" placeholder="Enter the Number (03022322933)">
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Submit</button>

@@ -105,6 +105,8 @@ Route::middleware('auth')->group(function(){
     Route::get('contacts', [ContactController::class, 'index'])->name('contacts');
     Route::get('contacts/create', [ContactController::class, 'create'])->name('contacts.create');
     Route::post('contacts/store', [ContactController::class, 'store'])->name('contacts.store');
+    Route::get('contacts/{id}/edit', [ContactController::class, 'edit'])->name('contacts.edit');
+    Route::post('contacts/{id}/update', [ContactController::class, 'update'])->name('contacts.update');
     Route::delete('contacts/destroy/{id}', [ContactController::class, 'destroy'] )->name('contacts.destroy');
 
 
