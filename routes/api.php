@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiControllers\ApiController;
+use App\Http\Controllers\ApiControllers\IncommingController;
 use App\Http\Controllers\ApiControllers\AdminNotificationController;
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,9 @@ use App\Http\Controllers\ApiControllers\AdminNotificationController;
 |
 */
 Route::any('sendmessage',[ApiController::class, 'store'])->name('store');
+
+Route::any('incoming/sms',[IncommingController::class, 'index'])->name('incoming.index');
+
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
