@@ -25,7 +25,8 @@ class IncommingController extends Controller
         if ($validator->fails()) {
              $response['response'] = $validator->messages();
         }else{
-
+            $getPrefix = explode(" ",$request->msgdata);
+            
             IncomingMessage::create([
                 'user_id'       => $user->id,
                 'sender'        => $request->sender,
@@ -39,7 +40,7 @@ class IncommingController extends Controller
             $response['response'] = "Received successfully!";
             $response['success'] = true;
         }
-        
+
         return response()->json($response);
         // dd($request->all());
     }
