@@ -9,6 +9,8 @@ class IncommingController extends Controller
 {
     public function index(Request $request)
     {
-        dd($request->all());
+
+        return response()->json($request->all());
+        // dd($request->all());
     }
 }
