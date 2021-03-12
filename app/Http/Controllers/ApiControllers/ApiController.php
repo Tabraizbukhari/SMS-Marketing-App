@@ -91,7 +91,7 @@ class ApiController extends Controller
                     $response['response'] = 'Message not send Successfully! please try again!';
                 }     
             }
-            return response()->json($response);
+        return response()->json($response);
     }
 
     public function message_url($data, $user)
