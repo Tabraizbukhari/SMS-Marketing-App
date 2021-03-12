@@ -108,4 +108,10 @@ class User extends Authenticatable
         $query->select(DB::raw('SUM(price) as profit'));
         }]);
     }
+
+    public function IncomingApi()
+    {
+        return $this->hasOne(IncomingApi::class);
+    }
+
 }
