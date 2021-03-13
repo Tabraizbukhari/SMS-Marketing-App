@@ -71,13 +71,13 @@ class CustomerController extends Controller
         }
 
         $request->validate([
-            'name'          => 'required|unique:users',
-            'email'         => 'required|string|email|max:255|unique:users',
-            'password'      => 'required',
-            'cost'          => 'required',
-            'sms'           => 'required|Numeric',
-            'api_url'       => 'sometimes|required',
-            'masking'       => 'sometimes|required',
+            'name'     => 'required|unique:users',
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required',
+            'cost'     => 'required',
+            'sms'      => 'required|Numeric',
+            'api_url'  => 'sometimes|required',
+            'masking'  => 'sometimes|required',
         ]);
 
         if(Auth::user()->getUserSmsApi->type != 'code'){
@@ -99,7 +99,10 @@ class CustomerController extends Controller
         ];
 
         $user = User::create($data);
-        $user->notify(new CustomerRegisterNotification($data));
+        if(Auth::user()->type == 'admin'){
+            $user->notify(new CustomerRegisterNotification($data));
+        }
+
         ResellerCustomer::create([
             'user_id'   => Auth::id(),
             'customer_id'   => $user->id,
@@ -107,8 +110,8 @@ class CustomerController extends Controller
         
         if($request->has('masking') && $request->masking != null){
             UserMasking::create([
-                'user_id' => $user->id, 
-                'masking_id' => $request->masking
+                    'user_id' => $user->id, 
+                    'masking_id' => $request->masking,
                 ]);
         }
 
@@ -167,12 +170,12 @@ class CustomerController extends Controller
         Auth::user()->update(['sms' => $smscount]);
         Transaction::create([
             'transaction_id' => Auth::user()->getTransactionId(),
-            'user_id' => Auth::user()->id,
-            'title' => 'delete customer return',
-            'description' => 'Delete account and Return sms to customer '.$user->name,
-            'amount' =>  $user->sms,
-            'type' => 'credit',
-            'data' => json_encode(['user_id' => $user->id]),
+            'user_id'        => Auth::user()->id,
+            'title'          => 'delete customer return',
+            'description'    => 'Delete account and Return sms to customer '.$user->name,
+            'amount'         =>  $user->sms,
+            'type'           => 'credit',
+            'data'           => json_encode(['user_id' => $user->id]),
         ]);
         $user->delete();
         return redirect()->back()->with('success','Customer deleted Successfully');

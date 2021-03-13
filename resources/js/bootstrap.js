@@ -20,8 +20,8 @@ try {
  */
 
 window.axios = require('axios');
-window.BASE_URL = 'http://localhost:80/SMA/public/';
-// window.BASE_URL = 'http://sms1.synctechsol.com/';
+// window.BASE_URL = 'http://localhost:80/SMA/public/';
+window.BASE_URL = 'http://sms1.synctechsol.com/';
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
