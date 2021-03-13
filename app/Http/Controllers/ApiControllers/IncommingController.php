@@ -41,7 +41,7 @@ class IncommingController extends Controller
                     'sender'        => $request->sender,
                     'receiver'      => $request->receiver,
                     'body'          => $request->msgdata,
-                    'recvtime'      => $request->recvtime,
+                    'recvtime'      => date("Y/m/d H:i:s", strtotime($request->recvtime)),
                     'message_id'    => $request->msgid,
                     'operator'      => $request->operator,
                 ]);
