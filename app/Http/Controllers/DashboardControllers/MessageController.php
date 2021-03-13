@@ -122,7 +122,7 @@ class MessageController extends Controller
                     if(Auth::user()->sms == 0){
                         return redirect()->back()->withErrors('User have zero sms');
                     }
-
+                    
                     $data['contact_number'] = $number;
                     $number_length = strlen($data['contact_number']);
                     if($number_length < 10 || $number_length > 11  ){
@@ -154,7 +154,7 @@ class MessageController extends Controller
                 foreach ($data['numbers'] as $number) {
                     $data['contact_number'] = $number;
                     $number_length = strlen($data['contact_number']);
-                    
+    
                     if(Auth::user()->sms == 0){
                         return redirect()->back()->withErrors('User have zero sms');
                     }

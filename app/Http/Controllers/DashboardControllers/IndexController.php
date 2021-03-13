@@ -44,26 +44,5 @@ class IndexController extends Controller
         return redirect()->back()->with('success', 'Sms limit updated successfully');
     }
 
-    public function getapi()
-    {   
-        if(Auth::user()->getUserSmsAPi->type == 'masking'){
-            $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email='.Auth::user()->email.'&message=testing&phone_number=090049124&orginator=your masking';
-        }else{
-            $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email='.Auth::user()->email.'&message=write&phone_number=090049124&orginator=your code';
-        }
-        return view('dashboard.api.index', $data);
-    }
-
-    public function message_url($data)
-    {
-        $url = $data->api_url;
-        $url .= 'user='.$data->api_username;
-        $url .= '&pwd='.$data->api_password;
-        $url .= '&sender='.NULL;
-        $url .= '&reciever='.NULL;
-        $url .= '&msg-data='.NULL;
-        $url .= '&response=json';
-        return $url;
-    }
-
+   
 }
