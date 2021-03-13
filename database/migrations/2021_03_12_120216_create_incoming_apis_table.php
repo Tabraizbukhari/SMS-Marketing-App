@@ -17,7 +17,6 @@ class CreateIncomingApisTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('prefix');
-            $table->string('api', 1000);
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class IncommingController extends Controller
 {
+    
     public function index(Request $request)
     {
         $response = ['success'=>false, 'response' => ''];
@@ -24,15 +25,17 @@ class IncommingController extends Controller
         ];
         
         $validator = Validator::make($request->all(), $rules);
-
         if ($validator->fails()) {
             $response['response'] = $validator->messages();
          }else{
+            
             $getPrefix = explode(" ",$request->msgdata);
             $user = User::whereHas('IncomingApi', function($q) use($getPrefix){ $q->where('prefix', $getPrefix[0]); })->first();
+            
             if(!$user){
                 $response['response'] = "something wents wrong! try again";
             }else{
+                
                 IncomingMessage::create([
                     'user_id'       => $user->id,
                     'sender'        => $request->sender,

@@ -17,6 +17,7 @@ use App\Models\Transaction;
 use App\Notifications\CustomerRegisterNotification;
 use DB;
 use Carbon\Carbon;
+use App\Models\IncomingApi;
 
 class CustomerController extends Controller
 {
@@ -32,6 +33,15 @@ class CustomerController extends Controller
 
     }
 
+    public function addPrefix($id, Request $request)
+    {
+        $request->validate(['prefix' => 'required']);
+        IncomingApi::updateOrCreate([
+            'user_id' => decrypt($id),
+            'prefix'  => $request->prefix,
+        ]);
+        return redirect()->back()->with('success', 'Add prefix succcessfully');
+    }
     public function index($id = null)
     {
         

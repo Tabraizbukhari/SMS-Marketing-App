@@ -70,6 +70,8 @@ Route::middleware('auth')->group(function(){
             Route::get('edit/{id}', [CustomerController::class, 'edit'] )->name('edit');
             Route::post('update/{id}', [CustomerController::class, 'update'] )->name('update');
 
+            Route::post('add/prefix/{id}', [CustomerController::class, 'addPrefix'] )->name('add.prefix');
+
             Route::post('api-create/{id}', [CustomerController::class, 'apiCreateORUpdate'] )->name('api.create.update');
         });
     });

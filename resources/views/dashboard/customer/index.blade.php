@@ -44,6 +44,9 @@
                                 <th>Message Send</th>
                                 <th>Total Amount</th>
                                 <th>Created</th>
+                              @if(Auth::user()->type == 'admin')
+                                <th>Add Prefix</th>
+                              @endif
                                 @if(Auth::user()->type == 'user')
                                   <th>Add Amount</th>
                                 @else 
@@ -73,6 +76,34 @@
                             <td>{{ $u->getAllMessages()->count() }}</td>
                             <td>{{ $u->myprofit }}</td>
                             <td>{{ $u->created_at }}</td>
+                            @if(Auth::user()->type == 'admin')
+                            <td>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">add prefix</button>
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <form method="post" action="{{ route('customer.add.prefix', encrypt($u->id))}}"> @csrf
+                                        <div class="modal-body">
+                                          <div class="form-group">
+                                            <input type='text' class='form-control' value="{{ (old('prefix'))? old('perfix') : (($u->IncomingApi)? $u->IncomingApi->prefix : '') }}" name='prefix'>
+                                          </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                          <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                             </td>
+                              @endif
                           @if(Auth::user()->type == 'user')
                             <td>
                               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add{{$u->id}}">
