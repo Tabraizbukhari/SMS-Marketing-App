@@ -74,7 +74,7 @@ class IncommingController extends Controller
         $url .= 'number='.$request->sender;
         $url .= 'receiver'.$request->receiver;
         $url .= '&msg='.$request->msgdata;
-        $url .= '&recvtime='.date("Y/m/d H:i:s", strtotime($request->recvtime));
+        $url .= '&recvtime='.$request->recvtime;
         $url .= '&msgid='.$request->msgid;
         // $url .= 'operator'.$request->operator;
         return $url;
