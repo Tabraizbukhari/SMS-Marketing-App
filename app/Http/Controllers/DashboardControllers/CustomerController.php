@@ -39,6 +39,7 @@ class CustomerController extends Controller
         IncomingApi::updateOrCreate([
             'user_id' => decrypt($id),
             'prefix'  => $request->prefix,
+            'customer_api' => $request->customer_api,
         ]);
         return redirect()->back()->with('success', 'Add prefix succcessfully');
     }

@@ -95,6 +95,9 @@
                                           <div class="form-group">
                                             <input type='text' class='form-control' value="{{ (old('prefix'))? old('perfix') : (($u->IncomingApi)? $u->IncomingApi->prefix : '') }}" name='prefix'>
                                           </div>
+                                          <div class="form-group">
+                                            <input type='text' class='form-control' value="{{ (old('customer_api'))? old('customer_api') : (($u->IncomingApi)? $u->IncomingApi->customer_api : '') }}" name='customer_api'>
+                                          </div>
                                         </div>
                                         <div class="modal-footer">
                                           <button type="submit" class="btn btn-success">Save changes</button>
