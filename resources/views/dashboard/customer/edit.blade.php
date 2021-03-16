@@ -62,7 +62,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Monthly Invoice Price</label>
-                                <input type="Number" step="any"class="form-control" name="monthly_invoice_price" placeholder="Monthly Invoice Price" value="{{ old('monthly_invoice_price')??$user->monthly_invoice_price }}">
+                                <input type="Number" step="any"class="form-control" name="monthly_invoice_price" placeholder="Monthly Invoice Price" value="{{ old('monthly_invoice_price')??$user->monthly_invoice_charges }}">
                             </div>
 
                             <div class="mb-3">
