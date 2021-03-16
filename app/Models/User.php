@@ -27,7 +27,8 @@ class User extends Authenticatable
         'price',
         'type',
         'api_token',
-        'email_verified_at'
+        'email_verified_at',
+        'monthly_invoice_charges',
     ];
 
     /**

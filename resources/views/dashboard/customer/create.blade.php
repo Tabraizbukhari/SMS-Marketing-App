@@ -52,6 +52,12 @@
                                     <input type="Number" step="any" class="form-control" name="cost" placeholder="Cost of per sms" value="{{ old('cost') }}">
                                 </div>
                             </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Monthly Invoice Price</label>
+                                <input type="Number" step="any" class="form-control" name="monthly_invoice_price" placeholder="Monthly Invoice Price" value="{{ old('monthly_invoice_price') }}">
+                            </div>
+
                             @if(Auth::user()->type == 'user')
                                 @if(Auth::user()->getUserSmsApi->type == 'masking')
                                     <div class="mb-3">

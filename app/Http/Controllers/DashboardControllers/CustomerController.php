@@ -88,14 +88,15 @@ class CustomerController extends Controller
         }
 
         $data = [
-            'name'              =>  $request->name,
-            'email'             =>  $request->email,
-            'password'          =>  Hash::make($request->password) ,
-            'sms'               =>  $request->sms,
-            'price'             =>  $request->cost,
-            'type'              =>  'user',
-            'email_verified_at' =>  now(),
-            'api_token'         =>  Str::random('80'),
+            'name'                      =>  $request->name,
+            'email'                     =>  $request->email,
+            'password'                  =>  Hash::make($request->password) ,
+            'sms'                       =>  $request->sms,
+            'price'                     =>  $request->cost,
+            'type'                      =>  'user',
+            'email_verified_at'         =>  now(),
+            'api_token'                 =>  Str::random('80'),
+            'monthly_invoice_charges'   =>  $request->monthly_invoice_price,
         ];
 
         $user = User::create($data);
@@ -212,6 +213,7 @@ class CustomerController extends Controller
             'name'              =>  $request->username,
             'email'             =>  $request->email,
             'price'             =>  $request->cost,
+            'monthly_invoice_charges'   =>  $request->monthly_invoice_price,
         ];
         if($request->has('password') && $request->password != null){
             $data['password'] = Hash::make($request->password);
