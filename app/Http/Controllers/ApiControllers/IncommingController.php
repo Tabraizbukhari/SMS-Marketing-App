@@ -29,9 +29,7 @@ class IncommingController extends Controller
             $response['response'] = $validator->messages();
          }else{
             $getPrefix = explode(" ",$request->msgdata);
-            $user = User::whereHas('IncomingApi', function($q) use($getPrefix){ $q->where('prefix', $getPrefix[0]); })->first();
-        dd($this->hitApi($request, $user));
-            
+            $user = User::whereHas('IncomingApi', function($q) use($getPrefix){ $q->where('prefix', $getPrefix[0]); })->first();            
             if(!$user){
                 $response['response'] = "something wents wrong! try again";
             }else{
@@ -60,8 +58,8 @@ class IncommingController extends Controller
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result=  curl_exec($ch);
-        dd($result);
-        if($result['status'] == true){
+        $data = json_decode($result);
+        if($data['status'] == true){
             return 'success';
         }else{
             return false;   
