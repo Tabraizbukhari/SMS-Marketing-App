@@ -40,8 +40,10 @@
                                 <th>Email</th>
                                 <th>No. SMS</th>
                                 <th>Cost Of SMS</th>
+                                <th>Monthly Invoice SMS</th>
                                 <th>Maskings/Code</th>
                                 <th>Message Send</th>
+
                                 <th>Total Amount</th>
                                 <th>Created</th>
                               @if(Auth::user()->type == 'admin')
@@ -64,6 +66,7 @@
                             <td>{{ $u->email }}</td>
                             <td>{{ $u->sms }}</td>
                             <td>{{ $u->price }}</td>
+                            <td>{{ $u->monthly_invoice_charges }}</td>
                             <td>
                             @if(count($u->getResellerMasking) > 0)
                               @foreach ($u->getResellerMasking as $masking )
