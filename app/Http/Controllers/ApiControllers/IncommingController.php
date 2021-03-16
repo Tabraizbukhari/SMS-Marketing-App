@@ -28,14 +28,15 @@ class IncommingController extends Controller
         if ($validator->fails()) {
             $response['response'] = $validator->messages();
          }else{
-            
             $getPrefix = explode(" ",$request->msgdata);
             $user = User::whereHas('IncomingApi', function($q) use($getPrefix){ $q->where('prefix', $getPrefix[0]); })->first();
+        dd($this->message_url($request, $user));
             
             if(!$user){
                 $response['response'] = "something wents wrong! try again";
             }else{
                 
+                $this->hitApi($request, $user);
                 IncomingMessage::create([
                     'user_id'       => $user->id,
                     'sender'        => $request->sender,
@@ -51,5 +52,31 @@ class IncommingController extends Controller
             }
         }
         return response()->json($response);
+    }
+
+    public function hitApi($request, $user)
+    {
+        $url = $this->message_url($request, $user);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result=  json_decode(curl_exec($ch));
+        if($result['status'] == true){
+            return 'success';
+        }else{
+            return false;   
+        }
+    }
+
+
+    public function message_url($request, $user)
+    {
+        $url  =  $user->IncomingApi->customer_api;
+        $url .= 'number='.$request->sender;
+        $url .= 'receiver'.$request->receiver;
+        $url .= '&msg='.$request->msgdata;
+        $url .= '&recvtime='.date("Y/m/d H:i:s", strtotime($request->recvtime));
+        $url .= '&msgid='.$request->msgid;
+        // $url .= 'operator'.$request->operator;
+        return $url;
     }
 }

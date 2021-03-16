@@ -10,7 +10,7 @@ class IncomingApi extends Model
     use HasFactory;
     protected $fillable = [
         'prefix',
-        'api',
+        'customer_api',
         'user_id',
     ];
 }

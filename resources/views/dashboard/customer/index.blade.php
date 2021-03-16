@@ -43,7 +43,6 @@
                                 <th>Monthly Invoice SMS</th>
                                 <th>Maskings/Code</th>
                                 <th>Message Send</th>
-
                                 <th>Total Amount</th>
                                 <th>Created</th>
                               @if(Auth::user()->type == 'admin')
