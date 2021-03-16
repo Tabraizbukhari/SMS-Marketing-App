@@ -72,7 +72,7 @@ class IncommingController extends Controller
     {
         $url  =  $user->IncomingApi->customer_api;
         $url .= 'number='.$request->sender;
-        $url .= '&receiver'.$request->receiver;
+        $url .= '&receiver='.$request->receiver;
         $url .= '&msg='.urlencode($request->msgdata);
         $url .= '&recvtime='.$request->recvtime;
         $url .= '&msgid='.$request->msgid;
