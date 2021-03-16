@@ -14,7 +14,7 @@ class AlertTableAddColumnIncomingApis extends Migration
     public function up()
     {
         Schema::table('incoming_apis', function (Blueprint $table) {
-            $table->string('customer_api')->nullable();
+            $table->string('customer_api')->nullable()->after('prefix');
         });
     }
 
