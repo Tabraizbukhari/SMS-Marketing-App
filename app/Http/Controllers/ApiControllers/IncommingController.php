@@ -59,7 +59,8 @@ class IncommingController extends Controller
         $url = $this->message_url($request, $user);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result=  json_decode(curl_exec($ch));
+        $result=  curl_exec($ch);
+        dd($result);
         if($result['status'] == true){
             return 'success';
         }else{
