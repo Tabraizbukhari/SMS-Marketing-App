@@ -35,7 +35,7 @@ class ApiController extends Controller
             $rules = [
                 'email'         => 'required',
                 'message'       => 'required',
-                'phone_number'  => 'required',
+                'phone_number'  => 'required|min:11|max:12',
                 'orginator'     => 'required',
             ];
             
