@@ -49,7 +49,7 @@ class IndexController extends Controller
         if(Auth::user()->getUserSmsAPi->type == 'masking'){
             $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email='.Auth::user()->email.'&message=testing&phone_number=090049124&orginator=masking';
         }else{
-            $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email='.Auth::user()->email.'&message=write&phone_number=090049124&orginator=99059';
+            $data['api_url'] =  'http://161.35.238.65/SMA/api/sendmessage?email='.Auth::user()->email.'&message=write&phone_number=090049124&orginator=99095';
         }
         return view('dashboard.api.index', $data);
     }
