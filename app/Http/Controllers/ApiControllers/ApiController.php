@@ -73,7 +73,7 @@ class ApiController extends Controller
                         $response['response'] = 'Masking not found';
                         return response()->json($response);
                     }
-                }elseif ($request->orginator != 99059) {
+                }elseif ($request->orginator != 99095) {
                     $response['response'] = 'incorrect code of orginator';
                     return response()->json($response);
                 }
