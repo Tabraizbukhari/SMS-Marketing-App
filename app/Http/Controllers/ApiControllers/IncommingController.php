@@ -30,7 +30,6 @@ class IncommingController extends Controller
          }else{
             $getPrefix = explode(" ",$request->msgdata);
             $user = User::whereHas('IncomingApi', function($q) use($getPrefix){ $q->where('prefix', $getPrefix[0]); })->first();            
-            dd($this->message_url($request, $user));
             if(!$user){
                 $response['response'] = "something wents wrong! try again";
             }else{
