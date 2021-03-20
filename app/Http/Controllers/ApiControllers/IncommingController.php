@@ -33,7 +33,6 @@ class IncommingController extends Controller
             if(!$user){
                 $response['response'] = "something wents wrong! try again";
             }else{
-                dd($this->message_url($request, $user));
 
                 dd($this->hitApi($request, $user));
                 $this->hitApi($request, $user);
