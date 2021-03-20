@@ -34,19 +34,24 @@ class IncommingController extends Controller
                 $response['response'] = "something wents wrong! try again";
             }else{
 
-                $this->hitApi($request, $user);
-                IncomingMessage::create([
-                    'user_id'       => $user->id,
-                    'sender'        => $request->sender,
-                    'receiver'      => $request->receiver,
-                    'body'          => $request->msgdata,
-                    'recvtime'      => date("Y/m/d H:i:s", strtotime($request->recvtime)),
-                    'message_id'    => $request->msgid,
-                    'operator'      => $request->operator,
-                ]);
+                $hitApi = $this->hitApi($request, $user);
+                if($hitAp == false){
+                    $response['response'] = "Something went's wrong";
+                    $response['success'] = false;
+                }else{
+                    IncomingMessage::create([
+                        'user_id'       => $user->id,
+                        'sender'        => $request->sender,
+                        'receiver'      => $request->receiver,
+                        'body'          => $request->msgdata,
+                        'recvtime'      => date("Y/m/d H:i:s", strtotime($request->recvtime)),
+                        'message_id'    => $request->msgid,
+                        'operator'      => $request->operator,
+                    ]);
 
-                $response['response'] = "Received successfully!";
-                $response['success'] = true;
+                    $response['response'] = "Received successfully!";
+                    $response['success'] = true;
+                }
             }
         }
         return response()->json($response);
@@ -62,7 +67,7 @@ class IncommingController extends Controller
         $result=  curl_exec($ch);
         $data = json_decode($result, true);
         if($data['status'] == true){
-            return 'success';
+            return true;
         }else{
             return false;   
         }
