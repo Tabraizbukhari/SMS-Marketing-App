@@ -60,7 +60,7 @@ class IncommingController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result=  curl_exec($ch);
         $data = json_decode($result, true);
-        dd($data);
+        dd($result);
         if($data['status'] == true){
             return 'success';
         }else{
