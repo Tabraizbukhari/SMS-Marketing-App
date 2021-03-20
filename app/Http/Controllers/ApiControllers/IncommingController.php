@@ -34,8 +34,6 @@ class IncommingController extends Controller
                 $response['response'] = "something wents wrong! try again";
             }else{
 
-
-                dd($this->hitApi($request, $user));
                 $this->hitApi($request, $user);
                 IncomingMessage::create([
                     'user_id'       => $user->id,
@@ -63,7 +61,6 @@ class IncommingController extends Controller
         curl_setopt($ch, CURLOPT_URL, $url);        
         $result=  curl_exec($ch);
         $data = json_decode($result, true);
-        dd($result);
         if($data['status'] == true){
             return 'success';
         }else{
