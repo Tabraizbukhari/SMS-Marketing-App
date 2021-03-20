@@ -33,6 +33,8 @@ class IncommingController extends Controller
             if(!$user){
                 $response['response'] = "something wents wrong! try again";
             }else{
+                dd($this->message_url($request, $user));
+
                 dd($this->hitApi($request, $user));
                 $this->hitApi($request, $user);
                 IncomingMessage::create([
@@ -74,7 +76,7 @@ class IncommingController extends Controller
         $url .= 'number='.$request->sender;
         $url .= '&receiver='.$request->receiver;
         $url .= '&msg='.urlencode($request->msgdata);
-        $url .= '&recvtime='.$request->recvtime;
+        $url .= '&recvtime='.date("Y/m/d H:i:s", strtotime($request->recvtime));
         $url .= '&msgid='.$request->msgid;
         // $url .= 'operator'.$request->operator;
         return $url;
