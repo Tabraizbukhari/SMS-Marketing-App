@@ -34,7 +34,6 @@ class IncommingController extends Controller
                 $response['response'] = "something wents wrong! try again";
             }else{
 
-                dd($this->message_url($request, $user));
 
                 dd($this->hitApi($request, $user));
                 $this->hitApi($request, $user);
@@ -58,6 +57,7 @@ class IncommingController extends Controller
     public function hitApi($request, $user)
     {
         $url = $this->message_url($request, $user);
+        $url = str_replace(" ", '%20', $url);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);        
