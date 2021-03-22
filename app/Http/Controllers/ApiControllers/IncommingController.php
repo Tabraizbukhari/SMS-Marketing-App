@@ -35,7 +35,7 @@ class IncommingController extends Controller
             }else{
 
                 $hitApi = $this->hitApi($request, $user);
-                dd($hitApi);
+                dd($hitApi, 'asdfasd');
                 if($hitApi == false){
                     $response['response'] = "Something went's wrong";
                     $response['success'] = false;
