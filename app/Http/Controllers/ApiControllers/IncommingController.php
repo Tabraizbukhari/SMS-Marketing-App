@@ -35,7 +35,6 @@ class IncommingController extends Controller
             }else{
 
                 $hitApi = $this->hitApi($request, $user);
-                dd($hitApi, 'asdfasd');
                 if($hitApi == false){
                     $response['response'] = "Something went's wrong";
                     $response['success'] = false;
@@ -66,7 +65,6 @@ class IncommingController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);        
         $result=  curl_exec($ch);
-        dd($result, 'ssssssssss');
         $data = json_decode($result, true);
         if($data['status'] == true){
             return true;
