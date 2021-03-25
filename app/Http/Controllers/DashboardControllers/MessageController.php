@@ -107,7 +107,7 @@ class MessageController extends Controller
         if($request->hasFile('file') && $request->file){
             $filesexel = $this->readExportFile($request->file);
             if($filesexel == false){
-                return redirect()->back()->withErrors("The excel file doesn't have heading Number..");
+                return redirect()->back()->withErrors("The excel file numbers column heading is not found, Something went wrong! Try again.");
             }
             $data['numbers'] = $filesexel;
             $data['file']    = $request->file;
