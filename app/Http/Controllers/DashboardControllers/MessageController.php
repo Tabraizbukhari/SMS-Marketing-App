@@ -92,7 +92,6 @@ class MessageController extends Controller
             'type'           => $request->type,
             'campaign'       => $request->campaign,
         ];
-
         if($messageLength > 5){
             return redirect()->back()->withErrors('Message maximum limit is 5');
         }else{
@@ -106,10 +105,14 @@ class MessageController extends Controller
             $data['api_type'] = 'code';
         }
         if($request->hasFile('file') && $request->file){
-            $data['numbers'] = $this->readExportFile($request->file);
+            $filesexel = $this->readExportFile($request->file);
+            if($filesexel == false){
+                return redirect()->back()->withErrors("The excel file doesn't have heading Number..");
+            }
+            $data['numbers'] = $filesexel;
             $data['file']    = $request->file;
         }
-
+            if($$this->readExportFile($request->file))
         if($request->has('late_shedule') && $request->has('sheduledatetime') && $request->sheduledatetime != null){
             $data['status'] = 'pending';
             $data['campaign_status'] = 'pending';
@@ -260,8 +263,12 @@ class MessageController extends Controller
         foreach ($readExcel as $_read) {
             if(count($_read) > 0){
                 foreach ($_read as $r) {
-                    $number = (int)$r['number'];
-                    array_push($numbers, $number);
+                    if(!isset($r['number'])){
+                        return false;
+                    }else{
+                        $number = (int)$r['number'];
+                        array_push($numbers, $number);
+                    }
                 }
             }
         }
