@@ -112,7 +112,6 @@ class MessageController extends Controller
             $data['numbers'] = $filesexel;
             $data['file']    = $request->file;
         }
-            if($$this->readExportFile($request->file))
         if($request->has('late_shedule') && $request->has('sheduledatetime') && $request->sheduledatetime != null){
             $data['status'] = 'pending';
             $data['campaign_status'] = 'pending';
