@@ -51,9 +51,8 @@ class MessageController extends Controller
         $data = [];
         $data['startDate']  = $request->start_date;
         $data['endDate']    = $request->end_date;
-        dd($data);
-        return (new MessageExport($data))->download('messages.xlsx');
-        // $messages   = Message::where('created_at', '>=', $startDate)->where('created_at', '<=', $endDate)->get();
+        $messages   = Message::where('created_at', '>=', $startDate)->where('created_at', '<=', $endDate)->get();
+        return (new MessageExport($messages))->download('messages.xlsx');
         // return Excel::download(new MessageExport, 'messages.xlsx');
     }
 
