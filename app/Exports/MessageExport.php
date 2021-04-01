@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
+use Auth;
 class MessageExport implements FromQuery, WithHeadings, WithMapping
 {
     /**
@@ -36,7 +37,7 @@ class MessageExport implements FromQuery, WithHeadings, WithMapping
     public function query()
     {
         // return Invoice::query()->whereYear('created_at', $this->year);
-        return Message::query()->where('created_at', '>=', $this->startdate)->where('created_at', '<=', $this->enddate);
+        return Message::query()->where('user_id', Auth::id())->where('created_at', '>=', $this->startdate)->where('created_at', '<=', $this->enddate);
     }
    
     public function map($message): array
