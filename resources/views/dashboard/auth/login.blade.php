@@ -27,7 +27,11 @@
 							<div class="card-body">
 								<div class="m-sm-4">
 									<div class="text-center">
-										<img src="{{ url('logo/logo.png') }}" alt="synctechsol-logo" class="img-fluid" width="132" height="132" />
+										@if($logo_img)
+											<img src="{{ url(Storage::url($logo_img) }}" alt="synctechsol-logo" class="img-fluid" width="132" height="132" />
+										@else
+											<img src="{{ url('logo/logo.png') }}" alt="synctechsol-logo" class="img-fluid" width="132" height="132" />
+										@endif
 									</div>
 									<form method="post" action="{{ route('login.post') }}"> @csrf
 										<div class="mb-3">

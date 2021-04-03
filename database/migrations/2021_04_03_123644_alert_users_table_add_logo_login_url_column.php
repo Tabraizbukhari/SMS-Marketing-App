@@ -14,7 +14,7 @@ class AlertUsersTableAddLogoLoginUrlColumn extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('login_logo_url');
+            $table->string('login_logo_url')->nullable();
         });
     }
 

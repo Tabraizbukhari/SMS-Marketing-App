@@ -14,7 +14,7 @@ class AlertUsersTableAddLogoColumn extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('logo_img')->after('type');
+            $table->string('logo_img')->after('type')->nullable();
         });
     }
 

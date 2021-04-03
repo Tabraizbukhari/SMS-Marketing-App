@@ -25,9 +25,9 @@ class loginController extends Controller
 
     public function loginView(Request $request)
     {
-        dd($request->getHttpHost());
-
-        return view('dashboard.auth.login');
+        $user = User::where('login_logo_url', $request->getHttpHost())->first();
+        $data['logo_img'] = ($user->logo_img != NULL)? $user->logo_img : NULL;
+        return view('dashboard.auth.login', $data);
     }
 
 
