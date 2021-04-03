@@ -27,7 +27,7 @@
 							<div class="card-body">
 								<div class="m-sm-4">
 									<div class="text-center">
-										@if(isset($logo_img))
+										@if($logo_img != NULL)
 											<img src="{{ url(Storage::url($logo_img)) }}" alt="logo not found" class="img-fluid" width="132" height="132" />
 										@else
 											<img src="{{ url('logo/logo.png') }}" alt="synctechsol-logo" class="img-fluid" width="132" height="132" />
