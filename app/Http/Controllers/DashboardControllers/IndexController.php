@@ -56,6 +56,7 @@ class IndexController extends Controller
 
     public function updateLogo(Request $request)
     {
+        dd('asd');
         $request->validate(['logo' => 'required|image']);
         if($request->hasFile('logo')){
             $file = $request->file('logo');
