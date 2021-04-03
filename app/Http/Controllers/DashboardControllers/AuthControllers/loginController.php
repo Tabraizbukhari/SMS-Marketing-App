@@ -27,6 +27,7 @@ class loginController extends Controller
     {
         $user = User::where('login_logo_url', $request->getHttpHost())->first();
         $data['logo_img'] = (isset($user['logo_img']))? $user->logo_img : NULL;
+        dd($data['logo_img']);
         return view('dashboard.auth.login', $data);
     }
 
