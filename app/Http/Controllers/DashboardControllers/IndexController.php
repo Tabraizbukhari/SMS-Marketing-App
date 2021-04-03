@@ -57,11 +57,10 @@ class IndexController extends Controller
     public function updateLogo(Request $request)
     {
         $request->validate(['logo' => 'required|image']);
-
         if($request->hasFile('logo')){
             $file = $request->file('logo');
             $file_path = $file->store(Auth::user()->getLogoUrlPath());
-            User::find(Auth::id())->update([
+            Auth::user()->update([
                 'logo_img' => $file_path,
             ]);
 
