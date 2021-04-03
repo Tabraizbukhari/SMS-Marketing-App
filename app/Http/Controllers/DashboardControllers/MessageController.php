@@ -170,8 +170,6 @@ class MessageController extends Controller
                         $data['price']  = $messageLength * Auth::user()->price;
                     }
 
-                    
-
                     $hitapi = $this->hitApi($data);
                     if($hitapi == 'success'){
                         $this->saveMessage($data, $masking_id);

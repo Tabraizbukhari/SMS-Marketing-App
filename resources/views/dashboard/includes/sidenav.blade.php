@@ -1,7 +1,7 @@
 <nav id="sidebar" class="sidebar">
         <div class="sidebar-content js-simplebar">
             <a class="sidebar-brand" href="{{ route('admin.dashboard') }}">
-                <span class="align-middle">	<img src="{{ url('logo/logo.png') }}" alt="synctechsol-logo" class="img-fluid" width="132" height="132" /></span>
+                <span class="align-middle">	<img src="{{ (Auth::user()->logo_img)? url(Storage::url(Auth::user()->logo_img)) : url('logo/logo.png') }}" alt="synctechsol-logo" class="img-fluid" width="132" height="132" /></span>
             </a>
 
             <ul class="sidebar-nav" >

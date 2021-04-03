@@ -14,6 +14,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
     public $file_prefix_path = 'public/file';
+    public $logo_prefix_path = 'public/logos';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -29,6 +31,7 @@ class User extends Authenticatable
         'api_token',
         'email_verified_at',
         'monthly_invoice_charges',
+        'logo_img',
     ];
 
     /**
@@ -93,11 +96,7 @@ class User extends Authenticatable
     }
 
 
-    public function getBulkSmsExcelPath()
-    {
-        return $this->file_prefix_path.'/'.Auth::user()->id;
-    }
-
+  
     public function getTransactionId()
     {
         return strtoupper('TS'.rand(0,100000).Str::random(2).Str::random(1));
@@ -113,6 +112,17 @@ class User extends Authenticatable
     public function IncomingApi()
     {
         return $this->hasOne(IncomingApi::class);
+    }
+
+    public function getBulkSmsExcelPath()
+    {
+        return $this->file_prefix_path.'/'.Auth::user()->id;
+    }
+
+
+    public function getLogoUrlPath()
+    {
+        return $this->logo_prefix_path.'/'.Auth::user()->id;
     }
 
 }

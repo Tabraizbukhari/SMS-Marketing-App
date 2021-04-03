@@ -53,5 +53,20 @@ class IndexController extends Controller
         }
         return view('dashboard.api.index', $data);
     }
-   
+
+    public function updateLogo(Request $request)
+    {
+        $request->validate(['logo' => 'required|image']);
+
+        if($request->hasFile('logo')){
+            $file = $request->file('logo');
+            $file_path = $file->store(Auth::user()->getLogoUrlPath());
+            User::find(Auth::id())->update([
+                'logo_img' => $file_path,
+            ]);
+
+            return redirect()->back()->with('success', 'Logo updated successfully');
+        }
+            return  redirect()->back()->withError('something wents wrong, Try Again');;
+    }
 }

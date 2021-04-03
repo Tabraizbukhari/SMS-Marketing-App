@@ -111,7 +111,7 @@ Route::middleware('auth')->group(function(){
     Route::post('contacts/{id}/update', [ContactController::class, 'update'])->name('contacts.update');
     Route::delete('contacts/destroy/{id}', [ContactController::class, 'destroy'] )->name('contacts.destroy');
 
-
+    Route::post('logo',[IndexController::class, 'updateLogo'])->name('logo.update');
 
 });
 
