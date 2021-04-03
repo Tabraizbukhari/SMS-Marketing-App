@@ -23,8 +23,10 @@ class loginController extends Controller
 
     }
 
-    public function loginView()
+    public function loginView(Request $request)
     {
+        dd($request->getHttpHost());
+
         return view('dashboard.auth.login');
     }
 
