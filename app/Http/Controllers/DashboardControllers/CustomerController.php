@@ -27,10 +27,10 @@ class CustomerController extends Controller
     public function __construct()
     {
         $this->pagination = 10;
+        $admin = User::where('type', 'admin')->first();
         $this->api_url = 'https://sms.synctechsol.com/APIManagement/API/RequestAPI?';
-        $this->api_username = 'synctech';
-        $this->api_password = 'AAUKHlNrDzuEHqqE9yVO%2bUKQlEwe94F9npa7WmUWJ1q1rwe7shghLUEs1jctgTbxPQ%3d%3d';
-
+        $this->api_username = $admin->getUserSmsApi->api_username;
+        $this->api_password = $admin->getUserSmsApi->api_password;
     }
 
     public function addPrefix($id, Request $request)
