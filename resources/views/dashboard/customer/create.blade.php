@@ -97,11 +97,11 @@
                             @endif
                             @if(Auth::user()->getUserSmsApi->type != 'code')
                                 <div class="mb-3">
-                                    <label class="form-label">Api Name<span class="text-danger">*</span></label>
+                                    <label class="form-label">Api Name</label>
                                     <input type="text" id='api_name' class="form-control" name="api_name" placeholder="Enter user api name" value="{{ old('api_name') }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Api Password<span class="text-danger">*</span></label>
+                                    <label class="form-label">Api Password</label>
                                     <input type="password" id='api_password' class="form-control" name="api_password" placeholder="Enter user api password" value="{{ old('api_password') }}">
                                 </div>
                             @endif

@@ -128,8 +128,8 @@ class CustomerController extends Controller
             SmsApi::create([
                 'user_id'       => $user->id,
                 'api_url'       => $request->api_url??$this->api_url,
-                'api_username'  => $request->api_name??$this->api_username,
-                'api_password'  => $request->api_password??$this->api_password,
+                'api_username'  => $request->api_name,
+                'api_password'  => $request->api_password,
                 'type'          => ($request->api_url)? 'code' : 'masking',
             ]);
         }
@@ -308,7 +308,7 @@ class CustomerController extends Controller
         if($request->has('api_name') && $request->has('api_password')){
             SmsApi::updateOrCreate([
                 'user_id'       => $user->id,
-                'api_url'       => $request->api_url,
+                'api_url'       => $request->api_url??$this->api_url,
                 'api_username'  => $request->api_name,
                 'api_password'  => $request->api_password,
                 'type'          => ($request->api_url)? 'code' : 'masking',
