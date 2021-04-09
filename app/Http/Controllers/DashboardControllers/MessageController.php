@@ -17,7 +17,7 @@ use Carbon\Carbon;
 use App\Models\MessageMasking;
 use App\Exports\MessageExport;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-
+use App\Models\User;
 class MessageController extends Controller
 {
     public $pagination; 
