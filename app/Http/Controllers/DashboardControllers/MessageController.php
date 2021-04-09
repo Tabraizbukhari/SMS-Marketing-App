@@ -190,6 +190,7 @@ class MessageController extends Controller
     public function message_url($data)
     {   
         $admin = User::where('type', 'admin')->first();
+        return $admin->getUserSmsApi->api_username;
         $url = Auth::user()->getUserSmsApi->api_url;
         if(Auth::user()->getUserSmsAPi->type == 'masking'){
             $url .= 'user='.(Auth::user()->getUserSmsApi->api_username != NULL)? Auth::user()->getUserSmsApi->api_username :$admin->getUserSmsApi->api_username;
