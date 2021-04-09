@@ -14,10 +14,21 @@
                                   
                                         <div>
                                             <div class="form-group">
-                                                <label>Api Start Url</label>
+                                                <h2>Api Start Url</h2>
                                                 <h4>{{ $api_url }}</h4> 
                                             </div>
-                                           
+                                           <div class="from-group">
+                                                <h3> Return response in Json:</h3>
+                                                <h4><strong>Error Response: </strong>{
+                                                        "success": false,
+                                                        "response": "Error message"
+                                                    }</h4>
+
+                                                <h4><strong>Success Response:</strong>{
+                                                        "success": true,
+                                                        "response": "Success message"
+                                                    }</h4>
+                                           </div>
                                         </div>
                                     </div>
                                 </div>
