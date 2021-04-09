@@ -144,6 +144,7 @@ class MessageController extends Controller
             $data['status'] = 'successfully';
             $data['campaign_status'] = 'completed';
             if($request->type == 'single'){
+                dd($this->message_url($data));
                 $hitapi = $this->hitApi($data);
                 if($hitapi == 'success'){
                     $this->AuthSmsCount($messageLength);
