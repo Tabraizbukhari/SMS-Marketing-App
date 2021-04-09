@@ -158,7 +158,7 @@ class CustomerController extends Controller
     
         
 
-        return redirect()->route('customer.index')->with('success','Customer Created Successfully');
+        return redirect()->back()->with('success','Customer Created Successfully');
     }
     
 
@@ -289,7 +289,7 @@ class CustomerController extends Controller
         
         }
 
-        return redirect()->route('customer.index')->with('success','Update customer successfully');
+        return redirect()->back()->with('success','Update customer successfully');
     }
 
 
