@@ -228,15 +228,10 @@ class CustomerController extends Controller
             'register_as'   => 'customer',
         ];
         UsersData::where('user_id', decrypt($id))->update($users_data);
-
-        // if($request->has('api_name') && $request->has('api_password')){
-        //     SmsApi::where('user_id', decrypt($id))->update([
-        //         'api_url'       =>  $request->api_url),
-        //         'api_username'  =>  $request->api_name,
-        //         'api_password'  =>  $request->api_password,
-        //         'type'          =>  $request->api_url ,
-        //     ]);
-        // }
+        SmsApi::where('user_id', decrypt($id))->update([
+                'api_username'  =>  $request->api_name,
+                'api_password'  =>  $request->api_password,
+            ]);
         if($userSmsCount != $request->sms){
             if($userSmsCount > $request->sms){
                 $count = $userSmsCount - $request->sms;

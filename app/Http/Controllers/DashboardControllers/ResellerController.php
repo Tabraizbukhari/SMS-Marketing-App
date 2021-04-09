@@ -204,12 +204,12 @@ class ResellerController extends Controller
         UsersData::where('user_id', decrypt($id))->update($users_data);
 
         $admin = User::where('type', 'admin')->firstOrFail();
-        if($request->has('api_name') && $request->has('api_password')){
-            SmsApi::where('user_id', decrypt($id))->update([
-                'api_username'  => $request->api_name??$admin->getUserSmsApi->api_username,
-                'api_password'  => $request->api_password??$admin->getUserSmsApi->api_password,
-            ]);
-        }
+        $apiUsername = ($request->api_name != NULL)? $request->api_name : $admin->getUserSmsApi->api_username;
+        $apiPassword = ($request->api_password != NULL)? $request->api_password : $admin->getUserSmsApi->api_username;
+        SmsApi::where('user_id', decrypt($id))->update([
+            'api_username'  =>  $apiUsername,
+            'api_password'  =>  $apiPassword,
+        ]);
         if($userSmsCount != $request->sms){
             if($userSmsCount > $request->sms){
                 $count = $userSmsCount - $request->sms;
