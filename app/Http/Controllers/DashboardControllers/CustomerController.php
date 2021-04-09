@@ -200,8 +200,6 @@ class CustomerController extends Controller
             'sms' => 'required|numeric',
             'cost' => 'required',
             'phone_number' => 'required',
-            'api_name' => 'required',
-            'api_password' => 'required',
             'api_url' => 'required',
         ]);
 
@@ -299,8 +297,6 @@ class CustomerController extends Controller
     {
         $user = User::findOrFail(decrypt($id));
         $request->validate([
-            'api_name'      => 'required',
-            'api_password'  => 'required',
             'api_url'       => 'required',
         ]);
 
