@@ -97,13 +97,13 @@ class ResellerController extends Controller
             'register_as'   => 'reseller',
         ];
         UsersData::create($users_data);
-        
+        $admin = User::where('type', 'admin')->firstOrFail();
         if($request->has('api_name') && $request->has('api_password')){
             SmsApi::create([
                 'user_id'       => $user->id,
                 'api_url'       => $request->api_url??$this->api_url,
-                'api_username'  => $request->api_name,
-                'api_password'  => $request->api_password,
+                'api_username'  => $request->api_name??$admin->getUserSmsApi->api_username,
+                'api_password'  => $request->api_password??$admin->getUserSmsApi->api_password,
                 'type'          => ($request->api_url)? 'code' : 'masking',
             ]);
         }
@@ -203,10 +203,11 @@ class ResellerController extends Controller
         ];
         UsersData::where('user_id', decrypt($id))->update($users_data);
 
+        $admin = User::where('type', 'admin')->firstOrFail();
         if($request->has('api_name') && $request->has('api_password')){
             SmsApi::where('user_id', decrypt($id))->update([
-                'api_username'  => $request->api_name,
-                'api_password'  => $request->api_password,
+                'api_username'  => $request->api_name??$admin->getUserSmsApi->api_username,
+                'api_password'  => $request->api_password??$admin->getUserSmsApi->api_password,
             ]);
         }
         if($userSmsCount != $request->sms){
