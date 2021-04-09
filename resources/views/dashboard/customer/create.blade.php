@@ -45,7 +45,7 @@
                             <div class="row form-group">
                                 <div class="col-md-6">
                                     <label class="form-label">SMS<span class="text-danger">*</span></label>
-                                    <input type="Number" class="form-control"  min="5" max="{{ Auth::user()->sms }}" name="sms" placeholder="Number of sms" value="{{ old('sms') }}">
+                                    <input type="Number" class="form-control"  min="1" max="{{ Auth::user()->sms }}" name="sms" placeholder="Number of sms" value="{{ old('sms') }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">Cost<span class="text-danger">*</span></label>
