@@ -98,9 +98,12 @@ class ApiController extends Controller
     {
         $url = $user->getUserSmsApi->api_url;
         $admin = User::where('type', 'admin')->first();
+        $apiUser = ($user->getUserSmsApi->api_username != NULL)? $user->getUserSmsApi->api_username :  $admin->getUserSmsApi->api_username;
+        $apiPass = ($user->getUserSmsApi->api_password != NULL)? $user->getUserSmsApi->api_password :  $admin->getUserSmsApi->api_password;
+
         if($user->getUserSmsAPi->type == 'masking'){
-            $url .= 'user='.$user->getUserSmsApi->api_username??$admin->getUserSmsApi->api_username;
-            $url .= '&pwd='.$user->getUserSmsApi->api_password??$admin->getUserSmsApi->api_password;
+            $url .= 'user='.$apiUser;
+            $url .= '&pwd='.$apiPass;
             $url .= '&sender='.$data['masking_name'];
             $url .= '&reciever='.$data['contact_number'];
             $url .= '&msg-data='.urlencode($data['message']);
