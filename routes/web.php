@@ -30,7 +30,7 @@ use App\Http\Controllers\DashboardControllers\ContactController;
 */
 
 Route::domain('admin.example.com')->group(function () {
-    return $account;
+    return 'helloworld';
 });
 Route::middleware('guest')->group(function(){
     Route::get('/',[loginController::class, 'loginView'])->name('login');
