@@ -89,7 +89,9 @@ $(document).ready(function(){
         if ($(this).is(':checked')) {
             var $_html = 
             `<label class="form-label">Phone Number <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="phone_number" placeholder="phone number" value="{{ old('phone_number') }}">`;
+            <input type="text" class="form-control" name="phone_number" placeholder="Phone Number 03123456789" value="{{ old('phone_number') }}">
+            <small>The correct number formate is: 03211234567 </small>
+            `;
             $('#someThingHere').append($_html);
         }
     });

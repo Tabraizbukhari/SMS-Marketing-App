@@ -144,7 +144,6 @@ class MessageController extends Controller
             $data['status'] = 'successfully';
             $data['campaign_status'] = 'completed';
             if($request->type == 'single'){
-                dd($this->message_url($data));
                 $hitapi = $this->hitApi($data);
                 if($hitapi == 'success'){
                     $this->AuthSmsCount($messageLength);
@@ -199,7 +198,7 @@ class MessageController extends Controller
             $url .= '&pwd='.$password;
             $url .= '&sender='.$data['masking_name'];
             $url .= '&reciever='.$data['contact_number'];
-            $url .= '&msg-data='.$data['message'];
+            $url .= '&msg-data='.urlencode($data['message']);
             $url .= '&response=json';
         }else{
             $url .= 'action=sendmessage';
