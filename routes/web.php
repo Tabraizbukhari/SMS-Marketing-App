@@ -29,6 +29,9 @@ use App\Http\Controllers\DashboardControllers\ContactController;
 |
 */
 
+Route::domain('{account}.example.com')->group(function () {
+    return $account;
+});
 Route::middleware('guest')->group(function(){
     Route::get('/',[loginController::class, 'loginView'])->name('login');
     Route::post('login',[loginController::class, 'login'])->name('login.post');
