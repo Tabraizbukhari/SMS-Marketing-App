@@ -29,9 +29,15 @@ use App\Http\Controllers\DashboardControllers\ContactController;
 |
 */
 
-Route::domain('{account}.synctechsol.com')->group(function () {
-    return 'helloworld';
+Route::group(array('domain' => '{account}.synctechsol.com'), function() {
+
+    Route::get('/', function($account, $id) {
+        // ...
+        return 'sds';
+    });
+
 });
+
 Route::middleware('guest')->group(function(){
     Route::get('/',[loginController::class, 'loginView'])->name('login');
     Route::post('login',[loginController::class, 'login'])->name('login.post');
