@@ -31,7 +31,7 @@ use App\Http\Controllers\DashboardControllers\ContactController;
 
 Route::group(array('domain' => '{account}.synctechsol.com'), function() {
 
-    Route::get('/', function($account, $id) {
+    Route::get('/', function($account) {
         // ...
         return 'sds';
     });
