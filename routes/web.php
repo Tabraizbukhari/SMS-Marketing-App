@@ -29,7 +29,7 @@ use App\Http\Controllers\DashboardControllers\ContactController;
 |
 */
 
-Route::domain('admin.example.com')->group(function () {
+Route::domain('{account}.example.com')->group(function () {
     return 'helloworld';
 });
 Route::middleware('guest')->group(function(){
