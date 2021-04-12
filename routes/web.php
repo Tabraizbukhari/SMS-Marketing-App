@@ -29,7 +29,7 @@ use App\Http\Controllers\DashboardControllers\ContactController;
 |
 */
 
-Route::group(array('domain' => 'admin.synctechsol.com'), function() {
+Route::group(array('domain' => '{account}.synctechsol.com'), function() {
 
     Route::get('/', function($account) {
         return $account;
