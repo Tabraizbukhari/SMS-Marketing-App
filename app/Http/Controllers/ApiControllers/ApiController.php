@@ -117,7 +117,7 @@ class ApiController extends Controller
             $url .= '&messagedata='.urlencode($data['message']).'';
             $url .= '&responseformat=html';
         }
-        return $url;
+        return urlencode($url);
     }
 
     public function hitApi($data, $user)
