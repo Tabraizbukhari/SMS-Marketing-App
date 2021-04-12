@@ -198,7 +198,7 @@ class MessageController extends Controller
             $url .= '&pwd='.$password;
             $url .= '&sender='.$data['masking_name'];
             $url .= '&reciever='.$data['contact_number'];
-            $url .= '&msg-data='.$data['message'];
+            $url .= '&msg-data='.urlencode($data['message']);
             $url .= '&response=json';
         }else{
             $url .= 'action=sendmessage';
