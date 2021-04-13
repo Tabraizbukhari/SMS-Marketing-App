@@ -10,6 +10,10 @@
             </div>
           </div>
           @endif
+
+		<div class="alert alert-info" role="alert">
+			<marquee scrollamount="4" direction="right" scrolldelay="100" behavior="alternate">Dear your user api is updated, please check your new api... <a class="btn btn-sm btn-outline-primary" href="{{ route('api.index') }}">My Api</a></marquee>
+		</div>
             <div class="row">
                 	<div class="col-md-12 d-flex">
 							<div class="w-100">
