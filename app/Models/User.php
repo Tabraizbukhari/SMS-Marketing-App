@@ -32,6 +32,7 @@ class User extends Authenticatable
         'email_verified_at',
         'monthly_invoice_charges',
         'logo_img',
+        'username',
     ];
 
     /**

@@ -47,9 +47,9 @@ class IndexController extends Controller
     public function getapi()
     {   
         if(Auth::user()->getUserSmsAPi->type == 'masking'){
-            $data['api_url'] =  'http://sms1.synctechsol.com/api/sendmessage?email='.Auth::user()->email.'&password='.Auth::user()->api_token.'&message=testing&phone_number=090049124&orginator=masking';
+            $data['api_url'] =  'http://sms1.synctechsol.com/api/sendmessage?username='.Auth::user()->username.'&password='.Auth::user()->api_token.'&message=testing&phone_number=090049124&orginator=masking';
         }else{
-            $data['api_url'] =  'http://sms1.synctechsol.com/api/sendmessage?email='.Auth::user()->email.'&password='.Auth::user()->api_token.'&message=write&phone_number=090049124&orginator=99095';
+            $data['api_url'] =  'http://sms1.synctechsol.com/api/sendmessage?username='.Auth::user()->username.'&password='.Auth::user()->api_token.'&message=write&phone_number=090049124&orginator=99095';
         }
         return view('dashboard.api.index', $data);
     }

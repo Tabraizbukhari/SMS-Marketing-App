@@ -30,6 +30,7 @@ use App\Http\Controllers\DashboardControllers\ContactController;
 */
 
 
+
 Route::middleware('guest')->group(function(){
     Route::get('/',[loginController::class, 'loginView'])->name('login');
     Route::post('login',[loginController::class, 'login'])->name('login.post');
@@ -117,6 +118,7 @@ Route::middleware('auth')->group(function(){
 
 });
 
+require __DIR__.'/admin.php';
 
 // require __DIR__.'/auth.php';
  

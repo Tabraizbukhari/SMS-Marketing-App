@@ -33,7 +33,7 @@ class ApiController extends Controller
     {
             $response = ['success'=>false, 'response' => ''];
             $rules = [
-                'email'         => 'required',
+                'username'         => 'required',
                 'message'       => 'required',
                 'phone_number'  => 'required|min:11|max:12',
                 'orginator'     => 'required',
@@ -43,7 +43,7 @@ class ApiController extends Controller
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                  $response['response'] = $validator->messages()->first();
-            }else if(!User::where('email', $request->email)->where('api_token', $request->password)->exists()){
+            }else if(!User::where('username', $request->username)->where('api_token', $request->password)->exists()){
                 $response['response'] = "User credentials doesn't match.";
             }else if($this->stringCount($request->message) == false){
                 $response['response'] = 'Maximum message length limit is 5';
