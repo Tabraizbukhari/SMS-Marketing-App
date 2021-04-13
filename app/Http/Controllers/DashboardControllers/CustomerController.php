@@ -96,7 +96,7 @@ class CustomerController extends Controller
             'price'                     =>  $request->cost,
             'type'                      =>  'user',
             'email_verified_at'         =>  now(),
-            'api_token'                 =>  Str::random('80'),
+            'api_token'                 =>  Str::random('30'),
             'monthly_invoice_charges'   =>  $request->monthly_invoice_price,
         ];
 
