@@ -42,8 +42,8 @@ class ApiController extends Controller
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                  $response['response'] = $validator->messages()->first();
-            }else if(!User::where('email', $request->email)->exists()){
-                $response['response'] = "User doesn't exists";
+            }else if(!User::where('email', $request->email)->where('api_token', $request->token)->exists()){
+                $response['response'] = "User credentials doesn't match.";
             }else if($this->stringCount($request->message) == false){
                 $response['response'] = 'Maximum message length limit is 5';
             }else{
