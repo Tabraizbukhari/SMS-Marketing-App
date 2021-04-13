@@ -37,6 +37,7 @@ class ApiController extends Controller
                 'message'       => 'required',
                 'phone_number'  => 'required|min:11|max:12',
                 'orginator'     => 'required',
+                'password'      => 'required',
             ];
             
             $validator = Validator::make($request->all(), $rules);
