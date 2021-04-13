@@ -33,7 +33,7 @@ class ApiController extends Controller
     {
             $response = ['success'=>false, 'response' => ''];
             $rules = [
-                'username'         => 'required',
+                'username'      => 'required',
                 'message'       => 'required',
                 'phone_number'  => 'required|min:11|max:12',
                 'orginator'     => 'required',
@@ -49,7 +49,7 @@ class ApiController extends Controller
                 $response['response'] = 'Maximum message length limit is 5';
             }else{
                 
-                $user = (Auth::check())? Auth::user() : User::where('email', $request->email)->firstOrFail();
+                $user = (Auth::check())? Auth::user() : User::where('username', $request->username)->firstOrFail();
                
                 if($user->sms == 0){
                     $response['response'] = 'User have zero sms ';
