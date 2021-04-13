@@ -196,7 +196,7 @@ class MessageController extends Controller
         if(Auth::user()->getUserSmsAPi->type == 'masking'){
             $url .= 'user='.$username;
             $url .= '&pwd='.$password;
-            $url .= '&sender='.$data['masking_name'];
+            $url .= '&sender='.urlencode($data['masking_name']);
             $url .= '&reciever='.$data['contact_number'];
             $url .= '&msg-data='.urlencode($data['message']);
             $url .= '&response=json';
@@ -209,7 +209,7 @@ class MessageController extends Controller
             $url .= '&messagedata='.urlencode($data['message']);
             $url .= '&responseformat=html';
         }
-        return urlencode($url);
+        return $url;
     }
 
  

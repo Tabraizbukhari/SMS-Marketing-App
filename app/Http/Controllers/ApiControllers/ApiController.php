@@ -104,7 +104,7 @@ class ApiController extends Controller
         if($user->getUserSmsAPi->type == 'masking'){
             $url .= 'user='.$apiUser;
             $url .= '&pwd='.$apiPass;
-            $url .= '&sender='.$data['masking_name'];
+            $url .= '&sender='.urlencode($data['masking_name']);
             $url .= '&reciever='.$data['contact_number'];
             $url .= '&msg-data='.urlencode($data['message']);
             $url .= '&response=json';    
@@ -117,7 +117,7 @@ class ApiController extends Controller
             $url .= '&messagedata='.urlencode($data['message']).'';
             $url .= '&responseformat=html';
         }
-        return urlencode($url);
+        return $url;
     }
 
     public function hitApi($data, $user)
