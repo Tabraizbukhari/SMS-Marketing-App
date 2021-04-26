@@ -5,266 +5,232 @@ namespace App\Http\Controllers\DashboardControllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Auth;
-use App\Models\Masking;
 use App\Models\UsersData;
-use App\Models\UserMasking;
+use App\Models\Masking;
 use App\Models\SmsApi;
+use Carbon\Carbon;
+use App\Models\UserMasking;
+use App\Models\ResellerCustomer;
+
+use Auth;
+use App\Models\Transaction;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use App\Models\ResellerCustomer;
-use App\Models\Transaction;
-use App\Notifications\CustomerRegisterNotification;
-use DB;
-use Carbon\Carbon;
-use App\Models\IncomingApi;
 
 class CustomerController extends Controller
 {
     public $pagination; 
-    public $api_url;
-    
     public function __construct()
     {
         $this->pagination = 10;
-        $admin = User::where('type', 'admin')->first();
-        $this->api_url = 'https://sms.synctechsol.com/APIManagement/API/RequestAPI?';
-        $this->api_username = $admin->getUserSmsApi->api_username;
-        $this->api_password = $admin->getUserSmsApi->api_password;
     }
 
-    public function addPrefix($id, Request $request)
+    public function index()
     {
-        $request->validate(['prefix' => 'required']);
-        IncomingApi::updateOrCreate([
-            'user_id' => decrypt($id),
-            'prefix'  => $request->prefix,
-            'customer_api' => $request->customer_api,
-        ]);
-        return redirect()->back()->with('success', 'Add prefix succcessfully');
-    }
-    public function index($id = null)
-    {
-        
-        if(isset($id) && $id != NULL){
-            $id = decrypt($id);
-            $data['user'] = User::where('id', $id['user_id'])->get();
-            DB::table('notifications')->where('id', $id['notification_id'])->update(['read_at' => Carbon::now() ]);
-        }else{
-            $data['user'] = ($id)??Auth::user()->getResellerCustomerProfit;
-        }
-        
+        $data['user'] =  Auth::user()->getResellerCustomer()->paginate($this->pagination);
         return view('dashboard.customer.index', $data);
     }
 
-
-    public function create()
-    {
-        $data['maskings'] = (Auth::user()->type == 'user')? Auth::user()->getResellerMasking : Masking::get();
+    public function create($type = NULL){
+        $data['type'] = $type;
+        if($type == NULL){
+            abort(404);
+        }elseif(Auth::user()->type != $type){
+            abort(404);
+        }elseif ($type == 'masking') {
+            $data['maskings'] = Auth::user()->getResellerMasking;
+        }else{
+            $data['code'] = '99095';
+        }
         return view('dashboard.customer.create', $data);
     }
 
-
-    public function store(Request $request)
-    {
-        if(Auth::user()->sms == 0){
-            return redirect()->back()->withErrors('You have no more sms');
+    public function store(Request $request, $type){
+   
+        if(Auth::user()->UserData->has_sms < $request->sms){
+            return redirect()->back()->withErrors('your have not enough balance ');
         }
 
         $request->validate([
-            'name'     => 'required|unique:users',
-            'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required',
-            'cost'     => 'required',
-            'sms'      => 'required|Numeric',
-            'api_url'  => 'sometimes|required',
-            'masking'  => 'sometimes|required',
+            "first_name"    => "required|string",
+            "last_name"     => "required|string",
+            "email"         => "required|email",
+            "password"      => "required|min:5",
+            "cost"          => "required",
+            "sms"           => "required",
+            "code"          => "sometimes|required|numeric",
+            "api_url"       => "sometimes|required",
+            'masking.*'     => "sometimes|required",
+            // 'register_as'   => "required"
         ]);
 
-        if(Auth::user()->getUserSmsApi->type != 'code'){
-            $request->validate([
-                'api_name'      => 'required',
-                'api_password'  => 'required',
-            ]);
-        }
-
-        $data = [
-            'name'                      =>  $request->name,
-            'email'                     =>  $request->email,
-            'password'                  =>  Hash::make($request->password) ,
-            'sms'                       =>  $request->sms,
-            'price'                     =>  $request->cost,
-            'type'                      =>  'user',
-            'email_verified_at'         =>  now(),
-            'api_token'                 =>  Str::random('30'),
-            'monthly_invoice_charges'   =>  $request->monthly_invoice_price,
-        ];
-
-        $user = User::create($data);
-        if(Auth::user()->type == 'admin'){
-            $user->notify(new CustomerRegisterNotification($data));
-        }
+        $user = User::create([
+            'first_name'        => $request->first_name,
+            'last_name'         => $request->last_name,
+            'email'             => $request->email,
+            'username'          => $request->first_name,
+            'email_verified_at' => Carbon::now(),
+            'password'          => Hash::make($request->password),
+            'api_token'         => Str::random('20'),
+            'phone_number'      => $request->phone_number,
+            'type'              => $type,
+            'register_as'       => 'customer',
+            'reference_id'      => Auth::id(),
+        ]);
 
         ResellerCustomer::create([
-            'user_id'   => Auth::id(),
-            'customer_id'   => $user->id,
+            'user_id' => Auth::id(),
+            'customer_id' => $user->id,
         ]);
-        
-        if($request->has('masking') && $request->masking != null){
-            UserMasking::create([
-                    'user_id' => $user->id, 
-                    'masking_id' => $request->masking,
+        UsersData::create([
+            'user_id'           =>  $user->id,
+            'has_sms'           =>  $request->sms,
+            'price_per_sms'     =>  $request->cost,
+            'Invoice_charges'   =>  $request->invoice_cost,
+        ]);
+
+        if($request->has('masking') && count($request->masking) > 0){
+            foreach ($request->masking as $mask) {
+                UserMasking::create([
+                    'user_id'     => $user->id, 
+                    'masking_id'  => $mask,
                 ]);
+            }
         }
 
-        $users_data = [
-            'user_id'       => $user->id,
-            'phone_number'  => $request->phone_number,
-            'register_as'   => 'customer',
-        ];
-        UsersData::create($users_data);
-        
-        if(Auth::user()->getUserSmsApi->type != 'code'){
-            SmsApi::create([
-                'user_id'       => $user->id,
-                'api_url'       => $request->api_url??$this->api_url,
-                'api_username'  => $request->api_name,
-                'api_password'  => $request->api_password,
-                'type'          => ($request->api_url)? 'code' : 'masking',
-            ]);
-        }
-         
-        
+     
+        $smsApiData['user_id'] = $user->id;
+        $smsApiData['api_url']      = $request->api_url??NULL;
+        $smsApiData['api_username'] = $request->api_name??NULL;
+        $smsApiData['api_password'] = $request->api_password??NULL;
+    
+        SmsApi::create($smsApiData);
+
         Transaction::create([
-            'transaction_id' => Auth::user()->getTransactionId(),
-            'user_id' => Auth::user()->id,
+            'transaction_id' => Auth::id(),
+            'user_id' => Auth::id(),
             'title' => 'transfer sms',
-            'description' => 'Transfer sms into new customer '.$request->username,
+            'description' => 'Transfer sms into new customer '.$user->full_name,
             'amount' =>  $request->sms,
             'type' => 'debit',
             'data' => json_encode(['user_id' => $user->id]),
         ]);
 
         Transaction::create([
-            'transaction_id' => Auth::user()->getTransactionId(),
+            'transaction_id' => Auth::id(),
             'user_id' => $user->id,
             'title' => 'received sms',
-            'description' => 'Received sms by '. Auth::user()->name,
+            'description' => 'Received sms by Admin',
             'amount' =>  $request->sms,
             'type' => 'credit',
         ]);
-        $count = Auth::user()->sms - $request->sms;
-        Auth::user()->update(['sms'=> $count]);
-    
-        
-
-        return redirect()->back()->with('success','Customer Created Successfully');
-    }
-    
-
-    public function destroy($id)
-    {
-        $user = User::findOrFail(decrypt($id));
-        if($user->getAllMessages()->count() > 0){
-            return redirect()->back()->withErrors('You can not delete this customer');
-        }
-        $smscount = Auth::user()->sms + $user->sms;
-        Auth::user()->update(['sms' => $smscount]);
-        Transaction::create([
-            'transaction_id' => Auth::user()->getTransactionId(),
-            'user_id'        => Auth::user()->id,
-            'title'          => 'delete customer return',
-            'description'    => 'Delete account and Return sms to customer '.$user->name,
-            'amount'         =>  $user->sms,
-            'type'           => 'credit',
-            'data'           => json_encode(['user_id' => $user->id]),
+     
+        $SmsUpdate = Auth::user()->UserData->has_sms - $request->sms;
+        $auth = Auth::user()->UserData()->update([
+            'has_sms' => $SmsUpdate,
         ]);
-        $user->delete();
-        return redirect()->back()->with('success','Customer deleted Successfully');
+        return redirect()->route('user.customer.index')->with('success', 'Customer Created Successfully');
     }
 
     public function edit($id)
     {
-        $data['user'] = User::findOrFail(decrypt($id));
-        $data['maskings'] = Masking::get();
-        return view('dashboard.customer.edit',$data);
+        $user = User::findOrFail(decrypt($id));
+        if($user->type == 'masking'){
+            $data['maskings'] = Auth::user()->getResellerMasking;
+        }else{
+            $data['code'] = 99095;
+        }
+        $userMasking = [];
+        foreach ($user->getResellerMasking as $masking) {
+            array_push($userMasking, $masking->id);
+        }
+        $data['userMasking']  = $userMasking;
+        $data['user'] = $user;
+        return view('dashboard.customer.edit', $data);
+
     }
 
-
-
-    public function update(Request $request,$id)
+    public function update(Request $request, $id)
     {
+        $id = decrypt($id);
         $request->validate([
-            'username' => 'required|string',
-            'email' => 'required|string|email',
-            'sms' => 'required|numeric',
-            'cost' => 'required',
-            'phone_number' => 'required',
-            'api_url' => 'required',
+            "first_name"    => "required|string",
+            "last_name"     => "required|string",
+            "email"         => "required|email",
+            "cost"          => "required",
+            "sms"           => "required",
+            "code"          => "sometimes|required|numeric",
+            "api_url"       => "sometimes|required",
+            'masking.*'     => "sometimes|required"
         ]);
 
-        if($request->sms > Auth::user()->sms){
-            return redirect()->back()->withErrors('you have not enough sms');
-        }
-        $user = User::findOrFail(decrypt($id));
-        $userSmsCount = $user->sms;
-        $data = [
-            'name'              =>  $request->username,
-            'email'             =>  $request->email,
-            'price'             =>  $request->cost,
-            'monthly_invoice_charges'   =>  $request->monthly_invoice_price,
-        ];
-        if($request->has('password') && $request->password != null){
-            $data['password'] = Hash::make($request->password);
-        }
-        $user->update($data);
+        $user = User::findOrFail($id);
+        $userPervioussms = $user->UserData->has_sms;
+        $user->update([
+            'first_name'        => $request->first_name,
+            'last_name'         => $request->last_name,
+            'email'             => $request->email,
+            'username'          => $request->first_name,
+            'password'          => Hash::make($request->password),
+            'api_token'         => Str::random('20'),
+            'phone_number'      => $request->phone_number,
+            'reference_id'      => Auth::id(),
+        ]);
 
-        if($request->has('masking')){
-            UserMasking::where('user_id', decrypt($id))->update(['masking_id' => $request->masking]);
+        $user->UserData()->update([
+            'has_sms'           =>  $request->sms,
+            'price_per_sms'     =>  $request->cost,
+            'Invoice_charges'   =>  $request->invoice_cost,
+        ]);
+
+        if($request->has('masking') && count($request->masking) > 0){
+            foreach ($request->masking as $mask) {
+                UserMasking::where('user_id', $user->id)->updateOrCreate([
+                    'masking_id'  => $mask,
+                ]);
+            }
         }
 
-        $users_data = [
-            'phone_number'  => $request->phone_number,
-            'register_as'   => 'customer',
-        ];
-        UsersData::where('user_id', decrypt($id))->update($users_data);
-        SmsApi::where('user_id', decrypt($id))->update([
-                'api_username'  =>  $request->api_name,
-                'api_password'  =>  $request->api_password,
-            ]);
-        if($userSmsCount != $request->sms){
-            if($userSmsCount > $request->sms){
-                $count = $userSmsCount - $request->sms;
-                $admincount = Auth::user()->sms + $count;
+        $smsApiData['api_url']      = $request->api_url??NULL;
+        $smsApiData['api_username'] = $request->api_name??NULL;
+        $smsApiData['api_password'] = $request->api_password??NULL;
+    
+        SmsApi::where('user_id', $user->id)->update($smsApiData);
+
+        if($userPervioussms != $request->sms){
+            if($userPervioussms > $request->sms){
+                $count = $userPervioussms - $request->sms;
+                $adminSmsUpdate = Auth::user()->has_sms + $count;
                 Transaction::create([
-                    'transaction_id' => Auth::user()->getTransactionId(),
-                    'user_id' => Auth::user()->id,
+                    'transaction_id' => Auth::id(),
+                    'user_id' => Auth::id(),
                     'title' => 'Return Sms',
-                    'description' => 'Return sms to customer '.$request->username,
+                    'description' => 'Return sms to reseller '.$user->full_name,
                     'amount' =>  $count,
                     'type' => 'credit',
                     'data' => json_encode(['user_id' => $user->id]),
                 ]);
 
                 Transaction::create([
-                    'transaction_id' => Auth::user()->getTransactionId(),
+                    'transaction_id' => Auth::id(),
                     'user_id' => $user->id,
                     'title' => 'Deduct Sms',
-                    'description' => 'Deduction sms',
+                    'description' => 'Deduct sms by Admin',
                     'amount' =>  $request->sms,
                     'type' => 'debit',
                 ]);
 
 
             }else{
-                $count = $request->sms - $userSmsCount;
-                $admincount = Auth::user()->sms - $count;
+                $count = $request->sms - $userPervioussms;
+                $adminSmsUpdate = Auth::user()->has_sms - $count;
 
                 Transaction::create([
                     'transaction_id' => Auth::user()->getTransactionId(),
                     'user_id' => Auth::user()->id,
                     'title' => 'transfer sms',
-                    'description' => 'Transfer sms into customer '.$request->username,
+                    'description' => 'Transfer sms into reseller '.$user->full_name,
                     'amount' =>  $count,
                     'type' => 'debit',
                     'data' => json_encode(['user_id' => $user->id]),
@@ -274,38 +240,79 @@ class CustomerController extends Controller
                     'transaction_id' => Auth::user()->getTransactionId(),
                     'user_id' => $user->id,
                     'title' => 'received sms',
-                    'description' => 'Received sms by '.Auth::user()->name,
+                    'description' => 'Received sms by Admin',
                     'amount' =>  $count,
                     'type' => 'credit',
                 ]);
             }
-            Auth::user()->update(['sms' => $admincount]);
-            $user->update(['sms' =>  $request->sms]);
-        
+            $auth = Auth::user()->update([
+                'has_sms' => $adminSmsUpdate,
+            ]);
         }
-
-        return redirect()->back()->with('success','Update customer successfully');
+        return redirect()->route('user.customer.index')->with('success', 'Reseller Updated Successfully');
     }
 
 
-    public function apiCreateORUpdate($id, Request $request)
+    public function destroy (Request $request, $id)
     {
         $user = User::findOrFail(decrypt($id));
-        $request->validate([
-            'api_url'       => 'required',
-        ]);
 
-        
-        if($request->has('api_name') && $request->has('api_password')){
-            SmsApi::updateOrCreate([
-                'user_id'       => $user->id,
-                'api_url'       => $request->api_url??$this->api_url,
-                'api_username'  => $request->api_name,
-                'api_password'  => $request->api_password,
-                'type'          => ($request->api_url)? 'code' : 'masking',
-            ]);
+        if($user->getAllMessages()->count() > 0){
+            return redirect()->back()->withErrors('You can not delete this reseller');
         }
 
-        return redirect()->back()->with('success', 'Api created successfully');
+        $smscount = Auth::user()->UserData->has_sms + $user->UserData->has_sms;
+        Auth::user()->UserData()->update(['has_sms' => $smscount]);
+        Transaction::create([
+            'transaction_id' => Auth::id(),
+            'user_id' => Auth::id(),
+            'title' => 'delete reseller return',
+            'description' => 'Delete account '.$user->full_name.' and Return sms to reseller '.$user->name,
+            'amount' =>  $user->UserData->has_sms,
+            'type' => 'credit',
+            'data' => json_encode(['user_id' => $user->id]),
+        ]);
+        $user->delete();
+        return redirect()->back()->with('success', 'User Deleted Successfully');
+    }
+
+
+    public function addCustomerAmount(Request $request, $id)
+    {
+        $request->validate(['amount' => 'required']);
+        $user = User::findOrFail(decrypt($id));
+        $amount = $user->UserData->has_sms + $request->amount;
+      
+        Transaction::create([
+            'transaction_id' => Auth::id(),
+            'user_id'     => Auth::id(),
+            'title'       => 'transfer sms',
+            'description' => 'Transfer sms into reseller '.$user->username,
+            'amount'      =>  $request->amount,
+            'type'        => 'debit',
+            'data'        => json_encode(['user_id' => $user->id]),
+        ]);
+
+
+        Transaction::create([
+            'transaction_id' => $user->id,
+            'user_id'     => $user->id,
+            'title'       => 'received sms',
+            'description' => 'Received sms by'.$user->username,
+            'amount'      =>  $request->amount,
+            'type'        => 'credit',
+            'data'        => json_encode(['user_id' => $user->id]),
+        ]);
+
+        $user->UserData()->update([
+            'has_sms'   => $amount,
+        ]);
+
+        $authSms = Auth::user()->UserData->has_sms - $request->amount;
+        Auth::user()->UserData()->update([
+            'has_sms'=> $authSms,
+        ]);
+
+        return redirect()->back()->with('success', 'Add Amount Successfully');
     }
 }

@@ -36,7 +36,7 @@
 									<div class="alert alert-danger" role="alert">
 										<marquee scrollamount="10" direction="top" scrolldelay="" behavior="">Our portal is under maintenance, if you faced any issue report it..</marquee>
 									</div>
-									<form method="post" action="{{ route('login.post') }}"> @csrf
+									<form method="post" action="{{ route('user.login.post') }}"> @csrf
 										<div class="mb-3">
 											<label class="form-label">Username</label>
 											<input class="form-control form-control-lg" type="text" name="username" placeholder="Enter your Username" />

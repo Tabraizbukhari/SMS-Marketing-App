@@ -16,9 +16,9 @@ class CreateSmsApisTable extends Migration
         Schema::create('sms_apis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('api_url');
-            $table->string('api_username');
-            $table->string('api_password',500);
+            $table->string('api_url')->nullable();
+            $table->string('api_username')->nullable();
+            $table->string('api_password',1000)->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

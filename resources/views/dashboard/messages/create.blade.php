@@ -1,5 +1,4 @@
 <x-dashboard>
-
 <main class="content">
 	<div class="container-fluid p-0">
         @if($errors->any())
@@ -25,16 +24,16 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">Create New Message and Campaign
-                          <a href="{{ route('message.index') }}" class="btn btn-outline-dark float-right" >
+                          <a href="{{ route('user.message.index') }}" class="btn btn-outline-dark float-right" >
                           <span class="align-middle" data-feather="chevron-left" ></span>back
                           </a>
                         </h2>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('message.store') }}" enctype="multipart/form-data"> @csrf
+                        <form method="post" action="{{ route('user.message.store') }}" enctype="multipart/form-data"> @csrf
                             <div class="mb-3">
                                 <label class="form-label">Write message<span class="text-danger">*</span></label>
-                                <textarea cols="5" id="msg" oncontextmenu="return false" onkeyup="checkTextArea();" class="form-control" name="message">{{ old('messsage')}} </textarea>
+                                <textarea cols="5" id="msg" oncontextmenu="return false" onkeyup="checkTextArea();" class="form-control" name="message">{{ old('message')}} </textarea>
                                 <small id="info">0 character(s) 1 SMS message(s)</small>
                                 <input type="hidden" id="na" name='no_of_sms' value="1">
                             </div>
@@ -53,17 +52,17 @@
                             <div class="mb-3" id="someThingHere">
                                
                             </div>
-                            @if(Auth::user()->getUserSmsApi->type != 'code')
+                            @if(Auth::user()->type == 'masking')
                             <div class="mb-3">
                                 <label class="form-label">Masking <span class="text-danger">*</span></label>
-                                <select class="select2 form-control" name="masking_id" data-placeholder="Select multiple masking">
+                                <select class="select2 form-control" name="masking" data-placeholder="Select multiple masking">
                                     @foreach ($maskings as $masking )
                                         <option {{ (old('masking') == $masking->id)? 'selected': null }} value="{{ $masking->id }}">{{ $masking->title }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             @endif
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <div class="custom-control custom-checkbox">
                                     <input type="checkbox" name="late_shedule" class="custom-control-input" id="lateShedule">
                                     <label class="custom-control-label" for="lateShedule">Select Shedule For Late Sending</label>
@@ -72,7 +71,7 @@
 
                             <div class="mb-3" id="latemessagedatetime">
                                
-                            </div>
+                            </div> -->
                             <button type="submit" class="btn btn-primary btn-block">Submit</button>
                         </form>
                     </div>
@@ -83,6 +82,23 @@
 </main>
 <script>
 
+function GetFileSizeNameAndType()
+        {
+        var fi = document.getElementById('customFile'); // GET THE FILE INPUT AS VARIABLE.
+
+        var totalFileSize = 0;
+
+        // VALIDATE OR CHECK IF ANY FILE IS SELECTED.
+        if (fi.files.length > 0)
+        {
+            // RUN A LOOP TO CHECK EACH SELECTED FILE.
+            for (var i = 0; i <= fi.files.length - 1; i++)
+            {
+                console.log(fi.files.item(i).name);
+                $("#fp").html(fi.files.item(i).name);
+            }
+        }
+    }
 $(document).ready(function(){
     $('#single_message').change(function(){
         $('#someThingHere').empty();
@@ -108,8 +124,8 @@ $(document).ready(function(){
                 <div class="col-md-6">
                     <label class="form-label">Import excel<span class="text-danger">*</span></label>
                     <div class="custom-file">
-                        <input type="file" name="file" class="custom-file-input" id="customFile" accept=".xls, .xlsx">
-                        <label class="custom-file-label" for="customFile">Import your excel</label>
+                        <input type="file" name="file" class="custom-file-input" onchange="GetFileSizeNameAndType()" id="customFile" accept=".xls, .xlsx">
+                        <label class="custom-file-label" id="fp" for="customFile">Import your excel</label>
                     </div>
                 </div>
 
@@ -120,6 +136,8 @@ $(document).ready(function(){
         }
     });
 
+  
+    
     $('#lateShedule').click(function(){
         if($(this).prop('checked')){
             var $_htmldatetime =  

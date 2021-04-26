@@ -71,9 +71,10 @@ class SmsCheck extends Command
                     $this->info($error->Data);
                 }
             }
-           $message = Message::findOrFail($msg->id);
-           $message->getCampaign()->update(['status' => 'completed']);
-           Message::findOrFail($msg->id)->update(['status' => 'successfully']);
+            $hitapi  = json_decode($result, true);
+            $message = Message::findOrFail($msg->id);
+            $message->getCampaign()->update(['status' => 'completed']);
+            $message->update(['status' => 'successfully', 'message_id' => $hitapi['Data']['msgid']]);
         }
         
         $this->info('Command run successfully');          

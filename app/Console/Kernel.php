@@ -3,6 +3,8 @@
 namespace App\Console;
 
 use App\Console\Commands\SmsCheck;
+use App\Console\Commands\VerifiedCodeSms;
+
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -27,6 +29,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command(SmsCheck::class)->everyMinute();
+        $schedule->command(VerifiedCodeSms::class)->daily();
+
     }
 
     /**

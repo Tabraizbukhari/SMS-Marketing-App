@@ -50,7 +50,7 @@
                                             <td>{{$c->name}}</td>
                                             <td>{{$c->status}}</td>
                                             <td>{{$c->campaign_date}}</td>
-                                            <td><a href="{{ route("message.campaign.file", encrypt($c->id)) }}" class="btn btn-primary">{{$c->file_name}}</a></td>
+                                            <td><a href="{{ route('user.message.campaign.file', encrypt($c->id)) }}" class="btn btn-primary">{{$c->file_name}}</a></td>
                                             <td>{{$c->created_at}}</td>
                                         </tr>
                                     @endforeach

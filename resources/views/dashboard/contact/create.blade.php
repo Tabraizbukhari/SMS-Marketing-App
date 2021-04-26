@@ -25,13 +25,13 @@
                 <div class="card">
                     <div class="card-header">
                         <h2 class="card-title">
-                          <a href="{{ route('contacts') }}" class="btn btn-outline-dark float-right" >
+                          <a href="{{ route('user.contacts') }}" class="btn btn-outline-dark float-right" >
                           <span class="align-middle" data-feather="chevron-left" ></span>back
                           </a>
                         </h2>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{{ route('contacts.store') }}" enctype="multipart/form-data"> @csrf
+                        <form method="post" action="{{ route('user.contacts.store') }}" enctype="multipart/form-data"> @csrf
                             <div class="form-group  pb-2">
                                 <input id="buttonselect" type="button" onClick="checkStatus()"  value="Import contact" class="btn btn-outline-success float-right pb-2">
                             </div>

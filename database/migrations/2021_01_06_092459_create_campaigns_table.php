@@ -15,7 +15,8 @@ class CreateCampaignsTable extends Migration
     {
         Schema::create('campaigns', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();           
+            $table->unsignedBigInteger('admin_id')->nullable();
             $table->string('name');
             $table->string('file_url');
             $table->string('file_name');
@@ -24,7 +25,7 @@ class CreateCampaignsTable extends Migration
             $table->enum('status',['pending', 'canceled', 'completed', 'failed']);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');            
 
         });
     }

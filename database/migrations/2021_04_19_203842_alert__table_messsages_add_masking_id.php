@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterAddColumnApiTable extends Migration
+class AlertTableMesssagesAddMaskingId extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AlterAddColumnApiTable extends Migration
      */
     public function up()
     {
-        Schema::table('sms_apis', function (Blueprint $table) {
-            $table->enum('type', ['code', 'masking'])->nullable()->after('created_at');
+        Schema::table('messages', function (Blueprint $table) {
+            $table->string('reference')->after('message_id');
         });
     }
 
@@ -25,8 +25,8 @@ class AlterAddColumnApiTable extends Migration
      */
     public function down()
     {
-        Schema::table('sms_apis', function (Blueprint $table) {
-            $table->dropColumn("type");
+        Schema::table('messages', function (Blueprint $table) {
+            $table->dropColumn('message_id');
         });
     }
 }

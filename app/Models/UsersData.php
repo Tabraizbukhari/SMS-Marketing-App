@@ -10,7 +10,10 @@ class UsersData extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
-        'phone_number',
-        'register_as',
+        'has_sms',
+        'price_per_sms',
+        'Invoice_charges',
+        'logo_img',
+        'login_url',
     ];
 }

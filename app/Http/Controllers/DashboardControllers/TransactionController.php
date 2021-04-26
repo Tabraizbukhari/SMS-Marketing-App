@@ -17,7 +17,7 @@ class TransactionController extends Controller
     }
     public function index()
     {
-        $data['transactions'] = Transaction::where('user_id', Auth::id())->orderBy('id','desc')->paginate($this->pagination);
+        $data['transactions'] = Auth::user()->transactions()->orderBy('id','desc')->paginate($this->pagination);
         return view('dashboard.transaction.index', $data);
     }
 

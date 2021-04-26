@@ -12,114 +12,58 @@
           @endif
 
 		<div class="alert alert-info" role="alert">
-			<marquee scrollamount="4" direction="right" scrolldelay="100" behavior="alternate">Dear {{Auth::user()->name}}, Your API has been updated, please check your new API ... <a class="btn btn-sm btn-outline-primary" href="{{ route('api.index') }}">My Api</a></marquee>
+			<marquee scrollamount="4" direction="right" scrolldelay="100" behavior="alternate">Dear {{Auth::user()->name}}, Your API has been updated, please check your new API ... <a class="btn btn-sm btn-outline-primary" href="{{ route('user.api.index') }}">My Api</a></marquee>
 		</div>
             <div class="row">
-                	<div class="col-md-12 d-flex">
-							<div class="w-100">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="card">
-											<div class="card-body">
-												<h5 class="card-title mb-4">My SMS</h5>
-												<h1 class="mt-1 mb-3">{{$sms_count}}</h1>
-												<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sms User Have.</span>
-											</div>
-										</div>
-										 @if(Auth::user()->type == 'admin')
-										<div class="card">
-											<div class="card-body">
-												<h5 class="card-title mb-4">Message Transfer</h5>
-												<h1 class="mt-1 mb-3">{{ $total_message_transfer }}</h1>
-												<div class="mb-1">
-													<span class="text-muted">Total Message transfer into User</span>
-												</div>
-											</div>
-										</div>
-                                    	@endif
-										<div class="card">
-											<div class="card-body">
-												<h5 class="card-title mb-4">Message Send</h5>
-												<h1 class="mt-1 mb-3">{{ $total_message_sending }}</h1>
-												<div class="mb-1">
-													<span class="text-muted">Total Count Of Message is sended</span>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-									<div class="card">
-										<div class="card-body">
-											<h5 class="card-title mb-4">Message Send Succesfully</h5>
-											<h1 class="mt-1 mb-3">{{ $message_send_successfully }}</h1>
-											<div class="mb-1">
-												<span class="text-muted">Total Count Of Message is sended</span>
-											</div>
-										</div>
-									</div>
-									<div class="card">
-										<div class="card-body">
-											<h5 class="card-title mb-4">Message send Failed</h5>
-											<h1 class="mt-1 mb-3">{{ $message_not_send }}</h1>
-											<div class="mb-1">
-												<span class="text-muted">Total Count Of Message is sended</span>
-											</div>
-										</div>
-									</div>
-                                    @if(isset(Auth::user()->getUserData) && Auth::user()->getUserData->register_as != 'customer')
-										<div class="card">
-											<div class="card-body">
-												<h5 class="card-title mb-4">Customer</h5>
-												<h1 class="mt-1 mb-3">{{ $customer_count }}</h1>
-												<div class="mb-1">
-													<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Customer by {{ (Auth::user()->type == 'admin')? 'Admin' : 'reseller' }}</span></br>
-													<span class="text-muted">Total Count Of Customer</span>
-												</div>
-											</div>
-										</div>
-                                    @endif
-									 @if(Auth::user()->type == 'admin')
-									<div class="card">
-										<div class="card-body">
-											<h5 class="card-title mb-4">Reseller</h5>
-											<h1 class="mt-1 mb-3">{{$reseller_count}}</h1>
-											<div class="mb-1">
-												<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total number of reseller</span>
-											</div>
-										</div>
-									</div>
-									@endif
-										<div class="card">
-											<div class="card-body">
-												<h5 class="card-title mb-4">Total Amount</h5>
-												<h1 class="mt-1 mb-3">{{ number_format((float)$profit, 2, '.', '') }}</h1>
-												<div class="mb-1">
-													<span class="text-muted">Total Amount of Message</span>
-												</div>
-											</div>
-										</div>
-										@if(Auth::user()->type == 'admin')
-										<div class="card">
-											<div class="card-body">
-												<h5 class="card-title mb-4">Message Sended By Code</h5>
-												<h1 class="mt-1 mb-3">{{ $message_send_code }}</h1>
-												
-											</div>
-										</div>
+				<div class="col-md-12 d-flex">
+					<div class="w-100">
+						<div class="row">
 
-										<div class="card">
-											<div class="card-body">
-												<h5 class="card-title mb-4">Message Sended By Masking</h5>
-												<h1 class="mt-1 mb-3">{{ $message_send_masking }}</h1>
-												
-											</div>
-										</div>
-										@endif
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-body">
+										<h5 class="card-title mb-4">User Remaining SMS</h5>
+										<h1 class="mt-1 mb-3">{{$has_sms}}</h1>
+										<span class="text-success"><i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sms User has.</span>
 									</div>
-								
-                                </div>
+								</div>
+							</div>								
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-body">
+										<h5 class="card-title mb-4">Total Sent Message Successfully</h5>
+										<h1 class="mt-1 mb-3">{{ $total_sentmessages }}</h1>
+										<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sent Message.</span>
+									</div>
+								</div>
 							</div>
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-body">
+										<h5 class="card-title mb-4">Whole credit of Sms</h5>
+										<h1 class="mt-1 mb-3">{{ $total_transcation }}</h1>
+										<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sms User Purchase.</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-body">
+										<h5 class="card-title mb-4">Failed Sms</h5>
+										<h1 class="mt-1 mb-3">{{ $failed_messages }}</h1>
+										<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Failed Sms.</span>
+									</div>
+								</div>
+							</div>
+								
 						</div>
+
+						
+
+
+					</div>
+				</div>
             </div>
         </div>
     </main>

@@ -27,7 +27,7 @@
                     <div class="card">
                         <div class="card-header">
                             <h2 class="card-title">Contacts 
-                                <a href="{{ route('contacts.create') }}" class="btn btn-success float-right">Add New Contact</a>
+                                <a href="{{ route('user.contacts.create') }}" class="btn btn-success float-right">Add New Contact</a>
                             </h5>
                         </div>
                         <table class="table table-bordered ">
@@ -48,13 +48,13 @@
                                         <td>{{ $contact->number }}</td>
                                         <td>{{ $contact->created_at }}</td>
                                         <td> 
-                                            <a href="{{ route('contacts.edit', encrypt($contact->id)) }}" >Edit </a></br>
-                                            <form method="POST" id="form1" action="{{ route('contacts.destroy', encrypt($contact->id))}}">
+                                            <a class="btn btn-link text-primary" href="{{ route('user.contacts.edit', encrypt($contact->id)) }}" >Edit </a></br>
+                                            <form method="POST" action="{{ route('user.contacts.destroy', encrypt($contact->id))}}">
                                                 @method('DELETE')
                                                 @csrf
-                                                <a href="#" class="text-danger" onclick="document.getElementById('form1').submit();">
+                                                <button  class="btn btn-link text-danger" type="submit" class="text-danger" >
                                                 Delete
-                                                </a>
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>

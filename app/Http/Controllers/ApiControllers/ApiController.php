@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\ApiControllers;
 
 use App\Models\User;
+use App\Models\Admin;
+
 use App\Models\Masking;
 use App\Models\Message;
 use App\Models\Campaign;
@@ -35,11 +37,10 @@ class ApiController extends Controller
             $rules = [
                 'username'      => 'required',
                 'message'       => 'required',
-                'phone_number'  => 'required|min:11|max:12',
+                'phone_number'  => 'required|min:10|max:12',
                 'orginator'     => 'required',
                 'password'      => 'required',
             ];
-            
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                  $response['response'] = $validator->messages()->first();
@@ -48,75 +49,85 @@ class ApiController extends Controller
             }else if($this->stringCount($request->message) == false){
                 $response['response'] = 'Maximum message length limit is 5';
             }else{
-                
-                $user = (Auth::check())? Auth::user() : User::where('username', $request->username)->firstOrFail();
-               
-                if($user->sms == 0){
-                    $response['response'] = 'User have zero sms ';
+
+                $num = (substr($request->phone_number, 0, 2) == '03')? true : ((substr($request->phone_number, 0, 3) == '923')? true : ((substr($request->phone_number, 0, 1) == "3")? true:false) );
+                if($num == false){
+                    $response['response'] = 'Plesae Start your number with 92, 03, 3';
+                    return response()->json($response);
+                }
+                    $user = User::Where('username', $request->username)->firstOrFail();
+
+                if($user->UserData->has_sms > $this->stringCount($request->message) && $user->UserData->has_sms == 0){
+                    $response['response'] = 'You do not have balance';
                     return response()->json($response);
                 }
                 $data = [
                     'user_id'        => $user->id,
                     'message'        => $request->message,
                     'message_length' => $this->stringCount($request->message),
-                    'contact_number' => ($request->has('phone_number'))? $request->phone_number : NULL,
-                    'send_date'      => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
-                    'price'          => $user->price * $this->stringCount($request->message),
-                    'api_type'       => 'code',
-                
+                    'contact_number' => $request->phone_number,
+                    'send_date'      => $request->sheduledatetime??Carbon::now(),
+                    'price'          => $user->UserData->price_per_sms * $this->stringCount($request->message),
+                    'api_type'       => $user->type,
                 ];
 
-                if($user->getUserSmsAPi->type == 'masking'){
-                    if(Masking::where('title', $request->orginator)->exists()){
-                        $data['masking_name'] = Masking::where('title', $request->orginator)->first()->title;
-                        $data['api_type'] = 'masking';
-                    }else{
-                        $response['response'] = 'Masking not found';
-                        return response()->json($response);
-                    }
-                }elseif ($request->orginator != 99095) {
-                    $response['response'] = 'incorrect code of orginator';
-                    return response()->json($response);
-                }
-                $hitapi = $this->hitApi($data, $user);
-                if($hitapi == 'success'){
-                    $data['status'] = 'successfully';
-                    $data['type'] = 'single';
-                    $sumSms = $user->sms - $this->stringCount($request->message);
-                    $user->sms = $sumSms;
-                    $user->save();
-                    Message::create($data);
-                    $response['response'] = "Message Send Successfully";
-                    $response['success'] = true;
+                if($user->type == 'masking'){
+                    $data['orginator'] = Masking::find($request->orginator)->title;
                 }else{
-                    $response['response'] = 'Message not send Successfully! please try again!';
-                }     
+                    $data['orginator'] = '99095';
+                }
+                
+                $data['type'] = 'single';
+                $htiApi = $this->hitApi($data, $user);
+                    if($user->type == 'masking'){
+                        if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
+                            $data['message_id']   = $htiApi['Data']['msgid'];
+                            $data['status']       = 'successfully';
+                            $sendMessage          = $this->saveMessage($data, $user);
+                            $response['success']  = true;
+                            $response['response'] = 'Message send successfully';
+                        }else{
+                            $response['response'] = $htiApi['Data'];
+                        }
+                    }else{
+                        if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
+                            $data['message_id']  = $htiApi['data']['acceptreport']['messageid'];
+                            $data['status']      = 'successfully';
+                            $sendMessage         = $this->saveMessage($data, $user);
+                            $response['success'] = true;
+                            $response['response']       = 'Message send successfully';
+                        }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
+                            $response['response'] = $htiApi['data']['errormessage'];
+                        }else{
+                            $response['response'] = 'Something wents wrong! plesae contact your admistrator';
+                        }
+                    }
+     
             }
         return response()->json($response);
     }
 
-    public function message_url($data, $user)
-    {
-        $url = $user->getUserSmsApi->api_url;
-        $admin = User::where('type', 'admin')->first();
-        $apiUser = ($user->getUserSmsApi->api_username != NULL)? $user->getUserSmsApi->api_username :  $admin->getUserSmsApi->api_username;
-        $apiPass = ($user->getUserSmsApi->api_password != NULL)? $user->getUserSmsApi->api_password :  $admin->getUserSmsApi->api_password;
-
-        if($user->getUserSmsAPi->type == 'masking'){
-            $url .= 'user='.$apiUser;
-            $url .= '&pwd='.$apiPass;
-            $url .= '&sender='.urlencode($data['masking_name']);
+    public function message_url($data, $user){   
+        $admin    = Admin::first();
+        $url      = $user->getUserSmsApi['api_url']??$admin->adminApi->api_url;
+        $username = $user->getUserSmsApi['api_username']??$admin->adminApi->api_username;
+        $password = $user->getUserSmsApi['api_password']??$admin->adminApi->api_password;
+        if($user->type == 'masking'){
+            $url .= 'user='.$username;
+            $url .= '&pwd='.$password;
+            $url .= '&sender='.urlencode($data['orginator']);
             $url .= '&reciever='.$data['contact_number'];
             $url .= '&msg-data='.urlencode($data['message']);
-            $url .= '&response=json';    
+            $url .= '&response=json';
         }else{
             $url .= 'action=sendmessage';
             $url .= '&username='.$user->getUserSmsApi->api_username;
             $url .= '&password='.$user->getUserSmsApi->api_password;
             $url .= '&recipient='.$data['contact_number'];
-            $url .= '&originator=99095';
-            $url .= '&messagedata='.urlencode($data['message']).'';
-            $url .= '&responseformat=html';
+            $url .= '&originator='.$data['orginator'];
+            $url .= '&messagedata='.urlencode($data['message']);
+            $url .= '&sendondate='.urlencode(date('Y-m-d h:m:s', strtotime($data['send_date'])));
+            $url .= '&responseformat=xml';
         }
         return $url;
     }
@@ -126,25 +137,48 @@ class ApiController extends Controller
         $url = $this->message_url($data, $user);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result=  curl_exec($ch);
-        if($user->getUserSmsAPi->type == 'masking'){
-            $error = (isset($result))? json_decode($result): null;
-            if(isset($error) && $error != null){
-                if(!isset($error->Data->status)){
-                    return $error->Data;
-                }
-            }
+        $response =  curl_exec($ch);
+
+        if($user->type == 'masking'){
+            return json_decode($response, true);
         }
-        if($result == true){
-            return 'success';
-        }else{
-            return $result;   
-        }
+        $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
+        $json = json_encode($xml);
+        return $array = json_decode($json,TRUE);
+        
     }
 
-
-    public function stringCount($message)
+    public function AuthSmsCount($messageLength, $user)
     {
+        $total_sms = $user->UserData->has_sms - $messageLength;
+        return $user->UserData()->update(['has_sms' => $total_sms]);
+    }
+
+    public function saveMessage($data, $user){
+        $this->AuthSmsCount($data['message_length'], $user);
+        $message = Message::create([
+            'message_id'        => $data['message_id'],
+            'message'           => $data['message'],
+            'message_length'    => $data['message_length'],
+            'contact_number'    => $data['contact_number'],
+            'send_date'         => $data['send_date'],
+            'type'              => 'single',
+            'price'             => $data['price'],
+            'api_type'          => $data['api_type'],
+            'status'            => $data['status'],
+            'reference'         => $data['orginator']
+        ]);
+
+        if($data['api_type'] == 'masking'){
+            MessageMasking::create([
+                'message_id' => $message->id,
+                'masking_id' => $masking_id
+            ]);
+        }
+        return $message;
+    }
+
+    public function stringCount($message){
         $count = '';
         if (strlen($message) != strlen(utf8_decode($message))){
             $urduCount = strlen(utf8_decode($message));

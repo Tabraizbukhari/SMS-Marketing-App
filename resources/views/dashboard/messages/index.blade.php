@@ -87,7 +87,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="post" action="{{ route('message.data.export') }}"> @csrf
+      <form method="post" action="{{ route('user.message.data.export') }}"> @csrf
         <div class="modal-body">
           <div class="row">
             <div class="col">

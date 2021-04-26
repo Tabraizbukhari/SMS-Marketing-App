@@ -18,14 +18,15 @@ use App\Models\MessageMasking;
 use App\Exports\MessageExport;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use App\Models\User;
+use App\Models\Admin;
+use App\Jobs\SendBulkSms;
+
 class MessageController extends Controller
 {
     public $pagination; 
-    public $api_url;
     public function __construct()
     {
         $this->pagination = 10;
-        $this->api_url = 'https://sms.synctechsol.com/APIManagement/API/RequestAPI?';
     }
 
     public function index()
@@ -42,7 +43,7 @@ class MessageController extends Controller
 
     public function create()
     {
-        $data['maskings']  =(Auth::user()->type == 'admin')? Masking::get() : Auth::user()->getResellerMasking ;
+        $data['maskings']  = Auth::user()->getResellerMasking ;
         return view('dashboard.messages.create', $data);
     }
 
@@ -52,151 +53,183 @@ class MessageController extends Controller
         $data['startDate']  = $request->start_date;
         $data['endDate']    = $request->end_date;
         return (new MessageExport($data))->download('messages.xlsx');
-        // $data['messages']   = Message::where('user_id', Auth::id())->where('created_at', '>=', $data['startDate'])->where('created_at', '<=', $data['endDate'])->get();
-        // return Excel::download(new MessageExport, 'messages.xlsx');
     }
 
     public function AuthSmsCount($messageLength)
     {
-        $total_sms = Auth::user()->sms - $messageLength;
-       return Auth::user()->update(['sms' => $total_sms]);
+        $total_sms = Auth::user()->UserData->has_sms - $messageLength;
+        return Auth::user()->UserData()->update(['has_sms' => $total_sms]);
     }
 
     public function store(Request $request)
     {
-        if(Auth::user()->sms == 0){
-            return redirect()->back()->withErrors('User have zero sms');
+        if(Auth::user()->UserData->has_sms == 0){
+            return redirect()->back()->withErrors('You have zero balance');
         }
-        
         $request->validate([
-            'message'       => 'required',
-            'no_of_sms'     => 'required',
-            'phone_number'  => 'sometimes|required',
-            'file'          => 'sometimes|required|file',
-            'type'          => 'required|string',
-            'phone_number'  => 'sometimes|required',
-            'masking'       => 'sometimes|required',
-            'campaign'      => 'sometimes|required',
-            'file'          => 'sometimes|file|required|mimes:xlsx,xls,xml',
-            'sheduledatetime' => 'sometimes|required', 
+            'type'    => 'required|string',
         ]);
 
-        $masking_id = $request->masking_id??NULL;
-        $messageLength = $request->no_of_sms??1;
+        $dataValidate = [
+            'message' => 'required',
+        ];
+
+        if($request->type == 'single'){
+            $dataValidate['phone_number'] = 'required|min:10|max:12';
+        }else{
+            $dataValidate['campaign'] = 'required';
+            $dataValidate['file']     = 'file|required|mimes:xlsx,xls,xml';
+        }
+
+        if($request->late_shedule == 'on'){
+            $dataValidate['sheduledatetime'] = 'required';
+        }
+
+        if(Auth::user()->type == 'masking'){
+            $dataValidate['masking']  =  'required';
+        }
+        
+        $request->validate($dataValidate);
+
+        $noOfSms  = $this->stringCount($request->message);
+       
+
+
+
+        if(Auth::user()->UserData->has_sms < $noOfSms){
+            return redirect()->back()->withErrors('User have enough sms');
+        }elseif($noOfSms > 5){
+            return redirect()->back()->withErrors('Message maximum limit is 5');
+        }
+        
+        $authType = Auth::user()->type;
         $data = [
             'user_id'        => Auth::id(),
             'message'        => $request->message,
-            'message_length' => $messageLength,
-            'contact_number' => ($request->has('phone_number'))? $request->phone_number : NULL,
-            'send_date'      => ($request->has('sheduledatetime') && !empty($request->sheduledatetime))? $request->sheduledatetime : Carbon::now(),
-            'type'           => $request->type,
+            'message_length' => $noOfSms,
+            'contact_number' => $request->phone_number??NULL,
+            // 'price'          => Auth::user()->UserData->price_per_sms * $noOfSms,
+            'send_date'      => $request->sheduledatetime??Carbon::now(),
+            'api_type'       => $authType,
             'campaign'       => $request->campaign,
         ];
-        if($messageLength > 5){
-            return redirect()->back()->withErrors('Message maximum limit is 5');
-        }else{
-            $data['price'] = $messageLength * Auth::user()->price;
-        }
-
-        if($masking_id){
-            $data['masking_name'] = Masking::find($request->masking_id)->title;
-            $data['api_type'] = 'masking';
-        }else{
-            $data['api_type'] = 'code';
-        }
-        if($request->hasFile('file') && $request->file){
-            $filesexel = $this->readExportFile($request->file);
-            if($filesexel == false){
-                return redirect()->back()->withErrors("The excel file numbers column heading is not found, Something went wrong! Try again.");
-            }
-            $data['numbers'] = $filesexel;
-            $data['file']    = $request->file;
-        }
-        if($request->has('late_shedule') && $request->has('sheduledatetime') && $request->sheduledatetime != null){
-            $data['status'] = 'pending';
-            $data['campaign_status'] = 'pending';
-            
-            if($data['type'] == 'single'){
-                $this->AuthSmsCount($messageLength);
-                $this->saveMessage($data, $masking_id);
-            }else{
-                foreach ($data['numbers'] as $number) {
-                    if(Auth::user()->sms == 0){
-                        return redirect()->back()->withErrors('User have zero sms');
-                    }
-                    
-                    $data['contact_number'] = $number;
-                    $number_length = strlen($data['contact_number']);
-                    if($number_length < 10 || $number_length > 11  ){
-                        $data['status'] = 'not_sent';
-                        $data['price']  = 0;
-                    }else{
-                        $this->AuthSmsCount($messageLength);
-                        $data['status'] = 'pending';
-                        $data['price']  = $messageLength * Auth::user()->price;
-                    }
-                    $this->saveMessage($data, $masking_id);
-                }
-                $this->save_campaign($data);
-            }
-
-        }else{
-            $data['status'] = 'successfully';
-            $data['campaign_status'] = 'completed';
-            if($request->type == 'single'){
-                $hitapi = $this->hitApi($data);
-                if($hitapi == 'success'){
-                    $this->AuthSmsCount($messageLength);
-                    $this->saveMessage($data, $masking_id);
-                }else{
-                    $message = $hitapi??'Message Sending Failed';
-                    return redirect()->back()->withErrors($message);
-                }     
-            }else{
-                foreach ($data['numbers'] as $number) {
-                    $data['contact_number'] = $number;
-                    $number_length = strlen($data['contact_number']);
-    
-                    if(Auth::user()->sms == 0){
-                        return redirect()->back()->withErrors('User have zero sms');
-                    }
-
-                    if($number_length < 10 || $number_length > 11  ){
-                        $data['status'] = 'not_sent';
-                        $data['price']  = 0;
-                    }else{
-                        $this->AuthSmsCount($messageLength);
-                        $data['status'] = 'successfully';
-                        $data['price']  = $messageLength * Auth::user()->price;
-                    }
-
-                    $hitapi = $this->hitApi($data);
-                    if($hitapi == 'success'){
-                        $this->saveMessage($data, $masking_id);
-                    }else{
-                        $message = $hitapi??'Message Sending Failed';
-                        return redirect()->back()->withErrors($message);
-                    }
-                }
-                $this->save_campaign($data);
-            }
-        } 
         
-       
-        return redirect()->back()->with('success','Message Sending Successfully!');
+        $data['status']      = ($request->late_shedule == NULL)? 'successfully' : 'pending';
+        if($authType == 'masking'){
+            $mask = Masking::find($request->masking);
+            $data['orginator'] = $mask->title;
+            $data['masking_id'] = $mask->id;
+        }else{
+            $data['orginator'] = '99095';
+        }
+        switch ($request->type) {
+            case 'single':
+                $num = (substr($request->phone_number, 0, 2) == '03')? true : ((substr($request->phone_number, 0, 3) == '923')? true : ((substr($request->phone_number, 0, 1) == "3")? true:false) );
+                if($num == false){
+                    return redirect()->back()->withErrors('Plesae Start your number with 92, 03, 3');
+                }
+                $data['type'] = 'single';
+                $htiApi = $this->hitApi($data);
+                    if(Auth::user()->type == 'masking'){
+                        if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
+                            if(substr($request->phone_number, 0, 3) == '033'){
+                                $noOfSms += $noOfSms / 2 + $noOfSms;
+                             }
+                            $data['price']      = Auth::user()->UserData->price_per_sms * $noOfSms;
+                            $data['message_id'] = $htiApi['Data']['msgid'];
+                            $data['status']     = 'successfully';
+                            $sendMessage        = $this->saveMessage($data);
+                            $dataResponse       = 'Message send successfully';
+                        }else{
+                            return redirect()->back()->withErrors($htiApi['Data']);
+                        }
+                    }else{
+                        if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
+                            $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
+                            $data['status'] = 'successfully';
+                            $sendMessage        = $this->saveMessage($data);
+                            $dataResponse       = 'Message send successfully';
+                        }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
+                            return redirect()->back()->withErrors($htiApi['data']['errormessage']);
+                        }else{
+                            return redirect()->back()->withErrors('Something wents wrong! plesae contact your admistrator');
+                        }
+                    }
+                break;
+            case 'bulk':
+                    if($request->hasFile('file') && $request->file){
+                        $filesexel = $this->readExportFile($request->file);
+                        if($filesexel == false){
+                            return redirect()->back()->withErrors('Something wents wrong with excel formate..! try again');
+                        }else{
+                            $data['type'] = 'campaign';
+                            // $data['file'] = $request->file;
+                            $campaign =  $this->save_campaign($data,$request->file,'pending');
+                            $data['campaign_id'] = $campaign->id;
+                            $data['url'] = $this->message_url($data);
+                            $job = (new SendBulkSms($data, $filesexel))->delay(now()->addSeconds(1));
+                            $dataResponse       = 'Campaign run successfully';
+                            dispatch($job);
+                            // foreach ($filesexel as $number) {
+                            //     $num = (substr($number, 0, 2) == '03')? true : ((substr($number, 0, 3) == '923')? true : ((substr($number, 0, 1) == "3")? true:false) );
+                            //     $data['contact_number'] = $number;
+                            //     if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
+                                    
+                            //         $htiApi = $this->hitApi($data);
+                            //         if(Auth::user()->type == 'masking'){
+                            //             $data['message_id'] = 'fromtesting';
+                            //             $data['status'] = 'successfully';
+                            //             $sendMessage        = $this->saveMessage($data, $campaign->id);
+                            //             $dataResponse       = 'Campaign run successfully';
+                            //             if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
+                            //                 $data['message_id'] = $htiApi['Data']['msgid'];
+                            //                 $data['status']     = 'successfully';
+                            //                 $sendMessage        = $this->saveMessage($data, $campaign->id);
+                            //                 $dataResponse       = 'Campaign run successfully';
+
+                            //             }else{
+                            //                 return redirect()->back()->withErrors($htiApi['Data']);
+                            //             }
+                            //         }else{
+                            //             if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
+                            //                 $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
+                            //                 $data['status'] = 'successfully';
+                            //                 $sendMessage        = $this->saveMessage($data, $campaign->id);
+                            //                 $dataResponse = 'Campaign run successfully';
+                            //             }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
+                            //                 Campaign::find($campaign->id)->update(['status','failed']);
+                            //                 return redirect()->back()->withErrors($htiApi['data']['errormessage']);
+                            //             }else{
+                            //                 Campaign::find($campaign->id)->update(['status','failed']);
+                            //                 return redirect()->back()->withErrors('Something wents wrong! plesae contact your admistrator');
+                            //             }
+                            //         }
+                            //     }else{
+                            //         $data['message_id'] = NULL;
+                            //         $data['status'] = 'not_sent';
+                            //         $sendMessage = $this->saveMessage($data, $campaign->id);
+                            //     }
+                            // }
+                            // Campaign::find($campaign->id)->update(['status','successfully']);
+                        }
+                    }else{
+                        return redirect()->back()->withErrors('Something wents wrong with your excel file! plesae contact your admistrator');
+                    }
+            break;            
+        }
+        
+        return redirect()->back()->with('success', $dataResponse);
     }
 
-    public function message_url($data)
-    {   
-        $admin = User::where('type', 'admin')->first();
-
-        $url = Auth::user()->getUserSmsApi->api_url;
-        $username = (Auth::user()->getUserSmsApi->api_username != NULL)? Auth::user()->getUserSmsApi->api_username :$admin->getUserSmsApi->api_username;
-        $password = (Auth::user()->getUserSmsApi->api_password != NULL)? Auth::user()->getUserSmsApi->api_password :$admin->getUserSmsApi->api_password;
-        if(Auth::user()->getUserSmsAPi->type == 'masking'){
+    public function message_url($data){   
+        $admin = Admin::first();
+        $url      = Auth::user()->getUserSmsApi['api_url']??$admin->adminApi->api_url;
+        $username = Auth::user()->getUserSmsApi['api_username']??$admin->adminApi->api_username;
+        $password = Auth::user()->getUserSmsApi['api_password']??$admin->adminApi->api_password;
+        if(Auth::user()->type == 'masking'){
             $url .= 'user='.$username;
             $url .= '&pwd='.$password;
-            $url .= '&sender='.urlencode($data['masking_name']);
+            $url .= '&sender='.urlencode($data['orginator']);
             $url .= '&reciever='.$data['contact_number'];
             $url .= '&msg-data='.urlencode($data['message']);
             $url .= '&response=json';
@@ -205,17 +238,19 @@ class MessageController extends Controller
             $url .= '&username='.Auth::user()->getUserSmsApi->api_username;
             $url .= '&password='.Auth::user()->getUserSmsApi->api_password;
             $url .= '&recipient='.$data['contact_number'];
-            $url .= '&originator=99095';
+            $url .= '&originator='.$data['orginator'];
             $url .= '&messagedata='.urlencode($data['message']);
-            $url .= '&responseformat=html';
+            $url .= '&sendondate='.urlencode(date('Y-m-d h:m:s', strtotime($data['send_date'])));
+            $url .= '&responseformat=xml';
         }
         return $url;
     }
 
  
 
-    public function save_campaign($data)
+    public function save_campaign($data, $file, $status)
     {
+        $data['file'] = $file;
         $file_path = $data['file']->store(Auth::user()->getBulkSmsExcelPath());
         $file_name = $data['file']->getClientOriginalName();
         $size = Storage::size($file_path);
@@ -226,7 +261,7 @@ class MessageController extends Controller
             'file_name' => $file_name,
             'size' => $size,
             'campaign_date' => $data['send_date'],
-            'status'    => $data['campaign_status'],
+            'status'    => $status,
         ];
        return $campaign =  Campaign::create($data);
     }
@@ -236,18 +271,15 @@ class MessageController extends Controller
         $url = $this->message_url($data);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result=  curl_exec($ch);
-        $error = (isset($result))? json_decode($result): null;
-        if(isset($error) && $error != null){
-            if(!isset($error->Data->status)){
-                return $error->Data;
-            }
+        $response =  curl_exec($ch);
+
+        if(Auth::user()->type == 'masking'){
+            return json_decode($response, true);
         }
-        if($result == true){
-            return 'success';
-        }else{
-            return $result;
-        }
+        $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
+        $json = json_encode($xml);
+        return $array = json_decode($json,TRUE);
+        
     }
 
     public function campaignFileDownload($id)
@@ -261,46 +293,97 @@ class MessageController extends Controller
     {
         $numbers = [];
         $readExcel = Excel::toArray(new BulkSmsImport, $file);
-        foreach ($readExcel as $_read) {
-            if(count($_read) > 0){
-                foreach ($_read as $r) {
-                    if(!isset($r['number'])){
-                        return false;
-                    }else{
-                        $number = (int)$r['number'];
-                        array_push($numbers, $number);
-                    }
-                }
+        foreach ($readExcel[0] as $_read) {
+            if(isset($_read['number'])){
+                array_push($numbers, $_read['number']);
+            }else{
+                return false;
             }
         }
         return $numbers;
     }
 
-    public function saveMessage($data, $masking_id = null)
-    {
+    public function saveMessage($data, $campId = NULL){
+        $this->AuthSmsCount($data['message_length']);
         $message = Message::create([
-            'user_id'           => $data['user_id'],
+            'message_id'        => $data['message_id'],
+            'user_id'           => Auth::id(),
             'message'           => $data['message'],
             'message_length'    => $data['message_length'],
             'contact_number'    => $data['contact_number'],
             'send_date'         => $data['send_date'],
-            'type'              => ($data['type'] == 'bulk')? 'campaign': $data['type'],
+            'type'              => $data['type'],
             'price'             => $data['price'],
             'api_type'          => $data['api_type'],
             'status'            => $data['status'],
+            'reference'         => $data['orginator']
         ]);
-        switch ($data['api_type']) {
-            case 'masking':
-                    MessageMasking::create([
-                        'message_id' => $message->id,
-                        'masking_id' => $masking_id
-                    ]);
-                break;
-            
-            default:
-                 return 'code';
-                break;
+
+        if($data['api_type'] == 'masking'){
+            MessageMasking::create([
+                'message_id' => $message->id,
+                'masking_id' => $data['masking_id']
+            ]);
         }
+        if($campId != NULL){
+            CampaignMessage::create(['message_id' => $message->id, 'campaign_id' => $campId]);
+        }
+        return $message;
     }
+
+
+
+    public function stringCount($message){
+        $count = '';
+        if (strlen($message) != strlen(utf8_decode($message))){
+            $urduCount = strlen(utf8_decode($message));
+            switch ($urduCount) {
+                case $urduCount <= 70:
+                        $count = 1;
+                    break;
+                case $urduCount <= 134:
+                        $count = 2;
+                    break;
+                case $urduCount <= 201:
+                        $count = 3;
+                    break;  
+                case $urduCount <= 268:
+                        $count = 4;
+                    break;  
+                case $urduCount <= 355:
+                        $count = 5;
+                    break;  
+                default:
+                    $count = false;
+                    break;
+            }
+
+        }else{
+            $englishCount  = strlen($message);
+            switch ($englishCount) {
+                case $englishCount <= 160:
+                        $count = 1;
+                    break;
+                case $englishCount <= 320:
+                        $count = 2;
+                    break;
+                case $englishCount <= 480:
+                        $count = 3;
+                    break;  
+                case $englishCount <= 640:
+                        $count = 4;
+                    break;  
+                case $englishCount <= 800:
+                        $count = 5;
+                    break;  
+                default:
+                    $count = false;
+                    break;
+            }
+        }
+
+        return $count;
+    }
+
 
 }

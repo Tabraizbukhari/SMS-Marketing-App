@@ -14,7 +14,6 @@ class SmsApi extends Model
         'api_url',
         'api_username',
         'api_password',
-        'type',
     ];
 
 }

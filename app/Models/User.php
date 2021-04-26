@@ -22,17 +22,17 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
-        'password',
-        'sms',
-        'price',
-        'type',
-        'api_token',
-        'email_verified_at',
-        'monthly_invoice_charges',
-        'logo_img',
         'username',
+        'password',
+        'api_token',
+        'phone_number',
+        'type',
+        'register_as',
+        'reference_id',
+        'is_blocked'
     ];
 
     /**
@@ -53,27 +53,47 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    
+    public function getFormatedCreatedAtAttribute()
+    {
+        return date('d-m-Y H:m a', strtotime($this->created_at));
+    }
 
-    // public function messageProfit()
-    // {
-    // return $this->hasMany(Message::class)
-    //     ->selectRaw('SUM(price) as total')
-    //     ->groupBy('user_id');
-    // }
+    public function setUserNameAttribute($value)
+    {
+    	$this->attributes['username'] = strtolower($value.'_reseller'.Str::random(4));
+    }
+
+    public function getFullNameAttribute($value)
+    {
+    	return $this->first_name.' '.$this->last_name;
+    }
+
+    public function UserData()
+    {
+        return $this->hasOne(UsersData::class);
+    }
+
+    public function getCurrentAccountBallance()
+    {
+        $ct = $this->transactions->where('type', 'credit')->sum('amount');
+        $dt = $this->transactions->where('type', 'debit')->sum('amount');
+        return round($ct - $dt, 2);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 
     public function getAllMessages()
     {
         return $this->hasMany(Message::class);
     }
 
-    public function getUserData()
-    {
-        return $this->hasOne(UsersData::class);
-    }
-
     public function getUserSmsApi()
     {
-        return $this->hasOne(SmsApi::class);
+        return $this->hasOne(SmsApi::class,'user_id');
     }
 
     public function getResellerMasking()
@@ -96,12 +116,6 @@ class User extends Authenticatable
       return  $this->belongsToMany(User::class,'reseller_customers','user_Id','customer_id');
     }
 
-
-  
-    public function getTransactionId()
-    {
-        return strtoupper('TS'.rand(0,100000).Str::random(2).Str::random(1));
-    }
 
     public function getResellerCustomerProfit()
     {

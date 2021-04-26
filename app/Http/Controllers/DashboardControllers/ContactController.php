@@ -4,7 +4,7 @@ namespace App\Http\Controllers\DashboardControllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Contacts;
+use App\Models\Contact;
 use Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ContactsImport;
@@ -19,7 +19,7 @@ class ContactController extends Controller
     }
     public function index()
     {
-        $data['contacts'] =  Contacts::where('user_id', Auth::id())->paginate($this->pagination); 
+        $data['contacts'] =  Contact::where('user_id', Auth::id())->paginate($this->pagination); 
         return view('dashboard.contact.index', $data);
     }
 
@@ -52,35 +52,34 @@ class ContactController extends Controller
                  }
             }
         }else{
-            Contacts::create([
+            Contact::create([
                 'user_id' => Auth::id(),
                 'name'   => $request->name,
                 'number' => $request->number,
             ]);
         }
 
-        return redirect()->route('contacts')->with('success', 'contact created successfully');
+        return redirect()->route('user.contacts')->with('success', 'contact created successfully');
     }
 
     public function destroy($id)
     {
-        $contact    =  Contacts::findOrFail(decrypt($id));
-
+        $contact    =  Contact::findOrFail(decrypt($id));
         $contact->delete();
-        return redirect()->route('contacts')->with('success', 'contact deleted successfully');
+        return redirect()->route('user.contacts')->with('success', 'contact deleted successfully');
     }
 
     public function edit($id)
     {
-        $data['contact']    = Contacts::findOrFail(decrypt($id));
+        $data['contact']    = Contact::findOrFail(decrypt($id));
         
         return view('dashboard.contact.edit', $data);
     }
 
     public function update($id, Request $request)
     {
-        $contact = Contacts::findOrFail(decrypt($id));
+        $contact = Contact::findOrFail(decrypt($id));
         $contact->update($request->all());
-        return redirect()->route('contacts')->with('success', 'contact updated successfully');
+        return redirect()->route('user.contacts')->with('success', 'contact updated successfully');
     }
 }

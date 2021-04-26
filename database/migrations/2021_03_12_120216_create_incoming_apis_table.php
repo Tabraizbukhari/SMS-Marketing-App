@@ -16,6 +16,7 @@ class CreateIncomingApisTable extends Migration
         Schema::create('incoming_apis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->string('customer_api')->nullable();
             $table->string('prefix');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

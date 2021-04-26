@@ -16,8 +16,11 @@ class CreateUsersDataTable extends Migration
         Schema::create('users_data', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('phone_number');
-            $table->enum('register_as',['reseller','customer']);
+            $table->bigInteger('has_sms');
+            $table->double('price_per_sms');
+            $table->double('Invoice_charges')->nullable();
+            $table->string('logo_img')->nullable();
+            $table->string('login_url')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
          
