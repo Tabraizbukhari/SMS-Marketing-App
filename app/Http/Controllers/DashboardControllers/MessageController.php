@@ -108,7 +108,7 @@ class MessageController extends Controller
             'message'        => $request->message,
             'message_length' => $noOfSms,
             'contact_number' => $request->phone_number??NULL,
-            // 'price'          => Auth::user()->UserData->price_per_sms * $noOfSms,
+            'price'          => Auth::user()->UserData->price_per_sms * $noOfSms,
             'send_date'      => $request->sheduledatetime??Carbon::now(),
             'api_type'       => $authType,
             'campaign'       => $request->campaign,
