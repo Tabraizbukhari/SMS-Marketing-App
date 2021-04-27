@@ -192,6 +192,7 @@ class UserController extends Controller
         if($request->has('masking') && count($request->masking) > 0){
             foreach ($request->masking as $mask) {
                 UserMasking::where('user_id', $user->id)->updateOrCreate([
+                    'user_id'     => $user->id,
                     'masking_id'  => $mask,
                 ]);
             }
