@@ -33,9 +33,9 @@
 											<img src="{{ url('logo/logo.png') }}" alt="synctechsol-logo" class="img-fluid" width="132" height="132" />
 										@endif
 									</div>
-									<div class="alert alert-danger" role="alert">
+									<!-- <div class="alert alert-danger" role="alert">
 										<marquee scrollamount="10" direction="top" scrolldelay="" behavior="">Our portal is under maintenance, if you faced any issue report it..</marquee>
-									</div>
+									</div> -->
 									<form method="post" action="{{ route('user.login.post') }}"> @csrf
 										<div class="mb-3">
 											<label class="form-label">Username</label>

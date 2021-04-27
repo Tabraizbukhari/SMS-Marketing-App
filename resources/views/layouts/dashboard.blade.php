@@ -15,7 +15,11 @@
 
 </head>
     <body >
+    
         @auth
+        <div class="alert alert-info" role="alert">
+			<marquee scrollamount="4" direction="right" scrolldelay="100" behavior="alternate"> Dear User the portal is on the updated, If your data is missing please wait..</marquee>
+		</div>
 	    <div class="wrapper" >
             @include('dashboard.includes.sidenav')
             <div class="main">
