@@ -53,6 +53,7 @@ class SendBulkSms implements ShouldQueue
                 $data['price'] = $this->users->UserData->price_per_sms * $data['message_length']; 
              }
 
+
             if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
                 
                 $htiApi = $this->hitApi($data);

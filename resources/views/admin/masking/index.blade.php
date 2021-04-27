@@ -91,6 +91,9 @@
 									</tbody>
 								</table>
 							</div>
+              <div class="float-right">
+                  {{ $masking->links() }}
+                </div>
 						</div>
           </div>
         </div>
