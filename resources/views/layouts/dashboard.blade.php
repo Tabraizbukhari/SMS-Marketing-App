@@ -17,8 +17,8 @@
     <body >
     
         @auth
-        <div class="alert alert-info" role="alert">
-			<marquee scrollamount="4" direction="right" scrolldelay="100" behavior="alternate"> Dear User the portal is on the updated, If your data is missing please wait..</marquee>
+        <div class="alert alert-danger" role="alert">
+			<marquee scrollamount="4" direction="right" scrolldelay="100" behavior="alternate">The portal is under maintenance, you may find some data missing, it will be updated shortly. We apologize for the inconvenience.</marquee>
 		</div>
 	    <div class="wrapper" >
             @include('dashboard.includes.sidenav')
