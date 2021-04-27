@@ -61,13 +61,15 @@ class ApiController extends Controller
                     $response['response'] = 'You do not have balance';
                     return response()->json($response);
                 }
+
+                $noOfSms =  $this->stringCount($request->message);
                 $data = [
                     'user_id'        => $user->id,
                     'message'        => $request->message,
                     'message_length' => $this->stringCount($request->message),
                     'contact_number' => $request->phone_number,
                     'send_date'      => $request->sheduledatetime??Carbon::now(),
-                    'price'          => $user->UserData->price_per_sms * $this->stringCount($request->message),
+                    'price'          => $user->UserData->price_per_sms *  $noOfSms,
                     'api_type'       => $user->type,
                 ];
 
@@ -81,6 +83,10 @@ class ApiController extends Controller
                 $htiApi = $this->hitApi($data, $user);
                     if($user->type == 'masking'){
                         if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
+                            if(substr($request->phone_number, 0, 3) == '033'){
+                                $noOfSms += $noOfSms / 2 + $noOfSms;
+                             }
+                            $data['price']        = $user->UserData->price_per_sms *  $noOfSms;
                             $data['message_id']   = $htiApi['Data']['msgid'];
                             $data['status']       = 'successfully';
                             $sendMessage          = $this->saveMessage($data, $user);
