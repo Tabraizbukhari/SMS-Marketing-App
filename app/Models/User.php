@@ -59,10 +59,10 @@ class User extends Authenticatable
         return date('d-m-Y H:m a', strtotime($this->created_at));
     }
 
-    public function setUserNameAttribute($value)
-    {
-    	$this->attributes['username'] = strtolower($value.'_reseller'.Str::random(4));
-    }
+    // public function setUserNameAttribute($value)
+    // {
+    // 	$this->attributes['username'] = strtolower($value.'sync'.Str::random(4));
+    // }
 
     public function getFullNameAttribute($value)
     {
