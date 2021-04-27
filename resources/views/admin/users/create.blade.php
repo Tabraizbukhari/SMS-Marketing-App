@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label">SMS<span class="text-danger">*</span></label>
-                                    <input type="Number" required class="form-control"  min="1" max="{{ Auth::user()->has_sms }}" name="sms" placeholder="Number of sms" value="{{ old('sms') }}">
+                                    <input type="Number" required class="form-control"  min="1"  name="sms" placeholder="Number of sms" value="{{ old('sms') }}">
                                 </div>
                             </div>
                             @if($type == 'masking')

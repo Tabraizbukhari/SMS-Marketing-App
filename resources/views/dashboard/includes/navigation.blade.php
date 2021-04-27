@@ -6,7 +6,7 @@
 		<ul class="navbar-nav navbar-align">
 			<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-toggle="dropdown">
-					<span class="text-dark">{{ Auth::user()->name }}</span>
+					<span class="text-dark">{{ Auth::user()->full_name }}</span>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right">
 					<button type="button" class="dropdown-item" data-toggle="modal" data-target="#upload_logo">
