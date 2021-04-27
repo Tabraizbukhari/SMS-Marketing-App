@@ -74,7 +74,7 @@ class ApiController extends Controller
                 ];
 
                 if($user->type == 'masking'){
-                    if(Masking::find($request->orginator)->exist()){
+                    if(Masking::where('title', $request->orginator)->exist()){
                         $data['orginator'] = Masking::find($request->orginator)->title;
                     }else{
                         $response['response'] = 'Incorrect orginator';
