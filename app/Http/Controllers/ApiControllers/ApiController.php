@@ -75,7 +75,10 @@ class ApiController extends Controller
 
                 if($user->type == 'masking'){
                     if(Masking::where('title', $request->orginator)->exists()){
-                        $data['orginator'] = Masking::where('title', $request->orginator)->first()->title;
+                        $masking = Masking::where('title', $request->orginator)->first();
+                        $data['orginator'] = $masking->title;
+                        $data['masking_id'] = $masking->id;
+
                     }else{
                         $response['response'] = 'Incorrect orginator';
                         return response()->json($response);
@@ -183,7 +186,7 @@ class ApiController extends Controller
         if($data['api_type'] == 'masking'){
             MessageMasking::create([
                 'message_id' => $message->id,
-                'masking_id' => $masking_id
+                'masking_id' => $data['masking_id'],
             ]);
         }
         return $message;
