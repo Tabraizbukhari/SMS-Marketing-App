@@ -94,7 +94,7 @@ class SendBulkSms implements ShouldQueue
                 $sendMessage = $this->saveMessage($data, $data['campaign_id']);
             }
         }
-        Campaign::find($data['campaign_id'])->update(['status','successfully']);
+        Campaign::find($data['campaign_id'])->update(['status','completed']);
     }
 
 
