@@ -146,6 +146,7 @@ class MessageController extends Controller
                     }else{
                         if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
                             $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
+                            $data['price']      = Auth::user()->UserData->price_per_sms * $noOfSms;
                             $data['status'] = 'successfully';
                             $sendMessage        = $this->saveMessage($data);
                             $dataResponse       = 'Message send successfully';
