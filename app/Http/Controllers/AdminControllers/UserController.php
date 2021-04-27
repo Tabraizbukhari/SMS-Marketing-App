@@ -172,16 +172,20 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
         $userPervioussms = $user->UserData->has_sms;
-        $user->update([
+
+        $data = [
             'first_name'        => $request->first_name,
             'last_name'         => $request->last_name,
             'email'             => $request->email,
             'username'          => $request->first_name,
-            'password'          => Hash::make($request->password),
             'api_token'         => Str::random('20'),
             'phone_number'      => $request->phone_number,
             'reference_id'      => Auth::id(),
-        ]);
+        ];
+        if($request->has('password') && $request->password != NULL){
+            $data['password'] = Hash::make($request->password);
+        }
+        $user->update($data);
 
         $user->UserData()->update([
             'has_sms'           =>  $request->sms,
