@@ -60,6 +60,9 @@ Route::name('user.')->group(function ()
             Route::get('edit/{id}', [CustomerController::class, 'edit'] )->name('edit');
             Route::post('update/{id}', [CustomerController::class, 'update'] )->name('update');
             Route::post('amount/{id}', [CustomerController::class, 'addCustomerAmount'])->name('amount.add');
+
+            Route::get('details/{id}', [CustomerController::class, 'customerDetails'])->name('details');
+
         });
 
 

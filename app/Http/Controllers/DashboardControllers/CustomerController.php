@@ -187,6 +187,7 @@ class CustomerController extends Controller
         if($request->has('masking') && count($request->masking) > 0){
             foreach ($request->masking as $mask) {
                 UserMasking::where('user_id', $user->id)->updateOrCreate([
+                    'user_id'   => $user->id,
                     'masking_id'  => $mask,
                 ]);
             }
@@ -315,4 +316,26 @@ class CustomerController extends Controller
 
         return redirect()->back()->with('success', 'Add Amount Successfully');
     }
+
+    public function customerDetails($id)
+    {
+        $customer = User::findOrFail(decrypt($id));
+        $orginator = '';
+        $data['customer'] = $customer;
+        if($customer->type == 'masking'){
+            $data['api_url'] =  'http://sms1.synctechsol.com/api/sendmessage?';
+            $orginator = 'masking';
+        }else{
+            $data['api_url'] =  'http://sms1.synctechsol.com/api/sendmessage?';
+            $orginator = '99095';
+        }
+        $data['api_username'] = 'username='.Auth::user()->username.'';
+        $data['api_pass'] = '&password='.Auth::user()->api_token.'';
+        $data['message'] = '&message=testing&phone_number=03211234567';
+        $data['orginator'] =  "&orginator=".$orginator."";
+        return view('dashboard.customer.details', $data);
+    }
+
+
+    
 }

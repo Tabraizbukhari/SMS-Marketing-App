@@ -69,7 +69,7 @@
                                   <i class="fas fa-ellipsis-h"></i>
                                 </a>
                                 <div class="dropdown-menu">
-                                  <a href="JavaScript:void(0)" class="dropdown-item" data-toggle="modal" data-target="#viewDetails{{$u->id}}">View Details</a>
+                                  <a href="{{ route('user.customer.details', encrypt($u->id)) }}" class="dropdown-item" >View Details</a>
                                   <a href="JavaScript:void(0)" class="dropdown-item" data-toggle="modal" data-target="#addSMS{{$u->id}}">Add Sms</a>
                                   <div class="dropdown-divider"></div>
                                   <a href="{{ route('user.customer.edit', encrypt($u->id)) }}" class="text-primary dropdown-item" >Edit</a>
