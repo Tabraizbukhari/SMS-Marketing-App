@@ -9,7 +9,8 @@ use App\Models\Admin;
 use App\Models\User;
 use App\Models\Message;
 use App\Models\Transaction;
-
+use App\Mail\InvoiceRegisteration;
+use Illuminate\Support\Facades\Mail;
 
 class DashboardController extends Controller
 {
@@ -103,6 +104,17 @@ class DashboardController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Add Amount Successfully');
+    }
+
+
+    public function SendMail()
+    {
+        $user = Auth::user();
+        $data['message']    =  'admin message ';
+        $result = Mail::send(new InvoiceRegisteration($user, $data));
+
+        dd($result);
+        return redirect()->back()->with('success', 'Mail send successfully');
     }
 
 }

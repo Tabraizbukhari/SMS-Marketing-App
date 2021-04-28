@@ -77,5 +77,7 @@ Route::name('admin.')->prefix('admin')->group(function(){
             Route::post('add/amount/{id}', [DashboardController::class, 'addAmount'] )->name('amount.post');
         });
 
+        Route::get('testing/email', [DashboardController::class, 'SendMail'])->name('test');
+
     });
 });
