@@ -6,7 +6,7 @@
 
             <ul class="sidebar-nav" >
                 <li class="sidebar-header">
-                    Sms Mangement App
+                    Sms Mangement App beta
                 </li>
 
                 <li class="sidebar-item">
