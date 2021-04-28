@@ -177,7 +177,7 @@ class UserController extends Controller
             'first_name'        => $request->first_name,
             'last_name'         => $request->last_name,
             'email'             => $request->email,
-            'username'          => $request->first_name,
+            // 'username'          => $request->first_name,
             'api_token'         => Str::random('20'),
             'phone_number'      => $request->phone_number,
             'reference_id'      => Auth::id(),
