@@ -7,15 +7,16 @@ Hello {{ $user['first_name'] }},
 <br />
     <table class="table">
         <tr> 
-            <th width="70%">Title</th>
+            <th>Title</th>
             <th>Amount</th>
         </tr>
         <tr>
-            <td width="70%"> Registeration Processing fees</td>
+            <td> Registeration Processing fees</td>
             <td>200</td>
         </tr>
         <tr>
-            <td colspan="2">200$</td>
+            <td>Total Amount </td>
+            <td>200$</td>
         </tr>
     </table>
 @endcomponent
