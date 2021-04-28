@@ -113,7 +113,6 @@ class DashboardController extends Controller
         $user = Auth::user();
         $data['message']    =  'admin message ';
         $SendEmailJob = (new SendMailInvoiceRegisteration($user, $data))->delay(now()->addSeconds(1));
-        dd($SendEmailJob);
         dispatch($job);
 
         dd($result);
