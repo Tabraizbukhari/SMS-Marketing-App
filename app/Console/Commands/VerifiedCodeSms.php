@@ -54,6 +54,6 @@ class VerifiedCodeSms extends Command
             //         }              
             // }
             return true;
-        }
+        // }
     }
 }
