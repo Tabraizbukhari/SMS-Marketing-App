@@ -52,7 +52,7 @@ class VerifiedCodeSms extends Command
                        $status =  Message::where('message_id', $d['MsgID'])->update(['is_verified'=> '1']);  
                     }              
                 }
-                return true;
             }
+            $this->info('The command was verified sms successful!');
     }
 }
