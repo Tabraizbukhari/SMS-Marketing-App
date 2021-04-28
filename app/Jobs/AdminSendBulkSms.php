@@ -45,6 +45,7 @@ class AdminSendBulkSms implements ShouldQueue
                 
                 $htiApi = $this->hitApi($data);
                 if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
+                    $data['price']      =   1;
                     $data['message_id'] = $htiApi['Data']['msgid'];
                     $data['status']     = 'successfully';
                     $sendMessage        = $this->saveMessage($data, $data['campaign_id']);
