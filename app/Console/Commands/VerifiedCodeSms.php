@@ -40,20 +40,19 @@ class VerifiedCodeSms extends Command
      */
     public function handle()
     {
-        $status =  Message::where('message_id', '8ff00b51-cb5a-4ec8-8cd1-35260a00b474')->update(['is_verified'=> '1']);  
-            // $file_url= 'https://reporting_smsc41.eocean.us/download_json.php?username=synctech&password=R2zuFkmYwXgCApRj&date=2021-04-19';
-            // header('Content-Type: application/octet-stream');
-            // header("Content-Transfer-Encoding: Binary"); 
-            // header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\""); 
-            // $read = readfile($file_url); 
-            // $data = json_decode($read, true);
-            // foreach ((array) $data as $d) {
-            //     if(Message::where('message_id', $d['MsgID'])->exists()){
-            //         if($d['status'] == 'DTH'){  
-            //            $status =  Message::where('message_id', $d['MsgID'])->update(['is_verified'=> '1']);  
-            //         }              
-            // }
-            return true;
-        // }
+            $file_url= 'https://reporting_smsc41.eocean.us/download_json.php?username=synctech&password=R2zuFkmYwXgCApRj&date=2021-04-19';
+            header('Content-Type: application/octet-stream');
+            header("Content-Transfer-Encoding: Binary"); 
+            header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\""); 
+            $read = readfile($file_url); 
+            $data = json_decode($read, true);
+            foreach ((array) $data as $d) {
+                if(Message::where('message_id', $d['MsgID'])->exists()){
+                    if($d['status'] == 'DTH'){  
+                       $status =  Message::where('message_id', $d['MsgID'])->update(['is_verified'=> '1']);  
+                    }              
+                }
+                return true;
+            }
     }
 }
