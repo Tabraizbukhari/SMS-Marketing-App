@@ -171,48 +171,7 @@ class MessageController extends Controller
                             $job = (new SendBulkSms($data, $filesexel))->delay(now()->addSeconds(1));
                             $dataResponse       = 'Campaign run successfully';
                             dispatch($job);
-                            // foreach ($filesexel as $number) {
-                            //     $num = (substr($number, 0, 2) == '03')? true : ((substr($number, 0, 3) == '923')? true : ((substr($number, 0, 1) == "3")? true:false) );
-                            //     $data['contact_number'] = $number;
-                            //     if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
-                                    
-                            //         $htiApi = $this->hitApi($data);
-                            //         if(Auth::user()->type == 'masking'){
-                            //             $data['message_id'] = 'fromtesting';
-                            //             $data['status'] = 'successfully';
-                            //             $sendMessage        = $this->saveMessage($data, $campaign->id);
-                            //             $dataResponse       = 'Campaign run successfully';
-                            //             if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
-                            //                 $data['message_id'] = $htiApi['Data']['msgid'];
-                            //                 $data['status']     = 'successfully';
-                            //                 $sendMessage        = $this->saveMessage($data, $campaign->id);
-                            //                 $dataResponse       = 'Campaign run successfully';
-
-                            //             }else{
-                            //                 return redirect()->back()->withErrors($htiApi['Data']);
-                            //             }
-                            //         }else{
-                            //             if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
-                            //                 $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
-                            //                 $data['status'] = 'successfully';
-                            //                 $sendMessage        = $this->saveMessage($data, $campaign->id);
-                            //                 $dataResponse = 'Campaign run successfully';
-                            //             }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
-                            //                 Campaign::find($campaign->id)->update(['status','failed']);
-                            //                 return redirect()->back()->withErrors($htiApi['data']['errormessage']);
-                            //             }else{
-                            //                 Campaign::find($campaign->id)->update(['status','failed']);
-                            //                 return redirect()->back()->withErrors('Something wents wrong! plesae contact your admistrator');
-                            //             }
-                            //         }
-                            //     }else{
-                            //         $data['message_id'] = NULL;
-                            //         $data['status'] = 'not_sent';
-                            //         $sendMessage = $this->saveMessage($data, $campaign->id);
-                            //     }
-                            // }
-                            // Campaign::find($campaign->id)->update(['status','successfully']);
-                        }
+                         }
                     }else{
                         return redirect()->back()->withErrors('Something wents wrong with your excel file! plesae contact your admistrator');
                     }
