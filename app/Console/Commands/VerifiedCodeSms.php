@@ -45,8 +45,8 @@ class VerifiedCodeSms extends Command
             header("Content-Transfer-Encoding: Binary"); 
             header("Content-disposition: attachment; filename=\"" . basename($file_url) . "\""); 
             $read = file_get_contents($file_url); 
-            dd($read);
             $data = json_decode($read, true);
+            dd($data[0]);
             foreach ((array) $data as $d) {
                 if(Message::where('message_id', $d['MsgID'])->exists()){
                     if($d['status'] == 'DTH'){  
