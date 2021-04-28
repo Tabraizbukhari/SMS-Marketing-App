@@ -1,5 +1,6 @@
 @component('mail::message')
 
+@component('mail:panel')
 <style type="text/css">
   @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
   body { margin: 0; padding: 0; background: #e1e1e1; }
@@ -408,6 +409,7 @@
     <td height="20"></td>
   </tr>
 </table>
+@endcomponent
 
 
 Thanks,<br>
