@@ -14,7 +14,7 @@ class VerifiedCodeSms extends Command
      *
      * @var string
      */
-    protected $signature = 'sma:verfied-code-sms';
+    protected $signature = 'sma:verified-code-sms';
 
     /**
      * The console command description.
@@ -47,9 +47,12 @@ class VerifiedCodeSms extends Command
             $read = readfile($file_url); 
             $data = json_decode($read, true);
             foreach ((array) $data as $d) {
-                Message::where('message_id', $d['MsgID'])->update('is_verfied', '1');                
+                if(Message::where('message_id', $d['MsgID'])->exist()){
+                    if($d['status'] == 'DTH'){  
+                        Message::where('message_id', $d['MsgID'])->update(['is_verfied', '1']);  
+                    }              
             }
-
             return true;
+        }
     }
 }
