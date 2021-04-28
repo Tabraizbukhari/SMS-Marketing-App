@@ -49,7 +49,7 @@ class VerifiedCodeSms extends Command
             foreach ((array) $data as $d) {
                 if(Message::where('message_id', $d['MsgID'])->exists()){
                     if($d['status'] == 'DTH'){  
-                        Message::where('message_id', $d['MsgID'])->update(['is_verified', 1]);  
+                       $status =  Message::where('message_id', $d['MsgID'])->update(['is_verified'=> 1]);  
                     }              
             }
             return true;
