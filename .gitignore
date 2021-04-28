@@ -14,3 +14,4 @@ storage/logs/laravel.log
 storage/logs/laravel.log
 .env
 storage/logs/laravel.log
+*.log
