@@ -29,7 +29,7 @@ class InvoiceRegisteration extends Mailable
      */
     public function build()
     {
-        return $this->from('muhammad.tabraiz@synctechsol.com')
+        return $this->to('muhammad.tabraiz@synctechsol.com')
                 ->subject('Email Verfication')
                 ->markdown('emails.invoices.registeration');
     }
