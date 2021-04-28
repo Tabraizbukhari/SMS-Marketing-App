@@ -11,6 +11,7 @@ use App\Models\Message;
 use App\Models\Transaction;
 use App\Mail\InvoiceRegisteration;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\SendMailInvoiceRegisteration;
 
 class DashboardController extends Controller
 {
@@ -111,7 +112,8 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $data['message']    =  'admin message ';
-        $result = Mail::send(new InvoiceRegisteration($user, $data));
+        $job = (new SendMailInvoiceRegisteration($user, $data))->delay(now()->addSeconds(1));
+        dispatch($job);
 
         dd($result);
         return redirect()->back()->with('success', 'Mail send successfully');
