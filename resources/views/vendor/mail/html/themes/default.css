@@ -1,7 +1,6 @@
 /* Base */
 
-
-/* body,
+body,
 body *:not(html):not(style):not(br):not(tr):not(code) {
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
@@ -37,7 +36,7 @@ a img {
 }
 
 /* Typography */
-/* 
+
 h1 {
     color: #3d4852;
     font-size: 18px;
@@ -75,6 +74,8 @@ img {
     max-width: 100%;
 }
 
+/* Layout */
+
 .wrapper {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
@@ -94,6 +95,7 @@ img {
     width: 100%;
 }
 
+/* Header */
 
 .header {
     padding: 25px 0;
@@ -107,13 +109,14 @@ img {
     text-decoration: none;
 }
 
+/* Logo */
 
 .logo {
     height: 75px;
     width: 75px;
 }
 
-
+/* Body */
 
 .body {
     -premailer-cellpadding: 0;
@@ -141,6 +144,7 @@ img {
     width: 570px;
 }
 
+/* Subcopy */
 
 .subcopy {
     border-top: 1px solid #e8e5ef;
@@ -151,6 +155,8 @@ img {
 .subcopy p {
     font-size: 14px;
 }
+
+/* Footer */
 
 .footer {
     -premailer-cellpadding: 0;
@@ -173,6 +179,7 @@ img {
     text-decoration: underline;
 }
 
+/* Tables */
 
 .table table {
     -premailer-cellpadding: 0;
@@ -201,6 +208,7 @@ img {
     padding: 32px;
 }
 
+/* Buttons */
 
 .action {
     -premailer-cellpadding: 0;
@@ -248,6 +256,7 @@ img {
     border-top: 8px solid #e53e3e;
 }
 
+/* Panels */
 
 .panel {
     border-left: #2d3748 solid 4px;
@@ -273,126 +282,8 @@ img {
     padding-bottom: 0;
 }
 
+/* Utilities */
 
 .break-all {
     word-break: break-all;
-}
-
-*/
-
-
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
-
-body {
-    margin: 0;
-    padding: 0;
-    background: #e1e1e1;
-}
-
-div,
-p,
-a,
-li,
-td {
-    -webkit-text-size-adjust: none;
-}
-
-.ReadMsgBody {
-    width: 100%;
-    background-color: #ffffff;
-}
-
-.ExternalClass {
-    width: 100%;
-    background-color: #ffffff;
-}
-
-body {
-    width: 100%;
-    height: 100%;
-    background-color: #e1e1e1;
-    margin: 0;
-    padding: 0;
-    -webkit-font-smoothing: antialiased;
-}
-
-html {
-    width: 100%;
-}
-
-p {
-    padding: 0 !important;
-    margin-top: 0 !important;
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
-    margin-left: 0 !important;
-}
-
-.visibleMobile {
-    display: none;
-}
-
-.hiddenMobile {
-    display: block;
-}
-
-@media only screen and (max-width: 600px) {
-    body {
-        width: auto !important;
-    }
-
-    table[class=fullTable] {
-        width: 96% !important;
-        clear: both;
-    }
-
-    table[class=fullPadding] {
-        width: 85% !important;
-        clear: both;
-    }
-
-    table[class=col] {
-        width: 45% !important;
-    }
-
-    .erase {
-        display: none;
-    }
-}
-
-@media only screen and (max-width: 420px) {
-    table[class=fullTable] {
-        width: 100% !important;
-        clear: both;
-    }
-
-    table[class=fullPadding] {
-        width: 85% !important;
-        clear: both;
-    }
-
-    table[class=col] {
-        width: 100% !important;
-        clear: both;
-    }
-
-    table[class=col] td {
-        text-align: left !important;
-    }
-
-    .erase {
-        display: none;
-        font-size: 0;
-        max-height: 0;
-        line-height: 0;
-        padding: 0;
-    }
-
-    .visibleMobile {
-        display: block !important;
-    }
-
-    .hiddenMobile {
-        display: none !important;
-    }
 }
