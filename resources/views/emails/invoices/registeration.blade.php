@@ -8,16 +8,16 @@ Hello {{ $user['first_name'] }},
 <br />
 <table class="table">
     <tr> 
-        <th>Title</th>
-        <th>Amount</th>
+        <th width="60%">Title</th>
+        <th width="40%">Amount</th>
     </tr>
     <tr>
-        <td> Registeration Processing fees</td>
-        <td>200</td>
+        <td width="60%"> Registeration Processing fees</td>
+        <td width="40%">200</td>
     </tr>
     <tr>
-        <td>Total Amount </td>
-        <td>200$</td>
+        <td width="60%">Total Amount </td>
+        <td width="40%">200$</td>
     </tr>
 </table>
 
