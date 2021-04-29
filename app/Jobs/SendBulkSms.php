@@ -14,6 +14,7 @@ use App\Models\CampaignMessage;
 use App\Models\Campaign;
 use Auth;
 use App\Models\Admin;
+use App\Models\UsersData;
 
 
 class SendBulkSms implements ShouldQueue
@@ -144,7 +145,7 @@ class SendBulkSms implements ShouldQueue
   
 
     public function saveMessage($data, $campId = NULL){
-        $this->AuthSmsCount($data['message_length']);
+        // $this->AuthSmsCount($data['message_length']);
         $message = Message::create([
             'message_id'        => $data['message_id'],
             'user_id'           => $this->users->id,
@@ -158,6 +159,11 @@ class SendBulkSms implements ShouldQueue
             'status'            => $data['status'],
             'reference'         => $data['orginator']
         ]);
+        
+        if($data['status'] == 'successfully'){
+            $total_sms = $this->users->UserData->has_sms - $data['message_length'];
+            UsersData::where('user_id', $this->user->id)->update(['has_sms' => $total_sms]);
+        }
 
         if($data['api_type'] == 'masking'){
             MessageMasking::create([
@@ -170,10 +176,10 @@ class SendBulkSms implements ShouldQueue
         }
         return $message;
     }
-    public function AuthSmsCount($messageLength)
-    {
-        $total_sms = $this->users->UserData->has_sms - $messageLength;
-        return $this->users->UserData()->update(['has_sms' => $total_sms]);
-    }
+    // public function AuthSmsCount($messageLength)
+    // {
+    //     $total_sms = $this->users->UserData->has_sms - $messageLength;
+    //     return $this->users->UserData()->update(['has_sms' => $total_sms]);
+    // }
 
 }
