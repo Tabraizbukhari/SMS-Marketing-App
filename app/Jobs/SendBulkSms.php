@@ -161,8 +161,9 @@ class SendBulkSms implements ShouldQueue
         ]);
         
         if($data['status'] == 'successfully'){
-            $total_sms = $this->users->UserData->has_sms - $data['message_length'];
-            UsersData::where('user_id', $this->user->id)->update(['has_sms' => $total_sms]);
+            $userData = UsersData::where('user_id', $this->user->id)->first();
+            $sms = $userData->has_sms - $data['message_length'];
+            $userData->update(['has_sms' => $total_sms]);
         }
 
         if($data['api_type'] == 'masking'){
