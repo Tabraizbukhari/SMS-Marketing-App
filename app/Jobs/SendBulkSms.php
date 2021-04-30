@@ -15,7 +15,7 @@ use App\Models\Campaign;
 use Auth;
 use App\Models\Admin;
 use App\Models\UsersData;
-
+use App\Jobs\SendCreatedSMS;
 
 class SendBulkSms implements ShouldQueue
 {
@@ -56,39 +56,14 @@ class SendBulkSms implements ShouldQueue
 
 
             if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
+                $data['message_id'] = NULL;
+                $data['status'] = 'pending';
+                $sendMessage    = $this->saveMessage($data, $data['campaign_id']);
+                $dataResponse = 'Campaign run successfully';
+                $data['mid'] = $sendMessage->id;
+                $jobs = (new SendCreatedSMS($data, $this->users))->delay(now()->addSeconds(1));
+                dispatch($jobs);
                 
-                $htiApi = $this->hitApi($data);
-                if($this->users->type == 'masking'){
-                    if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
-                        $data['message_id'] = $htiApi['Data']['msgid'];
-                        $data['status']     = 'successfully';
-                        $sendMessage        = $this->saveMessage($data, $data['campaign_id']);
-                        $dataResponse       = 'Campaign run successfully';
-
-                    }else{
-                        $data['status']     = 'not_sent';
-                        $sendMessage        = $this->saveMessage($data, $data['campaign_id']);
-
-                        // return redirect()->back()->withErrors($htiApi['Data']);
-                    }
-                }else{
-                    if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
-                        $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
-                        $data['status'] = 'successfully';
-                        $sendMessage        = $this->saveMessage($data, $data['campaign_id']);
-                        $dataResponse = 'Campaign run successfully';
-                    }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
-                        $data['status'] = 'not_sent';
-                        $sendMessage    = $this->saveMessage($data, $data['campaign_id']);
-                        Campaign::find($data['campaign_id'])->update(['status','failed']);
-                        // return redirect()->back()->withErrors($htiApi['data']['errormessage']);
-                    }else{
-                        $data['status'] = 'not_sent';
-                        $sendMessage    = $this->saveMessage($data, $data['campaign_id']);
-                        Campaign::find($data['campaign_id'])->update(['status','failed']);
-                        // return redirect()->back()->withErrors('Something wents wrong! plesae contact your admistrator');
-                    }
-                }
             }else{
                 $data['message_id'] = NULL;
                 $data['status'] = 'not_sent';
@@ -126,21 +101,21 @@ class SendBulkSms implements ShouldQueue
     }
 
 
-    public function hitApi($data)
-    {
-        $url = $this->message_url($data);
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response =  curl_exec($ch);
+    // public function hitApi($data)
+    // {
+    //     $url = $this->message_url($data);
+    //     $ch = curl_init($url);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //     $response =  curl_exec($ch);
 
-        if($this->users->type == 'masking'){
-            return json_decode($response, true);
-        }
-        $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
-        $json = json_encode($xml);
-        return $array = json_decode($json,TRUE);
+    //     if($this->users->type == 'masking'){
+    //         return json_decode($response, true);
+    //     }
+    //     $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
+    //     $json = json_encode($xml);
+    //     return $array = json_decode($json,TRUE);
         
-    }
+    // }
 
   
 
@@ -160,11 +135,11 @@ class SendBulkSms implements ShouldQueue
             'reference'         => $data['orginator']
         ]);
         
-        if($data['status'] == 'successfully'){
-            $userData = UsersData::where('user_id', $this->users->id)->first();
-            $sms = $userData->has_sms - $data['message_length'];
-            $userData->update(['has_sms' => $sms]);
-        }
+        // if($data['status'] == 'successfully'){
+        //     $userData = UsersData::where('user_id', $this->users->id)->first();
+        //     $sms = $userData->has_sms - $data['message_length'];
+        //     $userData->update(['has_sms' => $sms]);
+        // }
 
         if($data['api_type'] == 'masking'){
             MessageMasking::create([
