@@ -22,7 +22,7 @@
 									<div class="card-body">
 										<h5 class="card-title mb-4">User Remaining SMS</h5>
 										<h1 class="mt-1 mb-3">{{$has_sms}}</h1>
-										<span class="text-success"><i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sms User has.</span>
+										<span class="text-success"><i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sms User has.</span> <br />
 										<span class='text-secondary'>Total Amount Of Sent Message deduct according to message length.</span>
 									</div>
 								</div>
