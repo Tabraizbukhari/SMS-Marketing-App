@@ -38,8 +38,14 @@ class SendCreatedSMS implements ShouldQueue
         $data = $this->data;
         $userid =$this->users['id'];
         $userData = UsersData::where('user_id', $userid)->first();
+        if($userData->has_sms >= $data['message_length']){
+            return   $this->fail(true);
+        
+        }else{
+            return   $this->fail(false);
 
-        if($userData->has_sms <= $data['message_length']){
+        }
+        if($userData->has_sms >= $data['message_length']){
             $htiApi = $this->hitApi($data);
             if($this->users->type == 'masking'){
                 if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){            
@@ -69,7 +75,7 @@ class SendCreatedSMS implements ShouldQueue
             }
         }else{
             $failmessage = $userid.' has enough sms to run job';
-            return   $this->fail($userData->has_sms);
+            return   $this->fail($failmessage);
         }
     }
 
