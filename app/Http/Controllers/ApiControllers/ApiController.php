@@ -63,7 +63,6 @@ class ApiController extends Controller
                 }
 
                 $noOfSms =  $this->stringCount($request->message);
-                dd($user->id);
                 $data = [
                     'user_id'        => $user->id,
                     'message'        => $request->message,
@@ -172,6 +171,7 @@ class ApiController extends Controller
     public function saveMessage($data, $user){
         $this->AuthSmsCount($data['message_length'], $user);
         $message = Message::create([
+            'user_id'           => $data['user_id'],
             'message_id'        => $data['message_id'],
             'message'           => $data['message'],
             'message_length'    => $data['message_length'],
