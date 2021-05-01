@@ -59,7 +59,7 @@ class SendBulkSms implements ShouldQueue
                 if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
                     $data['message_length'] += $data['message_length'] / 2 + $data['message_length'];
                  }else{
-                     $data['message_length'] = stringCount($data['message']);
+                     $data['message_length'] = $this->stringCount($data['message']);
                  }
 
                 $data['message_id'] = NULL;
