@@ -59,7 +59,7 @@ class SendCreatedSMS implements ShouldQueue
                     $update = ['status' => 'successfully', 'message_id' => $data['message_id'] ];
                     Message::findOrFail($data['mid'])->update($update);
                 }else{
-                    return redirect()->back()->withErrors($htiApi['Data']);
+                    return   $this->fail($htiApi['Data']);
                 }
             }else{
                 if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
@@ -72,7 +72,7 @@ class SendCreatedSMS implements ShouldQueue
                     $update = ['status' => 'successfully', 'message_id' => $data['message_id'] ];
                     Message::findOrFail($data['mid'])->update($update);
                 }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
-                    return redirect()->back()->withErrors($htiApi['data']['errormessage']);
+                    return   $this->fail($htiApi['data']['errormessage']);
                 }
             }
         }else{
