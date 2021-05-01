@@ -56,6 +56,10 @@ class SendBulkSms implements ShouldQueue
 
 
             if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
+                if(substr($number, 0, 3) == '033'){
+                    $data['message_length'] += $data['message_length'] / 2 + $data['message_length'];
+                 }
+
                 $data['message_id'] = NULL;
                 $data['status'] = 'pending';
                 $sendMessage    = $this->saveMessage($data, $data['campaign_id']);

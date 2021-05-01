@@ -145,6 +145,10 @@ class MessageController extends Controller
                         }
                     }else{
                         if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
+                            if(substr($request->phone_number, 0, 3) == '033'){
+                                $noOfSms += $noOfSms / 2 + $noOfSms;
+                             }
+                            
                             $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
                             $data['price']      = Auth::user()->UserData->price_per_sms * $noOfSms;
                             $data['status'] = 'successfully';
