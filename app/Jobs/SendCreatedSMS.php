@@ -38,33 +38,37 @@ class SendCreatedSMS implements ShouldQueue
         $data = $this->data;
         $userid =$this->users['id'];
         $userData = UsersData::where('user_id', $userid)->first();
-        
-        $htiApi = $this->hitApi($data);
-        if($this->users->type == 'masking'){
-            if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){            
-                $userData = UsersData::where('user_id', $userid)->first();
-                $sms = $userData->has_sms - $data['message_length'];
-                $userData->update(['has_sms' => $sms]);
-            
-                $data['message_id'] = $htiApi['Data']['msgid'];
-                $update = ['status' => 'successfully', 'message_id' => $data['message_id'] ];
-                Message::findOrFail($data['mid'])->update($update);
+        if($userData->has_sms >= $data['message_length']){
+            $htiApi = $this->hitApi($data);
+            if($this->users->type == 'masking'){
+                if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){            
+                    $userData = UsersData::where('user_id', $userid)->first();
+                    $sms = $userData->has_sms - $data['message_length'];
+                    $userData->update(['has_sms' => $sms]);
+                
+                    $data['message_id'] = $htiApi['Data']['msgid'];
+                    $update = ['status' => 'successfully', 'message_id' => $data['message_id'] ];
+                    Message::findOrFail($data['mid'])->update($update);
+                }else{
+                    return redirect()->back()->withErrors($htiApi['Data']);
+                }
             }else{
-                return redirect()->back()->withErrors($htiApi['Data']);
+                if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
+                    $userData = UsersData::where('user_id', $userid)->first();
+                    $sms = $userData->has_sms - $data['message_length'];
+                    $userData->update(['has_sms' => $sms]);
+
+                    $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
+                    $data['message_id'] = $htiApi['Data']['msgid'];
+                    $update = ['status' => 'successfully', 'message_id' => $data['message_id'] ];
+                    Message::findOrFail($data['mid'])->update($update);
+                }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
+                    return redirect()->back()->withErrors($htiApi['data']['errormessage']);
+                }
             }
         }else{
-            if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
-                $userData = UsersData::where('user_id', $userid)->first();
-                $sms = $userData->has_sms - $data['message_length'];
-                $userData->update(['has_sms' => $sms]);
-
-                $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
-                $data['message_id'] = $htiApi['Data']['msgid'];
-                $update = ['status' => 'successfully', 'message_id' => $data['message_id'] ];
-                Message::findOrFail($data['mid'])->update($update);
-            }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
-                return redirect()->back()->withErrors($htiApi['data']['errormessage']);
-            }
+            $failmessage = $userid.' has enough sms to run job';
+            return   $this->fail($failmessage);
         }
     }
 
