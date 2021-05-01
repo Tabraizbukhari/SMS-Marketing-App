@@ -63,6 +63,7 @@ class ApiController extends Controller
                 }
 
                 $noOfSms =  $this->stringCount($request->message);
+                dd($user->id);
                 $data = [
                     'user_id'        => $user->id,
                     'message'        => $request->message,
