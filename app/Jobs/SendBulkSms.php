@@ -44,7 +44,9 @@ class SendBulkSms implements ShouldQueue
     {
         $data = $this->messages;
         $numbers = $this->numbers;
-        throw new Exception ('The message params are not valid');
+
+        $this->fail('user has enough sms');
+
         foreach ($numbers as $number) {
             $num = (substr($number, 0, 2) == '03')? true : ((substr($number, 0, 3) == '923')? true : ((substr($number, 0, 1) == "3")? true:false) );
             $data['contact_number'] = $number;
