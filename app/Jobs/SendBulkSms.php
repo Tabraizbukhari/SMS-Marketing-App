@@ -75,30 +75,30 @@ class SendBulkSms implements ShouldQueue
 
 
 
-    public function message_url($data){   
-        $admin = Admin::first();
-        $url      = $this->users->getUserSmsApi['api_url']??$admin->adminApi->api_url;
-        $username = $this->users->getUserSmsApi['api_username']??$admin->adminApi->api_username;
-        $password = $this->users->getUserSmsApi['api_password']??$admin->adminApi->api_password;
-        if($this->users->type == 'masking'){
-            $url .= 'user='.$username;
-            $url .= '&pwd='.$password;
-            $url .= '&sender='.urlencode($data['orginator']);
-            $url .= '&reciever='.$data['contact_number'];
-            $url .= '&msg-data='.urlencode($data['message']);
-            $url .= '&response=json';
-        }else{
-            $url .= 'action=sendmessage';
-            $url .= '&username='.$this->users->getUserSmsApi->api_username;
-            $url .= '&password='.$this->users->getUserSmsApi->api_password;
-            $url .= '&recipient='.$data['contact_number'];
-            $url .= '&originator='.$data['orginator'];
-            $url .= '&messagedata='.urlencode($data['message']);
-            $url .= '&sendondate='.urlencode(date('Y-m-d h:m:s', strtotime($data['send_date'])));
-            $url .= '&responseformat=xml';
-        }
-        return $url;
-    }
+    // public function message_url($data){   
+    //     $admin = Admin::first();
+    //     $url      = $this->users->getUserSmsApi['api_url']??$admin->adminApi->api_url;
+    //     $username = $this->users->getUserSmsApi['api_username']??$admin->adminApi->api_username;
+    //     $password = $this->users->getUserSmsApi['api_password']??$admin->adminApi->api_password;
+    //     if($this->users->type == 'masking'){
+    //         $url .= 'user='.$username;
+    //         $url .= '&pwd='.$password;
+    //         $url .= '&sender='.urlencode($data['orginator']);
+    //         $url .= '&reciever='.$data['contact_number'];
+    //         $url .= '&msg-data='.urlencode($data['message']);
+    //         $url .= '&response=json';
+    //     }else{
+    //         $url .= 'action=sendmessage';
+    //         $url .= '&username='.$this->users->getUserSmsApi->api_username;
+    //         $url .= '&password='.$this->users->getUserSmsApi->api_password;
+    //         $url .= '&recipient='.$data['contact_number'];
+    //         $url .= '&originator='.$data['orginator'];
+    //         $url .= '&messagedata='.urlencode($data['message']);
+    //         $url .= '&sendondate='.urlencode(date('Y-m-d h:m:s', strtotime($data['send_date'])));
+    //         $url .= '&responseformat=xml';
+    //     }
+    //     return $url;
+    // }
 
 
     // public function hitApi($data)
