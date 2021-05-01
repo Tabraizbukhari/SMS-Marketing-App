@@ -21,7 +21,7 @@ class IndexController extends Controller
         $totalMessage = Message::where('user_id', Auth::id())->where('status', 'successfully')->count();
         $messageLength = Message::where('user_id', Auth::id())->where('status', 'successfully')->sum('message_length');
         $data['total_sentmessages'] = $totalMessage * $messageLength;
-
+        dd($totalMessage, $messageLength);
         $data['failed_messages'] = Message::where('user_id', Auth::id())->where('status', 'not_sent')->count();
 
         $data['total_transcation'] = Transaction::where('user_id', Auth::id())->where('type', 'credit')->sum('amount');
