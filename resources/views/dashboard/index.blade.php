@@ -37,6 +37,18 @@
 								</div>
 							</div>
 
+
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-body">
+										<h5 class="card-title mb-4">Total Pending Messages</h5>
+										<h1 class="mt-1 mb-3">{{ $pendingMessage }}</h1>
+										<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Pending Message</span>
+									</div>
+								</div>
+							</div>
+
+
 							<div class="col-md-4">
 								<div class="card">
 									<div class="card-body">

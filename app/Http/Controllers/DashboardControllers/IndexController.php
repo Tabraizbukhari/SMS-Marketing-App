@@ -20,6 +20,9 @@ class IndexController extends Controller
         // $data['total_sentmessages'] = Message::where('user_id', Auth::id())->where('status', 'successfully')->count();
         $totalMessage = Message::where('user_id', Auth::id())->where('status', 'successfully')->count();
         $messageLength = Message::where('user_id', Auth::id())->where('status', 'successfully')->sum('message_length');
+
+        $data['pendingMessage'] = Message::where('user_id', Auth::id())->where('status', 'pending')->count();
+
         $data['total_sentmessages'] = $totalMessage;
         $data['total_sentmessagesamount'] = $messageLength;
 
