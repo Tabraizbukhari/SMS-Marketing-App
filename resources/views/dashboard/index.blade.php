@@ -31,10 +31,21 @@
 									<div class="card-body">
 										<h5 class="card-title mb-4">Total Sent Message Successfully</h5>
 										<h1 class="mt-1 mb-3">{{ $total_sentmessages }}</h1>
-										<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sent Message.</span>
+										<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Total Amount Of Sent Message deduct according to message length.</span>
 									</div>
 								</div>
 							</div>
+
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-body">
+										<h5 class="card-title mb-4">Length of Messages</h5>
+										<h1 class="mt-1 mb-3">{{ $total_sentmessagesamount }}</h1>
+										<span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i>Sum of Message length.</span>
+									</div>
+								</div>
+							</div>
+
 							<div class="col-md-4">
 								<div class="card">
 									<div class="card-body">
