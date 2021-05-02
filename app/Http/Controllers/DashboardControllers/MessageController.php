@@ -63,6 +63,7 @@ class MessageController extends Controller
 
     public function store(Request $request)
     {
+        
         if(Auth::user()->UserData->has_sms == 0){
             return redirect()->back()->withErrors('You have zero balance');
         }
@@ -113,7 +114,7 @@ class MessageController extends Controller
             'api_type'       => $authType,
             'campaign'       => $request->campaign,
         ];
-        
+        $number  =$request->phone_number;
         $data['status']      = ($request->late_shedule == NULL)? 'successfully' : 'pending';
         if($authType == 'masking'){
             $mask = Masking::find($request->masking);
