@@ -32,7 +32,8 @@ class User extends Authenticatable
         'type',
         'register_as',
         'reference_id',
-        'is_blocked'
+        'is_blocked',
+        'shortcode_monthly_rental_charges',
     ];
 
     /**
@@ -61,7 +62,7 @@ class User extends Authenticatable
 
     public function setUserNameAttribute($value)
     {
-    	$this->attributes['username'] = strtolower($value.'sync'.Str::random(4));
+    	$this->attributes['username'] = strtolower('sync_'.$value);
     }
 
     public function getFullNameAttribute($value)
