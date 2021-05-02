@@ -56,6 +56,12 @@ class SendBulkSms implements ShouldQueue
 
 
             if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
+                if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
+                    $data['message_length'] += $data['message_length'] / 2 + $data['message_length'];
+                 }else{
+                     $data['message_length'] = $this->stringCount($data['message']);
+                 }
+
                 $data['message_id'] = NULL;
                 $data['status'] = 'pending';
                 $sendMessage    = $this->saveMessage($data, $data['campaign_id']);
@@ -73,49 +79,57 @@ class SendBulkSms implements ShouldQueue
         Campaign::find($data['campaign_id'])->update(['status','completed']);
     }
 
+    public function stringCount($message){
+        $count = '';
+        if (strlen($message) != strlen(utf8_decode($message))){
+            $urduCount = strlen(utf8_decode($message));
+            switch ($urduCount) {
+                case $urduCount <= 70:
+                        $count = 1;
+                    break;
+                case $urduCount <= 134:
+                        $count = 2;
+                    break;
+                case $urduCount <= 201:
+                        $count = 3;
+                    break;  
+                case $urduCount <= 268:
+                        $count = 4;
+                    break;  
+                case $urduCount <= 355:
+                        $count = 5;
+                    break;  
+                default:
+                    $count = false;
+                    break;
+            }
 
-
-    public function message_url($data){   
-        $admin = Admin::first();
-        $url      = $this->users->getUserSmsApi['api_url']??$admin->adminApi->api_url;
-        $username = $this->users->getUserSmsApi['api_username']??$admin->adminApi->api_username;
-        $password = $this->users->getUserSmsApi['api_password']??$admin->adminApi->api_password;
-        if($this->users->type == 'masking'){
-            $url .= 'user='.$username;
-            $url .= '&pwd='.$password;
-            $url .= '&sender='.urlencode($data['orginator']);
-            $url .= '&reciever='.$data['contact_number'];
-            $url .= '&msg-data='.urlencode($data['message']);
-            $url .= '&response=json';
         }else{
-            $url .= 'action=sendmessage';
-            $url .= '&username='.$this->users->getUserSmsApi->api_username;
-            $url .= '&password='.$this->users->getUserSmsApi->api_password;
-            $url .= '&recipient='.$data['contact_number'];
-            $url .= '&originator='.$data['orginator'];
-            $url .= '&messagedata='.urlencode($data['message']);
-            $url .= '&sendondate='.urlencode(date('Y-m-d h:m:s', strtotime($data['send_date'])));
-            $url .= '&responseformat=xml';
+            $englishCount  = strlen($message);
+            switch ($englishCount) {
+                case $englishCount <= 160:
+                        $count = 1;
+                    break;
+                case $englishCount <= 320:
+                        $count = 2;
+                    break;
+                case $englishCount <= 480:
+                        $count = 3;
+                    break;  
+                case $englishCount <= 640:
+                        $count = 4;
+                    break;  
+                case $englishCount <= 800:
+                        $count = 5;
+                    break;  
+                default:
+                    $count = false;
+                    break;
+            }
         }
-        return $url;
+
+        return $count;
     }
-
-
-    // public function hitApi($data)
-    // {
-    //     $url = $this->message_url($data);
-    //     $ch = curl_init($url);
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //     $response =  curl_exec($ch);
-
-    //     if($this->users->type == 'masking'){
-    //         return json_decode($response, true);
-    //     }
-    //     $xml = simplexml_load_string($response, "SimpleXMLElement", LIBXML_NOCDATA);
-    //     $json = json_encode($xml);
-    //     return $array = json_decode($json,TRUE);
-        
-    // }
 
   
 

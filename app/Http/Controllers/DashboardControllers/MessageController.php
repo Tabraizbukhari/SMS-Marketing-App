@@ -132,7 +132,7 @@ class MessageController extends Controller
                 $htiApi = $this->hitApi($data);
                     if(Auth::user()->type == 'masking'){
                         if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
-                            if(substr($request->phone_number, 0, 3) == '033'){
+                            if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
                                 $noOfSms += $noOfSms / 2 + $noOfSms;
                              }
                             $data['price']      = Auth::user()->UserData->price_per_sms * $noOfSms;
@@ -145,6 +145,10 @@ class MessageController extends Controller
                         }
                     }else{
                         if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
+                            if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
+                                $noOfSms += $noOfSms / 2 + $noOfSms;
+                             }
+                            
                             $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
                             $data['price']      = Auth::user()->UserData->price_per_sms * $noOfSms;
                             $data['status'] = 'successfully';
