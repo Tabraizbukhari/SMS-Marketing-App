@@ -60,8 +60,8 @@ class SendBulkSms implements ShouldQueue
                 $sendMessage    = $this->saveMessage($data, $data['campaign_id']);
                 $dataResponse = 'Campaign run successfully';
                 $data['mid'] = $sendMessage->id;
-                // $jobs = (new SendCreatedSMS($data, $this->users))->delay(now()->addSeconds(1));
-                // dispatch($jobs);
+                $jobs = (new SendCreatedSMS($data, $this->users))->delay(now()->addSeconds(1));
+                dispatch($jobs);
                 
             }else{
                 $data['message_id'] = NULL;
