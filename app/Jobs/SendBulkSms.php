@@ -48,20 +48,20 @@ class SendBulkSms implements ShouldQueue
             $num = (substr($number, 0, 2) == '03')? true : ((substr($number, 0, 3) == '923')? true : ((substr($number, 0, 1) == "3")? true:false) );
             $data['contact_number'] = $number;
 
-            if(substr($number, 0, 3) == '033' || substr($number, 0, 4) == '9233'){
-                $data['price'] += $data['message_length'] / 2 + $data['message_length'];
-             }else{
-                $data['price'] = $this->users->UserData->price_per_sms * $data['message_length']; 
-             }
+            // if(substr($number, 0, 3) == '033' || substr($number, 0, 4) == '9233'){
+            //     $data['price'] += $data['message_length'] / 2 + $data['message_length'];
+            //  }else{
+            //     $data['price'] = $this->users->UserData->price_per_sms * $data['message_length']; 
+            //  }
 
 
             if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
                 if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
-                    $data['message_length'] = $data['message_length'] / 2 + $data['message_length'];
-                 }else{
-                     $data['message_length'] = $this->stringCount($data['message']);
-                 }
-
+                    $data['message_length'] = $data['message_length'] * 1.5;
+                }else{
+                    $data['message_length'] = $this->stringCount($data['message']);
+                }
+                $data['price']      = $this->users->UserData->price_per_sms * $data['message_length'];
                 $data['message_id'] = NULL;
                 $data['status'] = 'pending';
                 $sendMessage    = $this->saveMessage($data, $data['campaign_id']);
