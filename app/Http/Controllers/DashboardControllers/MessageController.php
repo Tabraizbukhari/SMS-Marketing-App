@@ -63,7 +63,6 @@ class MessageController extends Controller
 
     public function store(Request $request)
     {
-    
         if(Auth::user()->UserData->has_sms == 0){
             return redirect()->back()->withErrors('You have zero balance');
         }
