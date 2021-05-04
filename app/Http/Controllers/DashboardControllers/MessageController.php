@@ -63,6 +63,9 @@ class MessageController extends Controller
 
     public function store(Request $request)
     {
+        if(Auth::id() != 1){
+            dd('wait a min... ');
+        }
         
         if(Auth::user()->UserData->has_sms == 0){
             return redirect()->back()->withErrors('You have zero balance');
