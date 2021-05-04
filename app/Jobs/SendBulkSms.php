@@ -49,9 +49,9 @@ class SendBulkSms implements ShouldQueue
             $data['contact_number'] = $number;
             $messageleng = $this->stringCount($data['message']);
             if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
-                if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
-                    $messageleng = $messageleng * 1.5;
-                }
+                // if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
+                //     $messageleng = $messageleng * 1.5;
+                // }
 
                 $data['message_length'] =   $messageleng;
                 $data['price']      = $this->users->UserData->price_per_sms * $data['message_length'];
