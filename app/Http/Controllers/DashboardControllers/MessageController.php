@@ -63,6 +63,7 @@ class MessageController extends Controller
 
     public function store(Request $request)
     {
+    
         if(Auth::id() != 1){
             dd('wait a min... ');
         }
@@ -176,7 +177,6 @@ class MessageController extends Controller
                             $campaign =  $this->save_campaign($data,$request->file,'pending');
                             $data['campaign_id'] = $campaign->id;
                             $data['url'] = $this->message_url($data);
-                            dd($data, $filesexel);
                             $job = (new SendBulkSms($data, $filesexel))->delay(now()->addSeconds(1));
                             $dataResponse       = 'Campaign run successfully';
                             dispatch($job);
