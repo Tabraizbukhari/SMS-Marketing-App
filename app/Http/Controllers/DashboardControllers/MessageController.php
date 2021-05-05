@@ -20,6 +20,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use App\Models\User;
 use App\Models\Admin;
 use App\Jobs\SendBulkSms;
+use Illuminate\Support\Str;
 
 class MessageController extends Controller
 {
@@ -102,7 +103,7 @@ class MessageController extends Controller
             return redirect()->back()->withErrors('Message maximum limit is 5');
         }
 
-        dd($noOfSms, strlen($request->message));
+        dd($noOfSms, strlen($request->message), Str::length($request->message));
         $authType = Auth::user()->type;
         $data = [
             'user_id'        => Auth::id(),
