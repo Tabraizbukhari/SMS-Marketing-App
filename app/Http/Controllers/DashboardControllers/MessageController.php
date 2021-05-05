@@ -101,7 +101,7 @@ class MessageController extends Controller
         }elseif($noOfSms > 5){
             return redirect()->back()->withErrors('Message maximum limit is 5');
         }
-        dd($noOfSms, $request->all());
+        dd($noOfSms, $request->all(), strlen($request->message));
         $authType = Auth::user()->type;
         $data = [
             'user_id'        => Auth::id(),
