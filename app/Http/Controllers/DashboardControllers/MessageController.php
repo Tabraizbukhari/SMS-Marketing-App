@@ -325,23 +325,23 @@ class MessageController extends Controller
         }else{
             $englishCount  = strlen($message);
             switch ($englishCount) {
-                case $englishCount < 160:
-                        $count = 1;
-                    break;
-                case $englishCount < 320:
+                case $englishCount > 160:
                         $count = 2;
                     break;
-                case $englishCount < 480:
+                case $englishCount > 320:
                         $count = 3;
-                    break;  
-                case $englishCount < 640:
+                    break;
+                case $englishCount > 480:
                         $count = 4;
                     break;  
-                case $englishCount < 800:
+                case $englishCount > 640:
                         $count = 5;
                     break;  
+                case $englishCount > 800:
+                        $count = 6;
+                    break;  
                 default:
-                    $count = false;
+                    $count = 1;
                     break;
             }
         }
