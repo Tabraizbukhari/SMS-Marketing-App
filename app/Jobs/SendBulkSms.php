@@ -72,51 +72,52 @@ class SendBulkSms implements ShouldQueue
         Campaign::find($data['campaign_id'])->update(['status' => 'completed']);
     }
 
+   
     public function stringCount($message){
         $count = '';
         if (strlen($message) != strlen(utf8_decode($message))){
             $urduCount = strlen(utf8_decode($message));
             switch ($urduCount) {
-                case $urduCount <= 70:
-                        $count = 1;
-                    break;
-                case $urduCount <= 134:
+                case $urduCount > 70:
                         $count = 2;
                     break;
-                case $urduCount <= 201:
+                case $urduCount > 134:
                         $count = 3;
-                    break;  
-                case $urduCount <= 268:
+                    break;
+                case $urduCount > 201:
                         $count = 4;
                     break;  
-                case $urduCount <= 355:
+                case $urduCount > 268:
                         $count = 5;
                     break;  
+                case $urduCount > 355:
+                        $count = 6;
+                    break;  
                 default:
-                    $count = false;
+                    $count = 1;
                     break;
             }
 
         }else{
             $englishCount  = strlen($message);
             switch ($englishCount) {
-                case $englishCount <= 160:
-                        $count = 1;
-                    break;
-                case $englishCount <= 320:
+                case $englishCount > 160:
                         $count = 2;
                     break;
-                case $englishCount <= 480:
+                case $englishCount > 320:
                         $count = 3;
-                    break;  
-                case $englishCount <= 640:
+                    break;
+                case $englishCount > 480:
                         $count = 4;
                     break;  
-                case $englishCount <= 800:
+                case $englishCount > 640:
                         $count = 5;
                     break;  
+                case $englishCount > 800:
+                        $count = 6;
+                    break;  
                 default:
-                    $count = false;
+                    $count = 1;
                     break;
             }
         }

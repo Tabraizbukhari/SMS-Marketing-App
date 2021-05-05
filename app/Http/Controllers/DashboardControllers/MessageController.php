@@ -101,7 +101,6 @@ class MessageController extends Controller
         }elseif($noOfSms > 5){
             return redirect()->back()->withErrors('Message maximum limit is 5');
         }
-        dd($noOfSms, $request->all(), strlen($request->message));
         $authType = Auth::user()->type;
         $data = [
             'user_id'        => Auth::id(),
@@ -302,23 +301,23 @@ class MessageController extends Controller
         if (strlen($message) != strlen(utf8_decode($message))){
             $urduCount = strlen(utf8_decode($message));
             switch ($urduCount) {
-                case $urduCount < 70:
-                        $count = 1;
-                    break;
-                case $urduCount < 134:
+                case $urduCount > 70:
                         $count = 2;
                     break;
-                case $urduCount < 201:
+                case $urduCount > 134:
                         $count = 3;
-                    break;  
-                case $urduCount < 268:
+                    break;
+                case $urduCount > 201:
                         $count = 4;
                     break;  
-                case $urduCount <355:
+                case $urduCount > 268:
                         $count = 5;
                     break;  
+                case $urduCount > 355:
+                        $count = 6;
+                    break;  
                 default:
-                    $count = false;
+                    $count = 1;
                     break;
             }
 
