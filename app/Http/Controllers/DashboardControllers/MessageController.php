@@ -95,7 +95,7 @@ class MessageController extends Controller
        
 
 
-
+        dd($noOfSms);
         if(Auth::user()->UserData->has_sms < $noOfSms){
             return redirect()->back()->withErrors('User have enough sms');
         }elseif($noOfSms > 5){
