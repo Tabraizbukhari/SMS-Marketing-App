@@ -302,19 +302,19 @@ class MessageController extends Controller
         if (strlen($message) != strlen(utf8_decode($message))){
             $urduCount = strlen(utf8_decode($message));
             switch ($urduCount) {
-                case $urduCount <= 70:
+                case $urduCount < 70:
                         $count = 1;
                     break;
-                case $urduCount <= 134:
+                case $urduCount < 134:
                         $count = 2;
                     break;
-                case $urduCount <= 201:
+                case $urduCount < 201:
                         $count = 3;
                     break;  
-                case $urduCount <= 268:
+                case $urduCount < 268:
                         $count = 4;
                     break;  
-                case $urduCount <= 355:
+                case $urduCount <355:
                         $count = 5;
                     break;  
                 default:
@@ -325,19 +325,19 @@ class MessageController extends Controller
         }else{
             $englishCount  = strlen($message);
             switch ($englishCount) {
-                case $englishCount <= 160:
+                case $englishCount < 160:
                         $count = 1;
                     break;
-                case $englishCount <= 320:
+                case $englishCount < 320:
                         $count = 2;
                     break;
-                case $englishCount <= 480:
+                case $englishCount < 480:
                         $count = 3;
                     break;  
-                case $englishCount <= 640:
+                case $englishCount < 640:
                         $count = 4;
                     break;  
-                case $englishCount <= 800:
+                case $englishCount < 800:
                         $count = 5;
                     break;  
                 default:
