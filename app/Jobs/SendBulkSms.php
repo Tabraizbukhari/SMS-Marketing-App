@@ -47,7 +47,7 @@ class SendBulkSms implements ShouldQueue
         foreach ($numbers as $number) {
             $num = (substr($number, 0, 2) == '03')? true : ((substr($number, 0, 3) == '923')? true : ((substr($number, 0, 1) == "3")? true:false) );
             $data['contact_number'] = $number;
-            $messageleng = $this->stringCount($data['message']);
+            $messageleng =  $this->messages['message_length'];
             if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
                 if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
                     $messageleng = $messageleng * 1.5;
@@ -73,57 +73,7 @@ class SendBulkSms implements ShouldQueue
     }
 
    
-    public function stringCount($message){
-        $count = '';
-        if (strlen($message) != strlen(utf8_decode($message))){
-            $urduCount = strlen(utf8_decode($message));
-            switch ($urduCount) {
-                case $urduCount > 70:
-                        $count = 2;
-                    break;
-                case $urduCount > 134:
-                        $count = 3;
-                    break;
-                case $urduCount > 201:
-                        $count = 4;
-                    break;  
-                case $urduCount > 268:
-                        $count = 5;
-                    break;  
-                case $urduCount > 355:
-                        $count = 6;
-                    break;  
-                default:
-                    $count = 1;
-                    break;
-            }
-
-        }else{
-            $englishCount  = strlen($message);
-            switch ($englishCount) {
-                case $englishCount > 160:
-                        $count = 2;
-                    break;
-                case $englishCount > 320:
-                        $count = 3;
-                    break;
-                case $englishCount > 480:
-                        $count = 4;
-                    break;  
-                case $englishCount > 640:
-                        $count = 5;
-                    break;  
-                case $englishCount > 800:
-                        $count = 6;
-                    break;  
-                default:
-                    $count = 1;
-                    break;
-            }
-        }
-
-        return $count;
-    }
+  
 
   
 

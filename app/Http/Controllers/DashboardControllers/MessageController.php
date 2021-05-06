@@ -92,7 +92,7 @@ class MessageController extends Controller
         
         $request->validate($dataValidate);
 
-        $noOfSms  = $this->stringCount($request->message);
+        $noOfSms  = $request->no_of_sms??1;
        
 
 
@@ -103,7 +103,6 @@ class MessageController extends Controller
             return redirect()->back()->withErrors('Message maximum limit is 5');
         }
 
-        dd($noOfSms,$request->message,  strlen($request->message), Str::length($request->message));
         $authType = Auth::user()->type;
         $data = [
             'user_id'        => Auth::id(),
