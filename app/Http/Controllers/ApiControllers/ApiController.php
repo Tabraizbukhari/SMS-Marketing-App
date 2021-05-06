@@ -41,7 +41,9 @@ class ApiController extends Controller
                 'orginator'     => 'required',
                 'password'      => 'required',
             ];
+            
             $validator = Validator::make($request->all(), $rules);
+            
             if ($validator->fails()) {
                  $response['response'] = $validator->messages()->first();
             }else if(!User::where('username', $request->username)->where('api_token', $request->password)->exists()){
@@ -63,6 +65,7 @@ class ApiController extends Controller
                 }
 
                 $noOfSms =  $this->stringCount($request->message);
+                dd($noOfSms);
                 $data = [
                     'user_id'        => $user->id,
                     'message'        => $request->message,
@@ -217,7 +220,6 @@ class ApiController extends Controller
                     $count = false;
                     break;
             }
-
         }else{
             $englishCount  = strlen($message);
             switch ($englishCount) {

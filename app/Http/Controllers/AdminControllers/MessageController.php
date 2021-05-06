@@ -88,10 +88,13 @@ class MessageController extends Controller
         if(Auth::user()->type == 'masking'){
             $dataValidate['masking']  =  'required';
         }
+        if(!isset($request->no_of_sms) && $request->no_of_sms == NULL){
+            return redirect()->back()->withErrors('Something wents wrong with sms length');
+        }
         
         $request->validate($dataValidate);
 
-        $noOfSms  = $this->stringCount($request->message);
+        $noOfSms  = $request->no_of_sms??1;
         
         if(Auth::user()->has_sms < $noOfSms){
             return redirect()->back()->withErrors('User have enough sms');
@@ -125,9 +128,9 @@ class MessageController extends Controller
                 $data['type'] = 'single';
                 $htiApi = $this->hitApi($data);
                     if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
-                        if(substr($request->phone_number, 0, 3) == '033'){
-                            $noOfSms = $noOfSms / 2 + $noOfSms;
-                        }                
+                        if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
+                            $noOfSms = $noOfSms * 1.5;
+                        }              
                         $data['message_id'] = $htiApi['Data']['msgid'];
                         $data['status']     = 'successfully';
                         $data['price']      = 1 * $noOfSms;
