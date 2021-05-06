@@ -130,12 +130,13 @@ class MessageController extends Controller
                     return redirect()->back()->withErrors('Plesae Start your number with 92, 03, 3');
                 }
                 $data['type'] = 'single';
+                dd($this->message_url($data));
                 $htiApi = $this->hitApi($data);
                     if(Auth::user()->type == 'masking'){
                         if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
                             if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
-                                $noOfSms += $noOfSms / 2 + $noOfSms;
-                             }
+                                $noOfSms = $noOfSms * 1.5;
+                            }
                             $data['price']      = Auth::user()->UserData->price_per_sms * $noOfSms;
                             $data['message_id'] = $htiApi['Data']['msgid'];
                             $data['status']     = 'successfully';
@@ -147,8 +148,8 @@ class MessageController extends Controller
                     }else{
                         if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
                             if(substr($number, 0, 3) == '033' || substr($number, 0, 2) == '33' || substr($number, 0, 4) == '9233'){
-                                $noOfSms += $noOfSms / 2 + $noOfSms;
-                             }
+                                $noOfSms = $noOfSms * 1.5;
+                            }
                             
                             $data['message_id'] = $htiApi['data']['acceptreport']['messageid'];
                             $data['price']      = Auth::user()->UserData->price_per_sms * $noOfSms;
