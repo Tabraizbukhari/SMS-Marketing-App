@@ -64,7 +64,6 @@ class ApiController extends Controller
                     return response()->json($response);
                 }
                 $noOfSms =  $this->stringCount($request->message);
-                dd($noOfSms);
                 $data = [
                     'user_id'        => $user->id,
                     'message'        => $request->message,
