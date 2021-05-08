@@ -222,23 +222,20 @@ class ApiController extends Controller
         }else{
             $englishCount  = strlen($message);
             switch ($englishCount) {
-                case $englishCount <= 160:
-                        $count = 1;
-                    break;
-                case $englishCount <= 320:
+                case $englishCount > 160:
                         $count = 2;
                     break;
-                case $englishCount <= 480:
+                case $englishCount > 306:
                         $count = 3;
-                    break;  
-                case $englishCount <= 640:
+                    break;
+                case $englishCount > 459:
                         $count = 4;
                     break;  
-                case $englishCount <= 800:
+                case $englishCount > 612:
                         $count = 5;
                     break;  
                 default:
-                    $count = false;
+                    $count = 1;
                     break;
             }
         }
