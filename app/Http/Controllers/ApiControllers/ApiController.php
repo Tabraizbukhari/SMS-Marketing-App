@@ -63,7 +63,6 @@ class ApiController extends Controller
                     $response['response'] = 'You do not have balance';
                     return response()->json($response);
                 }
-                dd('waiting the api in progress');
                 $noOfSms =  $this->stringCount($request->message);
                 dd($noOfSms);
                 $data = [
