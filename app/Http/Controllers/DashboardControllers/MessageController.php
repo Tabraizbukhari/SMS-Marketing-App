@@ -130,6 +130,7 @@ class MessageController extends Controller
                     return redirect()->back()->withErrors('Plesae Start your number with 92, 03, 3');
                 }
                 $data['type'] = 'single';
+                dd( $this->message_url($data));
                 $htiApi = $this->hitApi($data);
                     if(Auth::user()->type == 'masking'){
                         if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
