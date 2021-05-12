@@ -38,21 +38,12 @@ class SendCreatedSMS implements ShouldQueue
         $data = $this->data;
         $userid =$this->users['id'];
         $userData = UsersData::where('user_id', $userid)->first();
-        return   $this->fail($userData->has_sms); 
-        // if($userData->has_sms >= $data['message_length']){
-        //     $sms = $userData->has_sms - $data['message_length'];
-        //     $userData->update(['has_sms' => $sms]);
-        //     return   $this->fail('condition ');
-        
-        // }else{
-        //     return   $this->fail('false');
 
-        // }
+      
         if($userData->has_sms >= $data['message_length']){
             $htiApi = $this->hitApi($data);
             if($this->users->type == 'masking'){
                 if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){            
-                    $userData = UsersData::where('user_id', $userid)->first();
                     $sms = $userData->has_sms - $data['message_length'];
                     $userData->update(['has_sms' => $sms]);
                 
@@ -64,7 +55,6 @@ class SendCreatedSMS implements ShouldQueue
                 }
             }else{
                 if(isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage"){
-                    $userData = UsersData::where('user_id', $userid)->first();
                     $sms = $userData->has_sms - $data['message_length'];
                     $userData->update(['has_sms' => $sms]);
 
