@@ -51,7 +51,7 @@ class SendCreatedSMS implements ShouldQueue
                     Message::findOrFail($data['mid'])->update($update);
                 }else{
                     // return   $this->fail($htiApi['Data']);
-                    return   $this->fail('api not working');
+                    return   $this->fail('api not working '. $this->message_url($data));
 
                 }
             }else{
@@ -65,7 +65,8 @@ class SendCreatedSMS implements ShouldQueue
                     Message::findOrFail($data['mid'])->update($update);
                 }else if(isset($htiApi['action']) && $htiApi['action'] == "error"){
                     // return   $this->fail($htiApi['data']['errormessage']);
-                    return   $this->fail('api not working');
+                    return   $this->fail('api not working '. $this->message_url($data));
+
 
                 }
             }
