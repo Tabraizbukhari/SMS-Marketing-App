@@ -38,6 +38,7 @@ class SendCreatedSMS implements ShouldQueue
         $data = $this->data;
         $userid =$this->users['id'];
         $userData = UsersData::where('user_id', $userid)->first();
+        return   $this->fail($userData->has_sms); 
         // if($userData->has_sms >= $data['message_length']){
         //     $sms = $userData->has_sms - $data['message_length'];
         //     $userData->update(['has_sms' => $sms]);
