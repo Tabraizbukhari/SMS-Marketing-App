@@ -10,6 +10,7 @@ use App\Models\ResellerCustomer;
 use Illuminate\Support\Str;
 use Auth;
 use Illuminate\Support\Facades\DB;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -54,7 +55,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
+
     public function getFormatedCreatedAtAttribute()
     {
         return date('d-m-Y H:m a', strtotime($this->created_at));
@@ -62,12 +63,12 @@ class User extends Authenticatable
 
     public function setUserNameAttribute($value)
     {
-    	$this->attributes['username'] = strtolower('sync_'.$value);
+        $this->attributes['username'] = strtolower('sync_' . $value . rand(99, 1999));
     }
 
     public function getFullNameAttribute($value)
     {
-    	return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function UserData()
@@ -94,12 +95,12 @@ class User extends Authenticatable
 
     public function getUserSmsApi()
     {
-        return $this->hasOne(SmsApi::class,'user_id');
+        return $this->hasOne(SmsApi::class, 'user_id');
     }
 
     public function getResellerMasking()
     {
-        return $this->belongsToMany(Masking::class,'user_maskings','user_id','masking_id');
+        return $this->belongsToMany(Masking::class, 'user_maskings', 'user_id', 'masking_id');
     }
 
     public function getFormatedCreatedAt()
@@ -109,19 +110,19 @@ class User extends Authenticatable
 
     public function getCustomerAddBy()
     {
-      return  $this->belongsToMany(User::class,'reseller_customers','customer_id','user_id');
+        return  $this->belongsToMany(User::class, 'reseller_customers', 'customer_id', 'user_id');
     }
 
     public function getResellerCustomer()
     {
-      return  $this->belongsToMany(User::class,'reseller_customers','user_Id','customer_id');
+        return  $this->belongsToMany(User::class, 'reseller_customers', 'user_Id', 'customer_id');
     }
 
 
     public function getResellerCustomerProfit()
     {
-      return  $this->belongsToMany(User::class,'reseller_customers','user_Id','customer_id')->withCount(['getAllMessages AS myprofit' => function ($query) {
-        $query->select(DB::raw('SUM(price) as profit'));
+        return  $this->belongsToMany(User::class, 'reseller_customers', 'user_Id', 'customer_id')->withCount(['getAllMessages AS myprofit' => function ($query) {
+            $query->select(DB::raw('SUM(price) as profit'));
         }]);
     }
 
@@ -132,13 +133,12 @@ class User extends Authenticatable
 
     public function getBulkSmsExcelPath()
     {
-        return $this->file_prefix_path.'/'.Auth::user()->id;
+        return $this->file_prefix_path . '/' . Auth::user()->id;
     }
 
 
     public function getLogoUrlPath()
     {
-        return $this->logo_prefix_path.'/'.Auth::user()->id;
+        return $this->logo_prefix_path . '/' . Auth::user()->id;
     }
-
 }
