@@ -25,6 +25,25 @@ class UserController extends Controller
         $this->pagination = 10;
     }
 
+    public function details($id)
+    {
+        $customer = User::findOrFail(decrypt($id));
+        $orginator = '';
+        $data['customer'] = $customer;
+        if ($customer->type == 'masking') {
+            $data['api_url'] =  'http://sms1.synctechsol.com/api/sendmessage?';
+            $orginator = 'masking';
+        } else {
+            $data['api_url'] =  'http://sms1.synctechsol.com/api/sendmessage?';
+            $orginator = '99095';
+        }
+        $data['api_username'] = 'username=' . Auth::user()->username . '';
+        $data['api_pass'] = '&password=' . Auth::user()->api_token . '';
+        $data['message'] = '&message=testing&phone_number=03211234567';
+        $data['orginator'] =  "&orginator=" . $orginator . "";
+        return view('admin.users.details', $data);
+    }
+
     public function resellerIndex()
     {
         $data['user'] =  User::where('register_as', 'reseller')->paginate($this->pagination);
@@ -32,10 +51,15 @@ class UserController extends Controller
         return view('admin.users.index', $data);
     }
 
-    public function customerIndex()
+    public function customerIndex($id)
     {
+        if (isset($id) && !empty($id)) {
+            $id = decrypt($id);
+            $data['user']  =  User::findOrFail($id)->getResellerCustomer()->paginate($this->pagination);
+        } else {
+            $data['user']  =  User::where('register_as', 'customer')->paginate($this->pagination);
+        }
         $data['title'] = 'Customer';
-        $data['user']  =  User::where('register_as', 'customer')->paginate($this->pagination);
         return view('admin.users.index', $data);
     }
 

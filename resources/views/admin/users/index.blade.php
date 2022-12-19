@@ -58,7 +58,7 @@
                             <tbody>
                                 @foreach ($user as $u)
                                     <tr>
-                                        <td>#{{ $u->id }}</td>
+                                        <td>#{{ $loop->iteration }}</td>
                                         <td>{{ $u->full_name }} </td>
                                         <td>{{ $u->username }} <br />
                                             <small> {{ $u->email }} </small>
@@ -81,8 +81,8 @@
                                                 <div class="dropdown-menu">
                                                     <a href="{{ route('admin.user.customer', encrypt($u->id)) }}"
                                                         class="dropdown-item">View Customers</a>
-                                                    <a href="JavaScript:void(0)" class="dropdown-item" data-toggle="modal"
-                                                        data-target="#viewDetails{{ $u->id }}">View Details</a>
+                                                    <a href="{{ route('admin.user.details', encrypt($u->id)) }}"
+                                                        class="dropdown-item">View Details</a>
                                                     <a href="JavaScript:void(0)" class="dropdown-item" data-toggle="modal"
                                                         data-target="#addSMS{{ $u->id }}">Add Sms</a>
                                                     <div class="dropdown-divider"></div>

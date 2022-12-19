@@ -43,7 +43,8 @@ Route::name('admin.')->prefix('admin')->group(function () {
 
         Route::prefix('user')->name('user.')->group(function () {
             Route::get('reseller', [UserController::class, 'resellerIndex'])->name('reseller');
-            Route::get('customer', [UserController::class, 'customerIndex'])->name('customer');
+            Route::get('customer/{id?}', [UserController::class, 'customerIndex'])->name('customer');
+            Route::get('details/{id}', [UserController::class, 'details'])->name('details');
             Route::get('create/{type?}', [UserController::class, 'create'])->name('create');
             Route::post('store/{type}', [UserController::class, 'store'])->name('store');
             Route::delete('destroy/{id}', [UserController::class, 'destroy'])->name('destroy');

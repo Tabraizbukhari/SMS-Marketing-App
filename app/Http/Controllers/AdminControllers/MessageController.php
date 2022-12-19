@@ -170,7 +170,7 @@ class MessageController extends Controller
             return redirect()->back()->with('success', $dataResponse);
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withErrors($e);
+            return redirect()->back()->withErrors($e->getMessage());
         }
     }
 

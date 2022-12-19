@@ -145,7 +145,11 @@ class MessageController extends Controller
                             $sendMessage        = $this->saveMessage($data);
                             $dataResponse       = 'Message send successfully';
                         } else {
-                            return redirect()->back()->withErrors($htiApi['Data']);
+                            if (isset($htiApi['Data'])) {
+                                return redirect()->back()->withErrors($htiApi['Data']);
+                            } else {
+                                return redirect()->back()->withErrors("SOMETHING WENT'S WORNG");
+                            }
                         }
                     } else {
                         if (isset($htiApi['data']) && isset($htiApi['data']['acceptreport']['messageid']) && $htiApi['action'] == "sendmessage") {
