@@ -65,7 +65,7 @@ class UserController extends Controller
                 "first_name"    => "required|string",
                 "last_name"     => "required|string",
                 "email"         => "required|email|unique:users",
-                "password"      => "required|string|size:4",
+                "password"      => "required|string",
                 "cost"          => "required",
                 "sms"           => "required",
                 "code"          => "sometimes|required|numeric",
