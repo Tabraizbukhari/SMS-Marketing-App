@@ -51,7 +51,7 @@ class UserController extends Controller
         return view('admin.users.index', $data);
     }
 
-    public function customerIndex($id)
+    public function customerIndex($id = null)
     {
         if (isset($id) && !empty($id)) {
             $id = decrypt($id);
