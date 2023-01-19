@@ -8,7 +8,7 @@ use App\Models\Masking;
 
 class MaskingController extends Controller
 {
-   
+
     /**
      * Display a listing of the resource.
      *
@@ -25,21 +25,21 @@ class MaskingController extends Controller
         return view('admin.masking.index', $data);
     }
 
-  
+
     public function create()
     {
         //
     }
 
-  
+
     public function store(Request $request)
     {
         $request->validate(['title' => 'required|string']);
         $data = ['title' => $request->title];
         Masking::create($data);
-        return redirect()->back()->with('success','Masking Created Successfully');
+        return redirect()->back()->with('success', 'Masking Created Successfully');
     }
-    
+
     public function show($id)
     {
         //
@@ -56,13 +56,13 @@ class MaskingController extends Controller
         $masking->update([
             'title' => $request->title,
         ]);
-        return redirect()->back()->with('success','Masking Updated Successfully');
+        return redirect()->back()->with('success', 'Masking Updated Successfully');
     }
 
     public function destroy($id)
     {
         $masking = Masking::findOrFail(decrypt($id));
         $masking->delete();
-        return redirect()->back()->with('success','Masking Deleted Successfully');
+        return redirect()->back()->with('success', 'Masking Deleted Successfully');
     }
 }
