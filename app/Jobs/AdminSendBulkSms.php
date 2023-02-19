@@ -39,44 +39,44 @@ class AdminSendBulkSms implements ShouldQueue
         $data = $this->messages;
         $numbers = $this->numbers;
         foreach ($numbers as $number) {
-            $num = (substr($number, 0, 2) == '03')? true : ((substr($number, 0, 3) == '923')? true : ((substr($number, 0, 1) == "3")? true:false) );
+            $num = (substr($number, 0, 2) == '03') ? true : ((substr($number, 0, 3) == '923') ? true : ((substr($number, 0, 1) == "3") ? true : false));
             $data['contact_number'] = $number;
-            if(strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true){
-                
+            if (strlen((string)$number) >= 10 && strlen((string)$number) <= 12 && $num == true) {
+
                 $htiApi = $this->hitApi($data);
-                if(isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])){
+                if (isset($htiApi['Data']['msgid']) && !empty($htiApi['Data']['msgid'])) {
                     $data['price']      =   1;
                     $data['message_id'] = $htiApi['Data']['msgid'];
                     $data['status']     = 'successfully';
                     $sendMessage        = $this->saveMessage($data, $data['campaign_id']);
                     $dataResponse       = 'Campaign run successfully';
-
-                }else{
+                } else {
                     $data['status']     = 'not_sent';
                     $sendMessage        = $this->saveMessage($data, $data['campaign_id']);
 
                     // return redirect()->back()->withErrors($htiApi['Data']);
                 }
-            }else{
+            } else {
                 $data['message_id'] = NULL;
                 $data['status'] = 'not_sent';
                 $sendMessage = $this->saveMessage($data, $data['campaign_id']);
             }
         }
-        Campaign::find($data['campaign_id'])->update(['status','successfully']);
+        Campaign::find($data['campaign_id'])->update(['status' => 'completed']);
     }
 
 
 
-    public function message_url($data){   
+    public function message_url($data)
+    {
         $url      = $this->users->adminApi->api_url;
         $username = $this->users->adminApi->api_username;
         $password = $this->users->adminApi->api_password;
-        $url .= 'user='.$username;
-        $url .= '&pwd='.$password;
-        $url .= '&sender='.urlencode($data['orginator']);
-        $url .= '&reciever='.$data['contact_number'];
-        $url .= '&msg-data='.urlencode($data['message']);
+        $url .= 'user=' . $username;
+        $url .= '&pwd=' . $password;
+        $url .= '&sender=' . urlencode($data['orginator']);
+        $url .= '&reciever=' . $data['contact_number'];
+        $url .= '&msg-data=' . urlencode($data['message']);
         $url .= '&response=json';
         return $url;
     }
@@ -88,16 +88,17 @@ class AdminSendBulkSms implements ShouldQueue
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $response =  curl_exec($ch);
-        return json_decode($response, true);        
+        return json_decode($response, true);
     }
 
-  
 
-    public function saveMessage($data, $campId = NULL){
+
+    public function saveMessage($data, $campId = NULL)
+    {
         $this->AuthSmsCount($data['message_length']);
         $message = Message::create([
             'message_id'        => $data['message_id'],
-            'user_id'           => $this->users->id,
+            'admin_id'          => $this->users->id,
             'message'           => $data['message'],
             'message_length'    => $data['message_length'],
             'contact_number'    => $data['contact_number'],
@@ -109,13 +110,13 @@ class AdminSendBulkSms implements ShouldQueue
             'reference'         => $data['orginator']
         ]);
 
-        if($data['api_type'] == 'masking'){
+        if ($data['api_type'] == 'masking') {
             MessageMasking::create([
                 'message_id' => $message->id,
                 'masking_id' => $data['masking_id']
             ]);
         }
-        if($campId != NULL){
+        if ($campId != NULL) {
             CampaignMessage::create(['message_id' => $message->id, 'campaign_id' => $campId]);
         }
         return $message;

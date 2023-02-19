@@ -65,8 +65,7 @@ class MessageController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction();
-
+            // DB::beginTransaction();
             if (Auth::user()->has_sms == 0) {
                 return redirect()->back()->withErrors('You have zero balance');
             }
@@ -123,7 +122,6 @@ class MessageController extends Controller
             $mask = Masking::find($request->masking_id);
             $data['orginator'] = $mask->title;
             $data['masking_id'] =  $mask->id;
-
             switch ($request->type) {
                 case 'single':
                     $num = (substr($request->phone_number, 0, 2) == '03') ? true : ((substr($request->phone_number, 0, 3) == '923') ? true : ((substr($request->phone_number, 0, 1) == "3") ? true : false));
@@ -166,7 +164,9 @@ class MessageController extends Controller
                     break;
             }
 
-            DB::commit();
+            // DB::commit();
+            // dd($job);
+
             return redirect()->back()->with('success', $dataResponse);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -196,7 +196,7 @@ class MessageController extends Controller
         $file_name = $file->getClientOriginalName();
         $size = Storage::size($file_path);
         $data = [
-            'user_id' => Auth::id(),
+            'admin_id' => Auth::id(),
             'name' => $data['campaign'],
             'file_url' => $file_path,
             'file_name' => $file_name,
@@ -230,8 +230,6 @@ class MessageController extends Controller
         foreach ($readExcel[0] as $_read) {
             if (isset($_read['number'])) {
                 array_push($numbers, $_read['number']);
-            } else {
-                return false;
             }
         }
         return $numbers;
