@@ -94,7 +94,6 @@ class MessageController extends Controller
             }
 
             $request->validate($dataValidate);
-
             $noOfSms  = $request->no_of_sms ?? 1;
 
 
@@ -126,7 +125,6 @@ class MessageController extends Controller
             } else {
                 $data['orginator'] = '99095';
             }
-
             switch ($request->type) {
                 case 'single':
                     $num = (substr($request->phone_number, 0, 2) == '03') ? true : ((substr($request->phone_number, 0, 3) == '923') ? true : ((substr($request->phone_number, 0, 1) == "3") ? true : false));
@@ -172,7 +170,9 @@ class MessageController extends Controller
                     break;
                 case 'bulk':
                     if ($request->hasFile('file') && $request->file) {
+
                         $filesexel = $this->readExportFile($request->file);
+
                         if ($filesexel == false) {
                             return redirect()->back()->withErrors('Something wents wrong with excel formate..! try again');
                         } else {
@@ -281,8 +281,6 @@ class MessageController extends Controller
         foreach ($readExcel[0] as $_read) {
             if (isset($_read['number'])) {
                 array_push($numbers, $_read['number']);
-            } else {
-                return false;
             }
         }
         return $numbers;
